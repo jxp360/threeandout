@@ -1,0 +1,7 @@
+
+Client ID: 	
+561469682758.apps.googleusercontent.com
+Email address: 	
+561469682758@developer.gserviceaccount.com
+Client secret: 	
+EWG3nQfnVNi7zy4ZK2dD83K8
