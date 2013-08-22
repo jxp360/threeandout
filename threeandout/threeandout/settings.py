@@ -1,3 +1,4 @@
+import mongoengine
 # Django settings for threeandout project.
 
 DEBUG = True
@@ -11,11 +12,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+mongoengine.connect('threeandout_test')
 MONGODB_DATABASES = { 
-    'default': {'name': 'django_mongoengine'}
+    'default': {'name': 'threeandout_test'}
 }
 DJANGO_MONGOENGINE_OVERRIDE_ADMIN = True
 
+
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.dummy', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -27,6 +31,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
+'''
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -137,6 +142,7 @@ INSTALLED_APPS = (
     'django_mongoengine.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'test_stats',
 )
 
 AUTHENTICATION_BACKENDS = (

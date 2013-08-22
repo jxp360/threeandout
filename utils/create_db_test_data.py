@@ -37,21 +37,21 @@ if __name__ == "__main__":
 
     ffl_players = [
                    {'name': 'Jeff Pfeiffenberger', 
-                    'id': 'jxp360@gmail.com', 
+                    'email': 'jxp360@gmail.com', 
                     'league': 1,
                     'picks': [{ 'week': 1, 'qb': 'Peyton Manning', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 86, 'time': datetime.datetime.utcnow()},
                              { 'week': 2, 'qb': 'Meyton Panning', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 86, 'time': datetime.datetime.utcnow()},
                              { 'week': 3, 'qb': 'Thomas Brady', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 86, 'time': datetime.datetime.utcnow()}]
                    },
                    {'name': 'Grant Faiks', 
-                    'id': 'grant.faiks@gmail.com', 
+                    'email': 'grant.faiks@gmail.com', 
                     'league': 1,
                     'picks': [{ 'week': 1, 'qb': 'Peyton Manning', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 76, 'time': datetime.datetime.utcnow()},
                              { 'week': 2, 'qb': 'Meyton Panning', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 76, 'time': datetime.datetime.utcnow()},
                              { 'week': 3, 'qb': 'Thomas Brady', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 76, 'time': datetime.datetime.utcnow()}]
                    },
                    {'name': 'Bryan Gregory', 
-                    'id': 'bsg@gmail.com', 
+                    'email': 'bsg@gmail.com', 
                     'league': 1,
                     'picks': [{ 'week': 1, 'qb': 'Peyton Manning', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 56, 'time': datetime.datetime.utcnow()},
                              { 'week': 2, 'qb': 'Meyton Panning', 'rb': 'Adrian Peterson', 'wr': 'Andre Johnson', 'score': 56, 'time': datetime.datetime.utcnow()},
