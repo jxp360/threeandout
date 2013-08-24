@@ -1,0 +1,33 @@
+from django.db import models
+import mongoengine
+import datetime
+
+POSITION = (('QB', 'Quarterback'),
+            ('RB', 'Running Back'),
+            ('WR', 'Wide Receiver'),
+            ('TE', 'Tight End'))
+
+class NFLWeeklyStat(mongoengine.EmbeddedDocument):
+    week =  mongoengine.IntField()
+    score =  mongoengine.FloatField()
+
+class NFLPlayer(mongoengine.Document):
+    name = mongoengine.StringField(max_length=200)
+    team = mongoengine.StringField(max_length=200)
+    position = mongoengine.StringField(max_length=2, choices=POSITION)
+    stats = mongoengine.ListField(mongoengine.EmbeddedDocumentField(NFLWeeklyStat))
+
+class Picks(mongoengine.EmbeddedDocument):
+    week = mongoengine.IntField()
+    qb = mongoengine.ReferenceField(NFLPlayer)
+    rb = mongoengine.ReferenceField(NFLPlayer)
+    te = mongoengine.ReferenceField(NFLPlayer)
+    wr = mongoengine.ReferenceField(NFLPlayer)
+    score = mongoengine.FloatField()
+    mod_time = mongoengine.DateTimeField(datetime.datetime.now)
+
+class ffl_players_test(mongoengine.Document):
+    name = mongoengine.StringField(max_length=200)
+    email = mongoengine.StringField(max_length=100)
+    league = mongoengine.IntField()
+    picks = mongoengine.ListField(mongoengine.EmbeddedDocumentField(Picks))
