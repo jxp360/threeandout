@@ -1,4 +1,3 @@
-import mongoengine
 # Django settings for threeandout project.
 
 DEBUG = True
