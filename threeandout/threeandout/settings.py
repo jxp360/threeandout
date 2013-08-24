@@ -12,26 +12,11 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-mongoengine.connect('threeandout_test')
-MONGODB_DATABASES = { 
-    'default': {'name': 'threeandout_test'}
-}
-DJANGO_MONGOENGINE_OVERRIDE_ADMIN = True
-
-
-'''
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.dummy', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-    }
+    'default': {'ENGINE': 'django.db.backends.sqlite3', 
+                'NAME': '/data/dbs/threeandout.db'}
 }
-'''
+
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -134,35 +119,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    'social_auth',
-    'debug_toolbar',
-    'django_mongoengine.debug_toolbar',
-    'django_mongoengine.auth',
-    'django_mongoengine.admin.sites',
-    'django_mongoengine.admin',
+    #'social_auth',
+    #'debug_toolbar',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'test_stats',
 )
-
-AUTHENTICATION_BACKENDS = (
-    'django_mongoengine.auth.backends.MongoEngineBackend',
-)
-
-
-SESSION_ENGINE = 'django_mongoengine.sessions'
-
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.logger.LoggingPanel',
-    'django_mongoengine.debug_toolbar.panel.MongoDebugPanel',
-)
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False
-}
-
-INTERNAL_IPS = ('127.0.0.1',)
-
 
 
 # A sample logging configuration. The only tangible logging
