@@ -12,11 +12,13 @@ def index(request):
 
 
 def picks(request):
-    return HttpResponse("Let's Make some Picks")
+    weeks = range(1,18)
+    return render(request, 'picks/pick.html', {'weeks':weeks})
+    
 
 def submit(request,week):
     
-    # Need to understand how to use login user information
+    # TODO: Change to grab player from current logged in session
     player = FFLPlayer.objects.get(name="Grant")
     
     #pick = player.picks.get_or_create(week=week) # I don't know why this doesn't work
@@ -39,7 +41,15 @@ def submit(request,week):
     return HttpResponseRedirect(reverse('threeandout:picksummary', args=(week)))
 
 def picksummary(request,week):
-    return HttpResponse("Thanks for making your picks for week %s" % week)
+    # TODO: Change to grab player from current logged in session
+    player = FFLPlayer.objects.get(name="Grant")
+    qb = player.picks.get(week=week).qb.name
+    rb = player.picks.get(week=week).rb.name
+    wr = player.picks.get(week=week).wr.name
+    te = player.picks.get(week=week).te.name
+
+    return render(request, 'picks/picksummary.html', {'week':week,'qb':qb,'rb':rb,'wr':wr,'te':te})
+
 
 def pickweek(request, week):
     
