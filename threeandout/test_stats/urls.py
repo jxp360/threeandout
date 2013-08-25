@@ -8,7 +8,12 @@ urlpatterns = patterns('',
     # ex: /threeandout/picks
     url(r'picks/$', views.picks, name='picks'),
     
-    # ex: /polls/5/
-    #url(r'^(?P<poll_id>\d+)/$', views.detail, name='detail'),
+    # ex: /threeandout/picks/5/
+    url(r'^picks/(?P<week>\d+)/$', views.pickweek, name='pickweek'),
+
+    # ex: /threeandout/picks/5/submit
+    url(r'^picks/(?P<week>\d+)/submit/$', views.submit, name='submit'),    
     
+    # ex: /threeandout/picks/5/picksummary
+    url(r'^picks/(?P<week>\d+)/picksummary/$', views.picksummary, name='picksummary'), 
     )
