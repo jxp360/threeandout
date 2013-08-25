@@ -1,0 +1,47 @@
+<p>Make Your Picks For Week {{week}}</p>
+
+
+<p> 
+<form action= "{% url 'threeandout:submit' week %}" method="post">
+{% csrf_token %}
+Pick a QB: 
+<select name="QB">
+{% for QB in QBs %}
+        
+        <option value="{{ QB.id }}">{{QB.name }}</option>
+{% endfor %}
+</select>
+</p>
+
+<p>
+Pick a RB:
+<select name="RB">
+{% for RB in RBs %}
+        
+        <option value="{{ RB.id }}">{{RB.name }}</option>
+{% endfor %}
+</select>
+</p>
+
+<p>
+Pick a WR:
+<select name="WR">
+{% for WR in WRs %}
+        
+        <option value="{{ WR.id }}">{{WR.name }}</option>
+{% endfor %}
+</select>
+</p>
+
+<p>
+Pick a TE:
+<select name="TE">
+{% for TE in TEs %}
+        
+        <option value="{{ TE.id }}">{{TE.name }}</option>
+{% endfor %}
+</select>
+</p>
+
+<input type="submit" value="submit" />
+</form>
