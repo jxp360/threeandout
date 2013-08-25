@@ -1,0 +1,7 @@
+<h1> Make Your Picks </h1>
+
+{% for week in weeks %}
+    
+    <a href="{% url 'threeandout:pickweek' week %}">Make Picks for {{week}} </a><br>
+
+{% endfor %}
