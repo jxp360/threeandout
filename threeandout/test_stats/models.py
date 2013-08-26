@@ -32,4 +32,13 @@ class FFLPlayer(models.Model):
     email = models.CharField(max_length=100)
     league = models.IntegerField()
     picks = models.ManyToManyField(Picks)
+    
+    def calculateyearlyscore(self):
+        #TODO: Calcuate the total score of all picks up to this point
+        return 0
+    
+    scoretodate = property(calculateyearlyscore)
+    
+    
+    
 
