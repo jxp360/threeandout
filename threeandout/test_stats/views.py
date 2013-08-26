@@ -10,7 +10,6 @@ from test_stats.models import NFLPlayer, Picks,FFLPlayer
 def index(request):
     return render(request, 'picks/index.html', {})
 
-
 def picks(request):
     weeks = range(1,18)
     return render(request, 'picks/pick.html', {'weeks':weeks})

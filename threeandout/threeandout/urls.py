@@ -17,5 +17,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^threeandout/', include('test_stats.urls', namespace="threeandout")),
     url(r'^threeandout/', include('test_stats.urls',namespace="threeandout")),
-    
+    url(r'^threeandout/login/$', 'django.contrib.auth.views.login'),
+
 )
