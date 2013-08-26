@@ -1,5 +1,14 @@
 <p>Make Your Picks For Week {{week}}</p>
 
+{% if currentpicks %}
+	<p> Your current picks for this week:<br>
+	QB: {{qb}} <br>
+	RB: {{rb}} <br>
+	WR: {{wr}} <br>
+	TE: {{te}} <br>
+	</p>
+{%endif %}
+
 
 <p> 
 <form action= "{% url 'threeandout:submit' week %}" method="post">
