@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+
 <h1> Thanks for making Picks for week {{week}} </h1>
 
 <p> Summary of your Picks </p>
@@ -13,3 +16,4 @@ TE: {{te}} <br>
 <p>
 <a href="{% url 'threeandout:picks' %}">Pick Another Week?</a>
 </p>
+{% endblock %}
