@@ -8,7 +8,7 @@ from django.utils import timezone
 from test_stats.models import NFLPlayer, Picks,FFLPlayer
 
 def index(request):
-    return HttpResponse("Welcome to Three and Out Fantasy Football!!!")
+    return render(request, 'picks/index.html', {})
 
 
 def picks(request):
@@ -61,3 +61,13 @@ def pickweek(request, week):
     
     return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs})
     
+def weeklyresultssummary(request):
+    weeks = range(1,18)
+    return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks})
+    
+def weeklyresults(request,week):
+    return render(request, 'picks/weeklyresults.html', {'week':week})
+
+
+def personalresults(request):
+    return render(request, 'picks/personalresults.html', {})
