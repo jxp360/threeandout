@@ -63,7 +63,10 @@ def pickweek(request, week):
         currentpicks = True
     except:
         currentpicks = False
-    
+        qb = None
+        rb = None
+        wr = None
+        te = None    
     
     #week = get_object_or_404(Schedule, pk=week)
     QBs = NFLPlayer.objects.filter(position='QB')
