@@ -107,7 +107,11 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/data/threeandout/threeandout/templates',
 )
+
+LOGIN_URL = 'threeandout/login'
+LOGIN_REDIRECT_URL = 'threeandout/picks'
 
 INSTALLED_APPS = (
     'django.contrib.auth',

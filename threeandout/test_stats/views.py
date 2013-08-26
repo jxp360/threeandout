@@ -10,7 +10,6 @@ from test_stats.models import NFLPlayer, Picks,FFLPlayer
 def index(request):
     return HttpResponse("Welcome to Three and Out Fantasy Football!!!")
 
-
 def picks(request):
     return HttpResponse("Let's Make some Picks")
 

@@ -1,8 +1,9 @@
 from django.conf.urls import patterns, url
-
+from django.contrib.auth import views as authviews
 from test_stats import views
 
 urlpatterns = patterns('',
+
     # ex: /threeandout/
     url(r'^$', views.index, name='index'),
     # ex: /threeandout/picks
@@ -16,4 +17,6 @@ urlpatterns = patterns('',
     
     # ex: /threeandout/picks/5/picksummary
     url(r'^picks/(?P<week>\d+)/picksummary/$', views.picksummary, name='picksummary'), 
-    )
+    #url(r'^login/$', authviews.login, name='login'),
+
+)
