@@ -1,0 +1,15 @@
+<h1> Thanks for making Picks for week {{week}} </h1>
+
+<p> Summary of your Picks </p>
+
+<p> 
+QB: {{qb}} <br>
+RB: {{rb}} <br>
+WR: {{wr}} <br>
+TE: {{te}} <br>
+</p>
+
+<a href="{% url 'threeandout:pickweek' week %}">Change Picks?</a>
+<p>
+<a href="{% url 'threeandout:picks' %}">Pick Another Week?</a>
+</p>
