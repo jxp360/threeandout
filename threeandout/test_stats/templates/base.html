@@ -1,0 +1,13 @@
+<body bgcolor="#8bad53">
+
+<h1><font size="30"> Three and Out Fantasy Football</font size> </h1><br>
+<a href="{% url 'threeandout:picks' %}">Make Picks</a>&nbsp&nbsp
+
+<a href="{% url 'threeandout:weeklyresultssummary' %}">Weekly Results</a>&nbsp&nbsp
+
+<a href="{% url 'threeandout:personalresults' %}">Personal Results</a>
+
+&nbsp&nbsp&nbsp&nbspLogged in as: {{ user.username }}
+<hr>
+{% block content %}{% endblock %}
+</body>

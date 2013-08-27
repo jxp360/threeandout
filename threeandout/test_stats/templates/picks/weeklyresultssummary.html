@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+
 <h1> Weekly Results </h1>
 
 {% for week in weeks %}
@@ -5,3 +8,4 @@
     <a href="{% url 'threeandout:weeklyresults' week %}">See Results for {{week}} </a><br>
 
 {% endfor %}
+{% endblock %}

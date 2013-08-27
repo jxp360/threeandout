@@ -3,6 +3,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.contrib.auth.models import User
 #from django.core.exceptions import DoesNotExist
 
 from test_stats.models import NFLPlayer, Picks,FFLPlayer
@@ -16,9 +17,9 @@ def picks(request):
     
 
 def submit(request,week):
-    
+    dir(User)
     # TODO: Change to grab player from current logged in session
-    player = FFLPlayer.objects.get(name="Grant")
+    player = FFLPlayer.objects.get(name=request.user.get_username())
     
     #pick = player.picks.get_or_create(week=week) # I don't know why this doesn't work
     try:
@@ -41,7 +42,7 @@ def submit(request,week):
 
 def picksummary(request,week):
     # TODO: Change to grab player from current logged in session
-    player = FFLPlayer.objects.get(name="Grant")
+    player = FFLPlayer.objects.get(name=request.user.get_username())
     qb = player.picks.get(week=week).qb.name
     rb = player.picks.get(week=week).rb.name
     wr = player.picks.get(week=week).wr.name
@@ -53,7 +54,7 @@ def picksummary(request,week):
 def pickweek(request, week):
     
     # TODO: Change to grab player from current logged in session
-    player = FFLPlayer.objects.get(name="Grant")
+    player = FFLPlayer.objects.get(name=request.user.get_username())
     try:
         qb = player.picks.get(week=week).qb.name
         rb = player.picks.get(week=week).rb.name
@@ -62,7 +63,10 @@ def pickweek(request, week):
         currentpicks = True
     except:
         currentpicks = False
-    
+        qb = None
+        rb = None
+        wr = None
+        te = None    
     
     #week = get_object_or_404(Schedule, pk=week)
     QBs = NFLPlayer.objects.filter(position='QB')
