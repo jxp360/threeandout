@@ -8,15 +8,24 @@ POSITIONS = (
     ('TE', 'Tight End'),
 )
 
-class NFLWeeklyStat(models.Model):
-    week =  models.IntegerField()
-    score =  models.FloatField()
-
 class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
     team = models.CharField(max_length=200)
     position = models.CharField(max_length=2, choices=POSITIONS)
-    stats = models.ManyToManyField(NFLWeeklyStat)
+
+class NFLWeeklyStat(models.Model):
+    week              = models.IntegerField()
+    score             = models.FloatField()
+    recTd             = models.IntegerField() 
+    fumbles           = models.IntegerField()
+    interceptions     = models.IntegerField() 
+    passTd            = models.IntegerField()
+    passYds           = models.IntegerField()
+    fumbleRecoveryTDs = models.IntegerField()
+    rushYds           = models.IntegerField()
+    recYds            = models.IntegerField()
+    rushTd            = models.IntegerField()
+    player            = models.ForeignKey(NFLPlayer)
 
 class Picks(models.Model):
     week = models.IntegerField()
