@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
 
 POSITIONS = (
     ('QB', 'Quarterback'),
@@ -28,7 +29,8 @@ class Picks(models.Model):
     mod_time = models.DateTimeField(datetime.datetime.now)
 
 class FFLPlayer(models.Model):
-    name = models.CharField(max_length=200)
+    user = models.ForeignKey(User)
+    #name = models.CharField(max_length=200)
     email = models.CharField(max_length=100)
     league = models.IntegerField()
     picks = models.ManyToManyField(Picks)
