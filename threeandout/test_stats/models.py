@@ -42,3 +42,9 @@ class FFLPlayer(models.Model):
     league = models.IntegerField()
     picks = models.ManyToManyField(Picks)
 
+class NFLSchedule(models.Model):
+    home = models.CharField(max_length=200)
+    away = models.CharField(max_length=200)
+    week = models.IntegerField()
+    kickoff = models.DateTimeField(datetime.datetime.now)
+
