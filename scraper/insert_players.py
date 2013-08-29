@@ -16,9 +16,10 @@ stats = s.scrapeWeek(1,2012)
 fields = ('name', 'team', 'position')
 for player in stats:
   args = {}
-  for key in fields:  
-    args[key]=player[key.capitalize()]
+  for scraperKey, modelKey in s.PLAYER_MAP.items():  
+    args[modelKey]=player[scraperKey]
   dbPlayer = test_stats.models.NFLPlayer(**args)
   dbPlayer.save()
+
 
 
