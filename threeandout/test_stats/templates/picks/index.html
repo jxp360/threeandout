@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<p><a href="{% url 'threeandout:picks' %}">Make Picks</a></p>
 
-<p><a href="{% url 'threeandout:weeklyresultssummary' %}">Weekly Results</a></p>
+{% if user.is_authenticated %}
 
-<p><a href="{% url 'threeandout:personalresults' %}">Personal Results</a></p>
+<p> Welcome {{ user.username }}
+
+{% else %}
+
+<a href="{% url 'django.contrib.auth.views.login' %}">Please Login</a><br>
+Not Yet a User? <a href="{% url 'threeandout:registerUser' %}">Register</a>
+
+{% endif %}
+
 {% endblock %}
