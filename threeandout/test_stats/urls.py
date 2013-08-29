@@ -6,6 +6,10 @@ urlpatterns = patterns('',
 
     # ex: /threeandout/
     url(r'^$', views.index, name='index'),
+    
+    # ex: /threeandout/registerUser
+    url(r'registerUser/$', views.registerUser, name='registerUser'),
+    
     # ex: /threeandout/picks
     url(r'picks/$', views.picks, name='picks'),
     
@@ -28,5 +32,7 @@ urlpatterns = patterns('',
     # ex: /threeandout/picks/5/picksummary
     url(r'^picks/(?P<week>\d+)/picksummary/$', views.picksummary, name='picksummary'), 
     #url(r'^login/$', authviews.login, name='login'),
+    
+
 
 )
