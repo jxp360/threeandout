@@ -12,6 +12,21 @@ class NflScraper(object):
 
   URL = 'http://fantasy.nfl.com/research/scoringleaders?offset=%(index)s&position=O&sort=pts&statCategory=stats&statSeason=%(season)s&statType=weekStats&statWeek=%(week)s'
 
+  PLAYER_MAP={'Name':'name',
+              'Team':'team',
+              'Position':'position'}
+
+  STATS_MAP={'Receiving_TD': 'recTd', 
+             'Lost': 'fumbles', 
+             'Int': 'interceptions', 
+             'Passing_TD': 'passTd',
+             'Passing_Yds': 'passYds',
+             'Points': 'score',
+             'FumTD': 'fumbleRecoveryTDs',
+             'Rushing_Yds': 'rushYds', 
+             'Receiving_Yds': 'recYds', 
+             'Rushing_TD': 'rushTd'}
+
   def __init__(self):  
       #MMM...Cookie
       self.cj = mechanize.CookieJar()
