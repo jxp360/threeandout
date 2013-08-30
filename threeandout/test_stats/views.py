@@ -101,7 +101,6 @@ class UserCreateForm(UserCreationForm):
         model = User
         fields = ( "username", "email" )
         
-@login_required
 def registerUser(request):
     if request.method =='POST':
         form = UserCreationForm(request.POST)
