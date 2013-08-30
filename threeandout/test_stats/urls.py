@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     
     # ex: /threeandout/registerUser
-    url(r'registerUser/$', views.registerUser, name='registerUser'),
+    url(r'^registerUser/$', views.registerUser, name='registerUser'),
     
     # ex: /threeandout/picks
     url(r'picks/$', views.picks, name='picks'),
