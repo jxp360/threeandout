@@ -8,8 +8,11 @@ from django.contrib.auth import authenticate,login
 from django.contrib.auth.forms import UserCreationForm,forms
 from django.contrib.auth.decorators import login_required
 #from django.core.exceptions import DoesNotExist
+import datetime
+import pytz
 
-from test_stats.models import NFLPlayer, Picks,FFLPlayer
+
+from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule
 
 def index(request):
     return render(request, 'picks/index.html', {})
@@ -38,9 +41,13 @@ def submit(request,week):
     pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
     pick.score = 0.0
     pick.mod_time=timezone.now()
-    pick.save()
-    player.picks.add(pick)
-    player.save()
+    
+    if validatePick(week,pick):
+        pick.save()
+        player.picks.add(pick)
+        player.save()    
+    else:
+        return HttpResponse("Invalid Pick")
     
     return HttpResponseRedirect(reverse('threeandout:picksummary', args=(week)))
 
@@ -57,8 +64,7 @@ def picksummary(request,week):
 
 @login_required
 def pickweek(request, week):
-    
-    # TODO: Change to grab player from current logged in session
+
     player = FFLPlayer.objects.get(user=request.user)
     try:
         qb = player.picks.get(week=week).qb.name
@@ -73,12 +79,11 @@ def pickweek(request, week):
         wr = None
         te = None    
     
-    #week = get_object_or_404(Schedule, pk=week)
-    QBs = NFLPlayer.objects.filter(position='QB')
-    RBs = NFLPlayer.objects.filter(position='RB')
-    WRs = NFLPlayer.objects.filter(position='WR')
-    TEs = NFLPlayer.objects.filter(position='TE')
-    
+    QBs = ValidPlayers(week,'QB')
+    RBs = ValidPlayers(week,'RB')
+    WRs = ValidPlayers(week,'WR')
+    TEs = ValidPlayers(week,'TE')
+
     return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,'currentpicks':currentpicks})
 @login_required    
@@ -133,5 +138,31 @@ def registerUser(request):
 #                       self.template_name,
 #                       { 'user_form' : user_form })
     
-    
+def validatePlayer(week,player):
+    try:
+        game = NFLSchedule.objects.get(week=week,home=player.team)
+    except:
+        try:
+            game = NFLSchedule.objects.get(week=week,away=player.team)
+        except:
+            return False
+    now = datetime.datetime(datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day, datetime.datetime.now().hour, datetime.datetime.now().minute, tzinfo=pytz.timezone('US/Eastern'))
+    return game.kickoff > now
 
+
+def ValidPlayers(week,position):
+    players= NFLPlayer.objects.filter(position=position)
+    validplayers = []
+    for player in players:
+        if validatePlayer(week,player):
+            validplayers.append(player)
+            
+    return validplayers
+
+def validatePick(week,pick):
+    
+    valid = (validatePlayer(week,pick.qb) and 
+             validatePlayer(week,pick.rb) and 
+             validatePlayer(week,pick.wr) and 
+             validatePlayer(week,pick.te))
+    return valid
