@@ -20,7 +20,7 @@ Pick a QB:
 <select name="QB">
 {% for QB in QBs %}
         
-        <option value="{{ QB.id }}">{{QB.name }}</option>
+        <option value="{{ QB.id }}">{{QB.name }} - {{QB.team}}</option>
 {% endfor %}
 </select>
 </p>
@@ -30,7 +30,7 @@ Pick a RB:
 <select name="RB">
 {% for RB in RBs %}
         
-        <option value="{{ RB.id }}">{{RB.name }}</option>
+        <option value="{{ RB.id }}">{{RB.name }} - {{RB.team}}</option>
 {% endfor %}
 </select>
 </p>
@@ -40,7 +40,7 @@ Pick a WR:
 <select name="WR">
 {% for WR in WRs %}
         
-        <option value="{{ WR.id }}">{{WR.name }}</option>
+        <option value="{{ WR.id }}">{{WR.name }} - {{WR.team}}</option>
 {% endfor %}
 </select>
 </p>
@@ -50,7 +50,7 @@ Pick a TE:
 <select name="TE">
 {% for TE in TEs %}
         
-        <option value="{{ TE.id }}">{{TE.name }}</option>
+        <option value="{{ TE.id }}">{{TE.name }}- {{TE.team}}</option>
 {% endfor %}
 </select>
 </p>
