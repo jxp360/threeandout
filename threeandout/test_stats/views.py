@@ -15,7 +15,7 @@ import pytz
 PICK_LOCKOUT_MINUTES = 10
 
 
-from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule
+from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
 
 def index(request):
     return render(request, 'picks/index.html', {})
@@ -31,7 +31,6 @@ def submit(request,week):
     # TODO: Change to grab player from current logged in session
     player = FFLPlayer.objects.get(user=request.user)
     
-    #pick = player.picks.get_or_create(week=week) # I don't know why this doesn't work
     try:
         pick = Picks.objects.get(week=week, fflPlayer=player)
     except ObjectDoesNotExist:
@@ -69,17 +68,18 @@ def pickweek(request, week):
     player = FFLPlayer.objects.get(user=request.user)
     try:
         pick = Picks.objects.get(week=week, fflPlayer=player)
-        qb = picks.qb.name
-        rb = player.rb.name
-        wr = player.wr.name
-        te = player.te.name
-        currentpicks = True
     except ObjectDoesNotExist:
-        currentpicks = False
         qb = None
         rb = None
         wr = None
         te = None    
+        currentpicks = False
+    else:
+        qb = pick.qb.name
+        rb = pick.rb.name
+        wr = pick.wr.name
+        te = pick.te.name
+        currentpicks = True
     
     QBs = ValidPlayers(week,'QB')
     RBs = ValidPlayers(week,'RB')
@@ -95,11 +95,53 @@ def weeklyresultssummary(request):
 
 @login_required
 def weeklyresults(request,week):
-    return render(request, 'picks/weeklyresults.html', {'week':week})
+    player = FFLPlayer.objects.get(user=request.user)
+    try:
+        picks = Picks.objects.get(week=week, fflPlayer=player)
+    except ObjectDoesNotExist:
+        currentpicks = False
+        picks=None
+    else:
+        currentpicks = True
+ 
+    return render(request, 'picks/weeklyresults.html', {'week':week, 'currentpicks':currentpicks,picks:picks})
 
 @login_required
 def personalresults(request):
-    return render(request, 'picks/personalresults.html', {})
+    player = FFLPlayer.objects.get(user=request.user)
+    picks = Picks.objects.filter(fflPlayer=player)
+    print "picks", picks
+    pickData= []
+    for pick in picks:
+      try:
+        qbScore = NFLWeeklyStat.objects.get(player=pick.qb, week=pick.week).score
+      except ObjectDoesNotExist:
+        qbScore = '-'
+      try:
+        rbScore = NFLWeeklyStat.objects.get(player=pick.rb, week=pick.week).score
+      except ObjectDoesNotExist:
+        rbScore = '-'
+      try:
+        wrScore = NFLWeeklyStat.objects.get(player=pick.wr, week=pick.week).score
+      except ObjectDoesNotExist:
+        wrScore = '-'
+      try:
+        teScore = NFLWeeklyStat.objects.get(player=pick.te, week=pick.week).score
+      except ObjectDoesNotExist:
+        teScore = '-'
+
+      d={'week':pick.week, 
+         'score':pick.score, 
+         'qbName':pick.qb.name,
+         'qbScore':qbScore, 
+         'rbName':pick.rb.name, 
+         'rbScore':rbScore, 
+         'teName':pick.te.name, 
+         'teScore':teScore,
+         'wrName':pick.wr.name, 
+         'wrScore':wrScore}
+      pickData.append(d)  
+    return render(request, 'picks/personalresults.html', {'picks':pickData})
 
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)

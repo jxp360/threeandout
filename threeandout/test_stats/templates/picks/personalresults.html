@@ -1,8 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1> Personal Results</h1>
+<h1> Personal Results </h1>
+<table border>
+    <tr>
+    <td>week</td>
+    <td>score</td>
+    <td>qb</td>
+    <td>qb score</td>
+    
+    <td>rb</td>
+    <td> rb score</td>
+    <td>te</td>
+    <td>te score</td>
+    <td>wr</td>
+    <td>wr score</td>
+    </tr>
+    {% for pick in picks %}
+    <tr>
+    <td>{{pick.week}}</td>
+    <td>{{pick.score}}</td>
+    <td>{{pick.qbName}}</td>
+    <td>{{pick.qbScore}}</td>
+    <td>{{pick.rbName}}</td>
+    <td>{{pick.rbScore}}</td>
+    <td>{{pick.teName}}</td>
+    <td>{{pick.teScore}}</td>
+    <td>{{pick.wrName}}</td>
+    <td>{{pick.wrScore}}</td>
+    </tr>
+    {% endfor %}
+</table>
 
-<p> Coming Soon </p>
+<p> Is that really the best you could do?  Seriously? </p>
 
 {% endblock %}
