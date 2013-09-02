@@ -21,6 +21,10 @@ def index(request):
     return render(request, 'picks/index.html', {})
 
 @login_required
+def rules(request):
+    return render(request, 'picks/rules.html', {})
+
+@login_required
 def picks(request):
     weeks = range(1,18)
     return render(request, 'picks/pick.html', {'weeks':weeks})
