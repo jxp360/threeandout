@@ -103,23 +103,31 @@ def personalresults(request):
 
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    teamname = forms.CharField(required=True)
 
     class Meta:
         model = User
-        fields = ( "username", "email" )
-        
+        fields = ( "username", "email", "teamname" )
+    
+    def save(self, commit=True):
+        if not commit:
+            raise NotImplementedError("Can't create User and FFLPlayer without database save")
+        user = super(UserCreateForm, self).save(commit=True)
+        newplayer = FFLPlayer(user=user,league=0, email=self.cleaned_data['email'], teamname=self.cleaned_data['teamname'])
+        newplayer.save()
+        return user, newplayer
+    
 def registerUser(request):
     if request.method =='POST':
-        form = UserCreationForm(request.POST)
+        form = UserCreateForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            newplayer = FFLPlayer(user=user,league=0)
-            newplayer.save()
+            user, newplayer = form.save()
+            #newplayer.save()
             #user = User.objects.create_user(form.cleaned_data['username'], None, form.cleaned_data['password1'])
             #user.save()
             return HttpResponseRedirect('/threeandout/login/') # Redirect after POST
     else:
-        form = UserCreationForm() # An unbound form
+        form = UserCreateForm() # An unbound form
     
     return render_to_response('picks/register.html', {
         'form': form,

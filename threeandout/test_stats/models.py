@@ -32,8 +32,9 @@ class NFLWeeklyStat(models.Model):
 class FFLPlayer(models.Model):
     user = models.ForeignKey(User)
     #name = models.CharField(max_length=200)
+    teamname = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
-    league = models.IntegerField()
+    league = models.IntegerField(default=0)
     
     def calculateyearlyscore(self):
         #TODO: Calcuate the total score of all picks up to this point
