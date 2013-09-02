@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.forms import UserCreationForm,forms
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 #from django.core.exceptions import DoesNotExist
 from datetime import datetime, timedelta
 import pytz
@@ -32,22 +33,19 @@ def submit(request,week):
     
     #pick = player.picks.get_or_create(week=week) # I don't know why this doesn't work
     try:
-        pick = player.picks.get(week=week)
-    #except FFLPlayer.DoesNotExist:  # I don't know why this doesn't work
-    except:
-        pick = Picks(week=week)
+        pick = Picks.objects.get(week=week, fflPlayer=player)
+    except ObjectDoesNotExist:
+        pick = Picks(week=week, fflPlayer=player)
     
     pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
     pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
     pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
     pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-    pick.score = 0.0
+    #pick.score = 0.0
     pick.mod_time=timezone.now()
     
     if validatePick(week,pick):
-        pick.save()
-        player.picks.add(pick)
-        player.save()    
+        pick.save()    
     else:
         return HttpResponse("Invalid Pick")
     
@@ -57,10 +55,11 @@ def submit(request,week):
 def picksummary(request,week):
     # TODO: Change to grab player from current logged in session
     player = FFLPlayer.objects.get(user=request.user)
-    qb = player.picks.get(week=week).qb.name
-    rb = player.picks.get(week=week).rb.name
-    wr = player.picks.get(week=week).wr.name
-    te = player.picks.get(week=week).te.name
+    pick =  Picks.objects.get(week=week, fflPlayer=player)
+    qb = pick.qb.name
+    rb = pick.rb.name
+    wr = pick.wr.name
+    te = pick.te.name
 
     return render(request, 'picks/picksummary.html', {'week':week,'qb':qb,'rb':rb,'wr':wr,'te':te})
 
@@ -69,12 +68,13 @@ def pickweek(request, week):
 
     player = FFLPlayer.objects.get(user=request.user)
     try:
-        qb = player.picks.get(week=week).qb.name
-        rb = player.picks.get(week=week).rb.name
-        wr = player.picks.get(week=week).wr.name
-        te = player.picks.get(week=week).te.name
+        pick = Picks.objects.get(week=week, fflPlayer=player)
+        qb = picks.qb.name
+        rb = player.rb.name
+        wr = player.wr.name
+        te = player.te.name
         currentpicks = True
-    except:
+    except ObjectDoesNotExist:
         currentpicks = False
         qb = None
         rb = None
