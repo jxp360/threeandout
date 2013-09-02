@@ -8,8 +8,10 @@ from django.contrib.auth import authenticate,login
 from django.contrib.auth.forms import UserCreationForm,forms
 from django.contrib.auth.decorators import login_required
 #from django.core.exceptions import DoesNotExist
-import datetime
+from datetime import datetime, timedelta
 import pytz
+
+PICK_LOCKOUT_MINUTES = 10
 
 
 from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule
@@ -123,20 +125,6 @@ def registerUser(request):
         'form': form,
     },context_instance=RequestContext(request))
 
-
-# def registerUser(self, request, *args, **kwargs):
-#         user_form = UserCreateForm(request.POST)
-#         if user_form.is_valid():
-#             username = user_form.clean_username()
-#             password = user_form.clean_password2()
-#             user_form.save()
-#             user = authenticate(username=username,
-#                                 password=password)
-#             login(request, user)
-#             return HttpResponseRedirect("threeandout")
-#         return render(request,
-#                       self.template_name,
-#                       { 'user_form' : user_form })
     
 def validatePlayer(week,player):
     try:
@@ -146,10 +134,9 @@ def validatePlayer(week,player):
             game = NFLSchedule.objects.get(week=week,away=player.team)
         except:
             return False
-    now = datetime.datetime(datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day, datetime.datetime.now().hour, datetime.datetime.now().minute, tzinfo=pytz.timezone('US/Eastern'))
-    return game.kickoff > now
-
-
+    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
+    return (game.kickoff.astimezone(pytz.timezone('US/Eastern')) > (now +timedelta(minutes=PICK_LOCKOUT_MINUTES)))
+                           
 def ValidPlayers(week,position):
     players= NFLPlayer.objects.filter(position=position)
     validplayers = []
