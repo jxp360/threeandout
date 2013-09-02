@@ -95,24 +95,29 @@ def weeklyresultssummary(request):
 
 @login_required
 def weeklyresults(request,week):
-    player = FFLPlayer.objects.get(user=request.user)
-    try:
-        picks = Picks.objects.get(week=week, fflPlayer=player)
-    except ObjectDoesNotExist:
-        currentpicks = False
-        picks=None
+    lastGame = getLastGame(week) 
+    #you've got to love the double negative here -- its like coding with a 6 year old!
+    okToDisplay = not hasNotStarted(lastGame)
+    #for debugging --
+    if okToDisplay:
+        picks = Picks.objects.filter(week=week)
+        tmpList = [(x.score,x) for x in picks]
+        tmpList.sort(reverse=True)
+        sortedPicks = [x[1] for x in tmpList]
+        pickData = [getPickData(x) for x in picks]
     else:
-        currentpicks = True
- 
-    return render(request, 'picks/weeklyresults.html', {'week':week, 'currentpicks':currentpicks,picks:picks})
+        pickData = []
+    
+    return render(request, 'picks/weeklyresults.html', {'week':week, 'picks':pickData, 'ok':okToDisplay})
 
 @login_required
 def personalresults(request):
     player = FFLPlayer.objects.get(user=request.user)
-    picks = Picks.objects.filter(fflPlayer=player)
-    print "picks", picks
-    pickData= []
-    for pick in picks:
+    picks = Picks.objects.filter(fflPlayer=player).order_by('week')
+    pickData= [getPickData(pick) for pick in picks]
+    return render(request, 'picks/personalresults.html', {'picks':pickData})
+
+def getPickData(pick):
       try:
         qbScore = NFLWeeklyStat.objects.get(player=pick.qb, week=pick.week).score
       except ObjectDoesNotExist:
@@ -130,18 +135,25 @@ def personalresults(request):
       except ObjectDoesNotExist:
         teScore = '-'
 
-      d={'week':pick.week, 
-         'score':pick.score, 
+      d={'user':pick.fflPlayer.user, #to do - replace this with team name if it exists
+         'week':pick.week,
+         'score':pick.score,
          'qbName':pick.qb.name,
-         'qbScore':qbScore, 
-         'rbName':pick.rb.name, 
-         'rbScore':rbScore, 
-         'teName':pick.te.name, 
+         'qbScore':qbScore,
+         'rbName':pick.rb.name,
+         'rbScore':rbScore,
+         'teName':pick.te.name,
          'teScore':teScore,
-         'wrName':pick.wr.name, 
+         'wrName':pick.wr.name,
          'wrScore':wrScore}
-      pickData.append(d)  
-    return render(request, 'picks/personalresults.html', {'picks':pickData})
+      return d
+
+def hasNotStarted(game, buffer=timedelta(0)):
+    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
+    return game.kickoff.astimezone(pytz.timezone('US/Eastern')) > (now +buffer)
+
+def getLastGame(week):
+    return NFLSchedule.objects.filter(week=week).order_by('-kickoff')[0]
 
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -176,8 +188,9 @@ def validatePlayer(week,player):
             game = NFLSchedule.objects.get(week=week,away=player.team)
         except:
             return False
-    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
-    return (game.kickoff.astimezone(pytz.timezone('US/Eastern')) > (now +timedelta(minutes=PICK_LOCKOUT_MINUTES)))
+    return hasNotStarted(game, timedelta(minutes=PICK_LOCKOUT_MINUTES))
+#    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
+#    return (game.kickoff.astimezone(pytz.timezone('US/Eastern')) > (now +timedelta(minutes=PICK_LOCKOUT_MINUTES)))
                            
 def ValidPlayers(week,position):
     players= NFLPlayer.objects.filter(position=position)
