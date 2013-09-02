@@ -91,7 +91,12 @@ def pickweek(request, week):
 @login_required    
 def weeklyresultssummary(request):
     weeks = range(1,18)
-    return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks})
+    players = FFLPlayer.objects.all()
+    #to do - replace with team name
+    tmp = [(x.scoretodate, x.user) for x in players]
+    tmp.sort(reverse=True)
+    leaders = [{'user':x[1],'score':x[0]} for x in tmp]
+    return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
 
 @login_required
 def weeklyresults(request,week):
