@@ -10,10 +10,14 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+dburl = '/data/test/dbs/threeandout.db'
+import os
+if os.environ.has_key('THREEANDOUT_DB'):
+    dburl = 'THREEANDOUT_DB'
 
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.sqlite3', 
-                'NAME': '/data/dbs/threeandout.db'}
+                'NAME': dburl}
 }
 
 
