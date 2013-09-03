@@ -10,6 +10,9 @@ urlpatterns = patterns('',
     # ex: /threeandout/registerUser
     url(r'^registerUser/$', views.registerUser, name='registerUser'),
     
+    # ex: /threeandout/editPreferences
+    url(r'^editPreferences/$', views.editPreferences, name='editPreferences'),
+    
     # ex: /threeandout/picks
     url(r'picks/$', views.picks, name='picks'),
 

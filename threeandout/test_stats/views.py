@@ -1,6 +1,7 @@
 # Create your views here.
 from django.http import HttpResponse,HttpResponseRedirect
-from django.shortcuts import render,render_to_response,RequestContext
+from django.template import Context
+from django.shortcuts import render,render_to_response,RequestContext, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -14,8 +15,8 @@ import pytz
 
 PICK_LOCKOUT_MINUTES = 10
 
-
 from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
+from test_stats.forms import FFLPlayerForm
 
 def index(request):
     return render(request, 'picks/index.html', {})
@@ -162,6 +163,21 @@ def hasNotStarted(game, buffer=timedelta(0)):
 def getLastGame(week):
     return NFLSchedule.objects.filter(week=week).order_by('-kickoff')[0]
 
+@login_required
+def editPreferences(request):
+    ffl = get_object_or_404(FFLPlayer, user=request.user)
+    if request.method == "POST":
+        form = FFLPlayerForm(request.POST, instance=ffl)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/threeandout/picks/')
+    else:
+        form = FFLPlayerForm(instance=ffl)
+    return render_to_response('picks/preferences.html', {
+                                  'form': form,
+                                  'title': 'Edit Preferences' },
+                                  context_instance=RequestContext(request))
+
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
     teamname = forms.CharField(required=True)
@@ -177,7 +193,7 @@ class UserCreateForm(UserCreationForm):
         newplayer = FFLPlayer(user=user,league=0, email=self.cleaned_data['email'], teamname=self.cleaned_data['teamname'])
         newplayer.save()
         return user, newplayer
-    
+   
 def registerUser(request):
     if request.method =='POST':
         form = UserCreateForm(request.POST)
