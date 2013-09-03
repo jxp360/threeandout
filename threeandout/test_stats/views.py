@@ -32,8 +32,6 @@ def picks(request):
     
 @login_required
 def submit(request,week):
-    dir(User)
-    # TODO: Change to grab player from current logged in session
     player = FFLPlayer.objects.get(user=request.user)
     
     try:
