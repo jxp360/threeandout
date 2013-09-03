@@ -56,7 +56,6 @@ def submit(request,week):
 
 @login_required
 def picksummary(request,week):
-    # TODO: Change to grab player from current logged in session
     player = FFLPlayer.objects.get(user=request.user)
     pick =  Picks.objects.get(week=week, fflPlayer=player)
     qb = pick.qb.name
@@ -96,8 +95,7 @@ def pickweek(request, week):
 def weeklyresultssummary(request):
     weeks = range(1,18)
     players = FFLPlayer.objects.all()
-    #to do - replace with team name
-    tmp = [(x.scoretodate, x.user) for x in players]
+    tmp = [(x.scoretodate, x.teamname) for x in players]
     tmp.sort(reverse=True)
     leaders = [{'user':x[1],'score':x[0]} for x in tmp]
     return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
@@ -144,7 +142,7 @@ def getPickData(pick):
       except ObjectDoesNotExist:
         teScore = '-'
 
-      d={'user':pick.fflPlayer.user, #to do - replace this with team name if it exists
+      d={'user':pick.fflPlayer.teamname,
          'week':pick.week,
          'score':pick.score,
          'qbName':pick.qb.name,
