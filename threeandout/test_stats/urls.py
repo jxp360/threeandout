@@ -12,6 +12,9 @@ urlpatterns = patterns('',
     
     # ex: /threeandout/picks
     url(r'picks/$', views.picks, name='picks'),
+
+    # ex: /threeandout/rules
+    url(r'rules/$', views.rules, name='rules'),
     
     # ex: /threeandout/weeklyresultssummary
     url(r'weeklyresultssummary/$', views.weeklyresultssummary, name='weeklyresultssummary'),
