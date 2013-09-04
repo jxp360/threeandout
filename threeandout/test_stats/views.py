@@ -108,11 +108,22 @@ def pickweek(request, week):
         wr = pick.wr.name
         te = pick.te.name
         currentpicks = True
-    
+
     QBs = ValidPlayers(week,'QB')
     RBs = ValidPlayers(week,'RB')
     WRs = ValidPlayers(week,'WR')
-    TEs = ValidPlayers(week,'TE')
+    TEs = ValidPlayers(week,'TE') 
+    
+    # If they already have picks and that pick is not valid then it cannot be changed
+    if qb !=None:
+        if not (validatePlayer(week,pick.qb)): QBs = []
+    if rb !=None:
+        if not (validatePlayer(week,pick.rb)): RBs = []
+    if wr !=None:
+        if not (validatePlayer(week,pick.wr)): WRs = []
+    if te !=None:
+        if not (validatePlayer(week,pick.te)): TEs = []            
+
 
     return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,'currentpicks':currentpicks})
