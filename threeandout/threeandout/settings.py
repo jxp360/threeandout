@@ -13,8 +13,8 @@ MANAGERS = ADMINS
 dburl = '/data/test/dbs/threeandout.db'
 import os
 if os.environ.has_key('THREEANDOUT_DB'):
-    dburl = 'THREEANDOUT_DB'
-
+    dburl = os.environ['THREEANDOUT_DB']
+print 'DBURL = %s' % dburl
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.sqlite3', 
                 'NAME': dburl}
