@@ -34,22 +34,48 @@ def picks(request):
 def submit(request,week):
     player = FFLPlayer.objects.get(user=request.user)
     
+    pickexists = False
     try:
+        # A Pick that that user and week already exists
         pick = Picks.objects.get(week=week, fflPlayer=player)
+        pickexists = True
     except ObjectDoesNotExist:
-        pick = Picks(week=week, fflPlayer=player)
+        pickexists = False
+        
     
-    pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
-    pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
-    pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
-    pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-    #pick.score = 0.0
-    pick.mod_time=timezone.now()
-    
-    if validatePick(week,pick):
-        pick.save()    
+    if pickexists: 
+        # If the  current pick.player is valid then ok to change it
+        if validatePlayer(week,pick.qb):
+            pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
+            if not(validatePlayer(week,pick.qb)):
+                return HttpResponse("Invalid Pick")
+        if validatePlayer(week,pick.rb):
+            pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
+            if not(validatePlayer(week,pick.rb)):
+                return HttpResponse("Invalid Pick")
+        if validatePlayer(week,pick.wr):
+            pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
+            if not(validatePlayer(week,pick.wr)):
+                return HttpResponse("Invalid Pick")
+        if validatePlayer(week,pick.te):
+            pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
+            if not(validatePlayer(week,pick.te)):
+                return HttpResponse("Invalid Pick")
+        pick.mod_time=timezone.now()
+        pick.save()      
+           
     else:
-        return HttpResponse("Invalid Pick")
+        #Make Totally New Pick
+        pick = Picks(week=week, fflPlayer=player)
+        pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
+        pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
+        pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
+        pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
+        if validatePick(week,pick):
+            pick.mod_time=timezone.now()
+            pick.save()    
+        else:
+            return HttpResponse("Invalid Pick")
     
     return HttpResponseRedirect(reverse('threeandout:picksummary', args=(week)))
 
