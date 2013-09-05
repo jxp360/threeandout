@@ -21,7 +21,6 @@ from test_stats.forms import FFLPlayerForm
 def index(request):
     return render(request, 'picks/index.html', {})
 
-@login_required
 def rules(request):
     return render(request, 'picks/rules.html', {})
 
