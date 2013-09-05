@@ -47,19 +47,19 @@ def submit(request,week):
         # If the  current pick.player is valid then ok to change it
         if validatePlayer(week,pick.qb):
             pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
-            if not(validatePlayer(week,pick.qb)):
+            if not(validatePlayer(week,pick.qb)) or validateTwoOrLessPicks(request.user,pick.qb):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.rb):
             pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
-            if not(validatePlayer(week,pick.rb)):
+            if not(validatePlayer(week,pick.rb))  or validateTwoOrLessPicks(request.user,pick.rb):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.wr):
             pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
-            if not(validatePlayer(week,pick.wr)):
+            if not(validatePlayer(week,pick.wr)) or validateTwoOrLessPicks(request.user,pick.wr):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.te):
             pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-            if not(validatePlayer(week,pick.te)):
+            if not(validatePlayer(week,pick.te)) or validateTwoOrLessPicks(request.user,pick.te):
                 return HttpResponse("Invalid Pick")
         pick.mod_time=timezone.now()
         pick.save()      
@@ -71,7 +71,7 @@ def submit(request,week):
         pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
         pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
         pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-        if validatePick(week,pick):
+        if validatePick(week,pick) and validateTwoOrLessPicksAll(request.user,pick):
             pick.mod_time=timezone.now()
             pick.save()    
         else:
@@ -244,6 +244,24 @@ def registerUser(request):
     return render_to_response('picks/register.html', {
         'form': form,
     },context_instance=RequestContext(request))
+
+
+def validateTwoOrLessPicks(user, player):
+    
+    allUserPicks = Picks.objects.get(fflPlayer=user)
+    count = 0
+    for pick in allUserPicks:
+        if pick.qb==player or pick.rb==player or pick.wr==player or pick.te==player:
+            count+=1
+    
+    return (count<=2)
+
+def validateTwoOrLessPicksAll(user,pick):
+    valid = (validateTwoOrLessPicks(user,pick.qb) and 
+             validateTwoOrLessPicks(user,pick.rb) and 
+             validateTwoOrLessPicks(user,pick.wr) and 
+             validateTwoOrLessPicks(user,pick.te))
+    return valid
 
     
 def validatePlayer(week,player):
