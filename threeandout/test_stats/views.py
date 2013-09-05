@@ -303,12 +303,9 @@ def validateTwoOrLessPicks(user, player):
     fflplayer = FFLPlayer.objects.get(user=user)
     allUserPicks = Picks.objects.filter(fflPlayer=fflplayer)
     count = 0
-    print "len" , len(allUserPicks)
     for pick in allUserPicks:
-        print pick.wr.name
         if pick.qb==player or pick.rb==player or pick.wr==player or pick.te==player:
             count+=1
-    print count
     return (count<=2)
 
 def validateTwoOrLessPicksAll(user,pick):
@@ -316,7 +313,6 @@ def validateTwoOrLessPicksAll(user,pick):
              validateTwoOrLessPicks(user,pick.rb) and 
              validateTwoOrLessPicks(user,pick.wr) and 
              validateTwoOrLessPicks(user,pick.te))
-    print  pick.wr.name, valid
     return valid
 
     
