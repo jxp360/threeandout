@@ -46,19 +46,19 @@ def submit(request,week):
         # If the  current pick.player is valid then ok to change it
         if validatePlayer(week,pick.qb):
             pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
-            if not(validatePlayer(week,pick.qb)) or validateTwoOrLessPicks(request.user,pick.qb):
+            if not(validatePlayer(week,pick.qb)) or not(validateTwoOrLessPicks(request.user,pick.qb)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.rb):
             pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
-            if not(validatePlayer(week,pick.rb))  or validateTwoOrLessPicks(request.user,pick.rb):
+            if not(validatePlayer(week,pick.rb))  or not(validateTwoOrLessPicks(request.user,pick.rb)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.wr):
             pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
-            if not(validatePlayer(week,pick.wr)) or validateTwoOrLessPicks(request.user,pick.wr):
+            if not(validatePlayer(week,pick.wr)) or not(validateTwoOrLessPicks(request.user,pick.wr)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.te):
             pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-            if not(validatePlayer(week,pick.te)) or validateTwoOrLessPicks(request.user,pick.te):
+            if not(validatePlayer(week,pick.te)) or not(validateTwoOrLessPicks(request.user,pick.te)):
                 return HttpResponse("Invalid Pick")
         pick.mod_time=timezone.now()
         pick.save()      
@@ -247,12 +247,15 @@ def registerUser(request):
 
 def validateTwoOrLessPicks(user, player):
     
-    allUserPicks = Picks.objects.get(fflPlayer=user)
+    fflplayer = FFLPlayer.objects.get(user=user)
+    allUserPicks = Picks.objects.filter(fflPlayer=fflplayer)
     count = 0
+    print "len" , len(allUserPicks)
     for pick in allUserPicks:
+        print pick.wr.name
         if pick.qb==player or pick.rb==player or pick.wr==player or pick.te==player:
             count+=1
-    
+    print count
     return (count<=2)
 
 def validateTwoOrLessPicksAll(user,pick):
@@ -260,6 +263,7 @@ def validateTwoOrLessPicksAll(user,pick):
              validateTwoOrLessPicks(user,pick.rb) and 
              validateTwoOrLessPicks(user,pick.wr) and 
              validateTwoOrLessPicks(user,pick.te))
+    print  pick.wr.name, valid
     return valid
 
     
