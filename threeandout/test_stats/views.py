@@ -130,9 +130,9 @@ def pickweek(request, week):
 def weeklyresultssummary(request):
     weeks = range(1,18)
     players = FFLPlayer.objects.all()
-    tmp = [(x.scoretodate, x.teamname) for x in players]
+    tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
     tmp.sort(reverse=True)
-    leaders = [{'user':x[1],'score':x[0]} for x in tmp]
+    leaders = [{'user':x[1],'score':x[0], 'id':x[2] } for x in tmp]
     return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
 
 @login_required
@@ -159,6 +159,59 @@ def personalresults(request):
     pickData= [getPickData(pick) for pick in picks]
     return render(request, 'picks/personalresults.html', {'picks':pickData})
 
+@login_required
+def selected(request, user):
+    try:
+        userObj = User.objects.get(id=user)
+    except ObjectDoesNotExist:
+        return HttpResponse('Invalid User "%s"' %user)
+    #try:
+    #    player = FFLPlayer.objects.get(teamname=user)
+    #except ObjectDoesNotExist:
+    #    return HttpResponse('Invalid User "%s"' %user)
+    player = FFLPlayer.objects.get(user=userObj)
+    picks = Picks.objects.filter(fflPlayer=player)
+    qbs={}
+    rbs={}
+    wrs={}
+    tes={}
+    #only if the user requested his own data will we show them the pending stuff
+    showPending = request.user == player.user
+
+    for pick in picks:
+        week = pick.week
+        updateDict(qbs,pick.qb, week, showPending)
+        updateDict(rbs,pick.rb, week, showPending)
+        updateDict(wrs,pick.wr, week, showPending)
+        updateDict(tes,pick.te, week, showPending)
+    qbTmp = [x for x in qbs.items()]
+    wrTmp = [x for x in wrs.items()]
+    teTmp = [x for x in tes.items()]
+    rbTmp = [x for x in rbs.items()]
+    qbTmp.sort()
+    wrTmp.sort()
+    teTmp.sort()
+    rbTmp.sort()
+    qbList = [x[1] for x in qbTmp]
+    wrList = [x[1] for x in wrTmp]
+    teList = [x[1] for x in teTmp]
+    rbList = [x[1] for x in rbTmp]
+    return render(request, 'picks/selected.html', {'qb':qbList,'wr':wrList,'te':teList,'rb':rbList, user:user})
+
+def updateDict(positionDict, player, week, showPending):
+    playerPending = validatePlayer(week, player)
+    if showPending or not playerPending:
+      name = player.name
+      try:
+          d=positionDict[name]
+      except KeyError:
+          d ={'name':name, 'pending':0, 'locked':0}
+          positionDict[name]=d
+      if showPending:
+          d['pending']+=1
+      else:
+          d['locked']+=1
+      
 def getPickData(pick):
       try:
         qbScore = NFLWeeklyStat.objects.get(player=pick.qb, week=pick.week).score
