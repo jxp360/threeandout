@@ -181,11 +181,20 @@ a:hover {
 	border: none;
 }
 
-#menu a:hover, #menu .current_page_item a {
+/*
+#menu li.current_page_item a {
 	text-decoration: none;
+        color:white;
+        background: #05457D;
+}
+*/
+#menu a:hover {
+	text-decoration: none;
+        color:white;
+        background: #05457D;
 }
 
-#menu .current_page_item a {
+#menu li.active a {
 	background: #05457D;
 	color: #FFFFFF;
 }

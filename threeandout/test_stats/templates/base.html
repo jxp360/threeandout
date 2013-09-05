@@ -24,11 +24,11 @@
 <div id="wrapper">
         <div id="menu">
                 <ul>
-                        <li class="current_page_item"><a href="{% url 'threeandout:picks' %}" title="">Make Picks</a></li>
-                        <li><a href="{% url 'threeandout:weeklyresultssummary' %}" title="">Weekly Results</a></li>
-                        <li><a href="{% url 'threeandout:personalresults' %}" title="">Personal Results</a></li>
-                        <li><a href="{% url 'threeandout:editPreferences' %}" title="">Preferences</a></li>
-                        <li><a href="{% url 'threeandout:rules' %}" title="">Rules</a></li>
+                        <li class="{% block link_makepicks_class %}{% endblock %}"><a href="{% url 'threeandout:picks' %}" title="">Make Picks</a></li>
+                        <li class="{% block link_weeklyresults_class %}{% endblock %}"><a href="{% url 'threeandout:weeklyresultssummary' %}" title="">Weekly Results</a></li>
+                        <li class="{% block link_personalresults_class %}{% endblock %}"><a href="{% url 'threeandout:personalresults' %}" title="">Personal Results</a></li>
+                        <li class="{% block link_preferences_class %}{% endblock %}"><a href="{% url 'threeandout:editPreferences' %}" title="">Preferences</a></li>
+                        <li class="{% block link_rules_class %}{% endblock %}"><a href="{% url 'threeandout:rules' %}" title="">Rules</a></li>
                         <li class="last"><a href="{% url "django.contrib.auth.views.logout" %}" title="">Logout</a></li>
                 </ul>
         </div>
