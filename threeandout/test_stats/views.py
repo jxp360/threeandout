@@ -46,19 +46,19 @@ def submit(request,week):
         # If the  current pick.player is valid then ok to change it
         if validatePlayer(week,pick.qb):
             pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
-            if not(validatePlayer(week,pick.qb)):
+            if not(validatePlayer(week,pick.qb)) or not(validateTwoOrLessPicks(request.user,pick.qb)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.rb):
             pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
-            if not(validatePlayer(week,pick.rb)):
+            if not(validatePlayer(week,pick.rb))  or not(validateTwoOrLessPicks(request.user,pick.rb)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.wr):
             pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
-            if not(validatePlayer(week,pick.wr)):
+            if not(validatePlayer(week,pick.wr)) or not(validateTwoOrLessPicks(request.user,pick.wr)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.te):
             pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-            if not(validatePlayer(week,pick.te)):
+            if not(validatePlayer(week,pick.te)) or not(validateTwoOrLessPicks(request.user,pick.te)):
                 return HttpResponse("Invalid Pick")
         pick.mod_time=timezone.now()
         pick.save()      
@@ -70,7 +70,7 @@ def submit(request,week):
         pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
         pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
         pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-        if validatePick(week,pick):
+        if validatePick(week,pick) and validateTwoOrLessPicksAll(request.user,pick):
             pick.mod_time=timezone.now()
             pick.save()    
         else:
@@ -130,9 +130,9 @@ def pickweek(request, week):
 def weeklyresultssummary(request):
     weeks = range(1,18)
     players = FFLPlayer.objects.all()
-    tmp = [(x.scoretodate, x.teamname) for x in players]
+    tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
     tmp.sort(reverse=True)
-    leaders = [{'user':x[1],'score':x[0]} for x in tmp]
+    leaders = [{'user':x[1],'score':x[0], 'id':x[2] } for x in tmp]
     return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
 
 @login_required
@@ -159,6 +159,59 @@ def personalresults(request):
     pickData= [getPickData(pick) for pick in picks]
     return render(request, 'picks/personalresults.html', {'picks':pickData})
 
+@login_required
+def selected(request, user):
+    try:
+        userObj = User.objects.get(id=user)
+    except ObjectDoesNotExist:
+        return HttpResponse('Invalid User "%s"' %user)
+    #try:
+    #    player = FFLPlayer.objects.get(teamname=user)
+    #except ObjectDoesNotExist:
+    #    return HttpResponse('Invalid User "%s"' %user)
+    player = FFLPlayer.objects.get(user=userObj)
+    picks = Picks.objects.filter(fflPlayer=player)
+    qbs={}
+    rbs={}
+    wrs={}
+    tes={}
+    #only if the user requested his own data will we show them the pending stuff
+    showPending = request.user == player.user
+
+    for pick in picks:
+        week = pick.week
+        updateDict(qbs,pick.qb, week, showPending)
+        updateDict(rbs,pick.rb, week, showPending)
+        updateDict(wrs,pick.wr, week, showPending)
+        updateDict(tes,pick.te, week, showPending)
+    qbTmp = [x for x in qbs.items()]
+    wrTmp = [x for x in wrs.items()]
+    teTmp = [x for x in tes.items()]
+    rbTmp = [x for x in rbs.items()]
+    qbTmp.sort()
+    wrTmp.sort()
+    teTmp.sort()
+    rbTmp.sort()
+    qbList = [x[1] for x in qbTmp]
+    wrList = [x[1] for x in wrTmp]
+    teList = [x[1] for x in teTmp]
+    rbList = [x[1] for x in rbTmp]
+    return render(request, 'picks/selected.html', {'qb':qbList,'wr':wrList,'te':teList,'rb':rbList, user:user})
+
+def updateDict(positionDict, player, week, showPending):
+    playerPending = validatePlayer(week, player)
+    if showPending or not playerPending:
+      name = player.name
+      try:
+          d=positionDict[name]
+      except KeyError:
+          d ={'name':name, 'pending':0, 'locked':0}
+          positionDict[name]=d
+      if showPending:
+          d['pending']+=1
+      else:
+          d['locked']+=1
+      
 def getPickData(pick):
       try:
         qbScore = NFLWeeklyStat.objects.get(player=pick.qb, week=pick.week).score
@@ -243,6 +296,24 @@ def registerUser(request):
     return render_to_response('picks/register.html', {
         'form': form,
     },context_instance=RequestContext(request))
+
+
+def validateTwoOrLessPicks(user, player):
+    
+    fflplayer = FFLPlayer.objects.get(user=user)
+    allUserPicks = Picks.objects.filter(fflPlayer=fflplayer)
+    count = 0
+    for pick in allUserPicks:
+        if pick.qb==player or pick.rb==player or pick.wr==player or pick.te==player:
+            count+=1
+    return (count<=2)
+
+def validateTwoOrLessPicksAll(user,pick):
+    valid = (validateTwoOrLessPicks(user,pick.qb) and 
+             validateTwoOrLessPicks(user,pick.rb) and 
+             validateTwoOrLessPicks(user,pick.wr) and 
+             validateTwoOrLessPicks(user,pick.te))
+    return valid
 
     
 def validatePlayer(week,player):

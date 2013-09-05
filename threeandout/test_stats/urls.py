@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^picks/(?P<week>\d+)/picksummary/$', views.picksummary, name='picksummary'), 
     #url(r'^login/$', authviews.login, name='login'),
     
-
+    # ex: /threeandout/selected/1
+    url(r'^selected/(?P<user>\d+)/$', views.selected, name='selected'),
 
 )

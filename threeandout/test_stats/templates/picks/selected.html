@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1> Showing selections made by position for {{user}}</h1>
+<h2>QB</h2>
+<table border>
+<tr>
+<td>name</td>
+<td>locked</td>
+<td>pending</td>
+</tr>
+{% for player in qb %}
+<tr>
+<td>{{player.name}}</td>
+<td>{{player.locked}}</td>
+<td>{{player.pending}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>RB</h2>
+<table border>
+    <tr>
+    <td>name</td>
+    <td>locked</td>
+    <td>pending</td>
+    </tr>
+    {% for player in rb %}
+    <tr>
+    <td>{{player.name}}</td>
+    <td>{{player.locked}}</td>
+    <td>{{player.pending}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>TE</h2>
+<table border>
+    <tr>
+    <td>name</td>
+    <td>locked</td>
+    <td>pending</td>
+    </tr>
+    {% for player in te %}
+    <tr>
+    <td>{{player.name}}</td>
+    <td>{{player.locked}}</td>
+    <td>{{player.pending}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>WR</h2>
+<table border>
+    <tr>
+    <td>name</td>
+    <td>locked</td>
+    <td>pending</td>
+    </tr>
+    {% for player in wr %}
+    <tr>
+    <td>{{player.name}}</td>
+    <td>{{player.locked}}</td>
+    <td>{{player.pending}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}
