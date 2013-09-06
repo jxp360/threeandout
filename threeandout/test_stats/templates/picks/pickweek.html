@@ -19,8 +19,11 @@
 Pick a QB: 
 <select name="QB">
 {% for QB in QBs %}
-        
-        <option value="{{ QB.id }}">{{QB.name }} - {{QB.team}}</option>
+        {% if QB.name == qb %}
+           <option selected="selected"value="{{ QB.id }}">{{QB.name }} - {{QB.team}}</option>
+        {% else %}
+           <option value="{{ QB.id }}">{{QB.name }} - {{QB.team}}</option>
+        {% endif %}
 {% endfor %}
 </select>
 </p>
@@ -29,8 +32,12 @@ Pick a QB:
 Pick a RB:
 <select name="RB">
 {% for RB in RBs %}
-        
-        <option value="{{ RB.id }}">{{RB.name }} - {{RB.team}}</option>
+        {% if RB.name == rb %}
+            <option selected="selected"value="{{ RB.id }}">{{RB.name }} - {{RB.team}}</option>
+        {% else %}            
+            <option value="{{ RB.id }}">{{RB.name }} - {{RB.team}}</option>
+        {% endif %}            
+            
 {% endfor %}
 </select>
 </p>
@@ -39,8 +46,11 @@ Pick a RB:
 Pick a WR:
 <select name="WR">
 {% for WR in WRs %}
-        
-        <option value="{{ WR.id }}">{{WR.name }} - {{WR.team}}</option>
+        {% if WR.name == wr %}        
+            <option selected="selected"value="{{ WR.id }}">{{WR.name }} - {{WR.team}}</option>
+        {% else %}                  
+            <option value="{{ WR.id }}">{{WR.name }} - {{WR.team}}</option>
+        {% endif %}               
 {% endfor %}
 </select>
 </p>
@@ -49,8 +59,11 @@ Pick a WR:
 Pick a TE:
 <select name="TE">
 {% for TE in TEs %}
-        
+        {% if TE.name == te %}        
+        <option selected="selected"value="{{ TE.id }}">{{TE.name }}- {{TE.team}}</option>
+        {% else %}        
         <option value="{{ TE.id }}">{{TE.name }}- {{TE.team}}</option>
+        {% endif %}  
 {% endfor %}
 </select>
 </p>
