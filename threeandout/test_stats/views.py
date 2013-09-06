@@ -11,12 +11,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 #from django.core.exceptions import DoesNotExist
 from datetime import datetime, timedelta
+import time
 import pytz
-
-PICK_LOCKOUT_MINUTES = 10
-
+from django.db.models import Q
+from validate import *
 from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
 from test_stats.forms import FFLPlayerForm
+
 
 def index(request):
     return render(request, 'picks/index.html', {})
@@ -46,19 +47,19 @@ def submit(request,week):
         # If the  current pick.player is valid then ok to change it
         if validatePlayer(week,pick.qb):
             pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
-            if not(validatePlayer(week,pick.qb)) or not(validateTwoOrLessPicks(request.user,pick.qb)):
+            if not(validatePlayer(week,pick.qb)) or not(validateTwoOrLessPicks(player,pick.qb,"QB")):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.rb):
             pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
-            if not(validatePlayer(week,pick.rb))  or not(validateTwoOrLessPicks(request.user,pick.rb)):
+            if not(validatePlayer(week,pick.rb))  or not(validateTwoOrLessPicks(player,pick.rb,"RB")):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.wr):
             pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
-            if not(validatePlayer(week,pick.wr)) or not(validateTwoOrLessPicks(request.user,pick.wr)):
+            if not(validatePlayer(week,pick.wr)) or not(validateTwoOrLessPicks(player,pick.wr,"WR")):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.te):
             pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-            if not(validatePlayer(week,pick.te)) or not(validateTwoOrLessPicks(request.user,pick.te)):
+            if not(validatePlayer(week,pick.te)) or not(validateTwoOrLessPicks(player,pick.te,"TE")):
                 return HttpResponse("Invalid Pick")
         pick.mod_time=timezone.now()
         pick.save()      
@@ -70,7 +71,7 @@ def submit(request,week):
         pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
         pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
         pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-        if validatePick(week,pick) and validateTwoOrLessPicksAll(request.user,pick):
+        if validatePick(week,pick) and validateTwoOrLessPicksAll(player,pick):
             pick.mod_time=timezone.now()
             pick.save()    
         else:
@@ -108,11 +109,10 @@ def pickweek(request, week):
         te = pick.te.name
         currentpicks = True
 
-    QBs = ValidPlayers(week,'QB')
-    RBs = ValidPlayers(week,'RB')
-    WRs = ValidPlayers(week,'WR')
-    TEs = ValidPlayers(week,'TE') 
-    
+    QBs = ValidPlayers(week,'QB',request.user)
+    RBs = ValidPlayers(week,'RB',request.user)
+    WRs = ValidPlayers(week,'WR',request.user)   
+    TEs = ValidPlayers(week,'TE',request.user) 
     # If they already have picks and that pick is not valid then it cannot be changed
     if qb !=None:
         if not (validatePlayer(week,pick.qb)): QBs = []
@@ -122,6 +122,7 @@ def pickweek(request, week):
         if not (validatePlayer(week,pick.wr)): WRs = []
     if te !=None:
         if not (validatePlayer(week,pick.te)): TEs = []            
+
 
 
     return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
@@ -243,9 +244,7 @@ def getPickData(pick):
          'wrScore':wrScore}
       return d
 
-def hasNotStarted(game, buffer=timedelta(0)):
-    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
-    return game.kickoff.astimezone(pytz.timezone('US/Eastern')) > (now +buffer)
+
 
 def getLastGame(week):
     return NFLSchedule.objects.filter(week=week).order_by('-kickoff')[0]
@@ -297,50 +296,3 @@ def registerUser(request):
         'form': form,
     },context_instance=RequestContext(request))
 
-
-def validateTwoOrLessPicks(user, player):
-    
-    fflplayer = FFLPlayer.objects.get(user=user)
-    allUserPicks = Picks.objects.filter(fflPlayer=fflplayer)
-    count = 0
-    for pick in allUserPicks:
-        if pick.qb==player or pick.rb==player or pick.wr==player or pick.te==player:
-            count+=1
-    return (count<=2)
-
-def validateTwoOrLessPicksAll(user,pick):
-    valid = (validateTwoOrLessPicks(user,pick.qb) and 
-             validateTwoOrLessPicks(user,pick.rb) and 
-             validateTwoOrLessPicks(user,pick.wr) and 
-             validateTwoOrLessPicks(user,pick.te))
-    return valid
-
-    
-def validatePlayer(week,player):
-    try:
-        game = NFLSchedule.objects.get(week=week,home=player.team)
-    except:
-        try:
-            game = NFLSchedule.objects.get(week=week,away=player.team)
-        except:
-            return False
-    return hasNotStarted(game, timedelta(minutes=PICK_LOCKOUT_MINUTES))
-#    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
-#    return (game.kickoff.astimezone(pytz.timezone('US/Eastern')) > (now +timedelta(minutes=PICK_LOCKOUT_MINUTES)))
-                           
-def ValidPlayers(week,position):
-    players= NFLPlayer.objects.filter(position=position)
-    validplayers = []
-    for player in players:
-        if validatePlayer(week,player):
-            validplayers.append(player)
-            
-    return validplayers
-
-def validatePick(week,pick):
-    
-    valid = (validatePlayer(week,pick.qb) and 
-             validatePlayer(week,pick.rb) and 
-             validatePlayer(week,pick.wr) and 
-             validatePlayer(week,pick.te))
-    return valid
