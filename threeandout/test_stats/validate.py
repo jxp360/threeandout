@@ -10,25 +10,27 @@ def hasNotStarted(game, buffer=timedelta(0)):
     now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
     return game.kickoff.astimezone(pytz.timezone('US/Eastern')) > (now +buffer)
 
-def validateTwoOrLessPicks(fflplayer, player,position):
+def validateTwoOrLessPicks(fflplayer, player,position,week):
+    # Count the number of times a pick for the given FFLplayer matches the NFL player
+    # Exclude the picking week because re-picking a player does not increase the number of uses
     if position == "QB":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,qb=player).count()
+        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,qb=player).exclude(week=week).count()
         return (allUserMatches)<=2
     if position == "RB":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,rb=player).count()
+        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,rb=player).exclude(week=week).count()
         return (allUserMatches)<=2
     if position == "WR":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,wr=player).count()
+        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,wr=player).exclude(week=week).count()
         return (allUserMatches)<=2
     if position == "TE":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,te=player).count()
+        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,te=player).exclude(week=week).count()
         return (allUserMatches)<=2
 
-def validateTwoOrLessPicksAll(fflplayer,pick):
-    valid = (validateTwoOrLessPicks(fflplayer,pick.qb,"QB") and 
-             validateTwoOrLessPicks(fflplayer,pick.rb,"RB") and 
-             validateTwoOrLessPicks(fflplayer,pick.wr,"WR") and 
-             validateTwoOrLessPicks(fflplayer,pick.te,"TE"))
+def validateTwoOrLessPicksAll(fflplayer,pick,week):
+    valid = (validateTwoOrLessPicks(fflplayer,pick.qb,"QB",week) and 
+             validateTwoOrLessPicks(fflplayer,pick.rb,"RB",week) and 
+             validateTwoOrLessPicks(fflplayer,pick.wr,"WR",week) and 
+             validateTwoOrLessPicks(fflplayer,pick.te,"TE",week))
     return valid
 
     
@@ -48,7 +50,7 @@ def ValidPlayers(week,position,user):
         time0 = time.time()
         a = validatePlayer(week,player) 
         time1 = time.time()
-        b= validateTwoOrLessPicks(fflplayer,player,position)
+        b= validateTwoOrLessPicks(fflplayer,player,position,week)
         time2 = time.time()
         print "delta", time1-time0, time2-time1      
         if a and b:

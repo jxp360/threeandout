@@ -47,19 +47,19 @@ def submit(request,week):
         # If the  current pick.player is valid then ok to change it
         if validatePlayer(week,pick.qb):
             pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
-            if not(validatePlayer(week,pick.qb)) or not(validateTwoOrLessPicks(player,pick.qb,"QB")):
+            if not(validatePlayer(week,pick.qb)) or not(validateTwoOrLessPicks(player,pick.qb,"QB",week)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.rb):
             pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
-            if not(validatePlayer(week,pick.rb))  or not(validateTwoOrLessPicks(player,pick.rb,"RB")):
+            if not(validatePlayer(week,pick.rb))  or not(validateTwoOrLessPicks(player,pick.rb,"RB",week)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.wr):
             pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
-            if not(validatePlayer(week,pick.wr)) or not(validateTwoOrLessPicks(player,pick.wr,"WR")):
+            if not(validatePlayer(week,pick.wr)) or not(validateTwoOrLessPicks(player,pick.wr,"WR",week)):
                 return HttpResponse("Invalid Pick")
         if validatePlayer(week,pick.te):
             pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-            if not(validatePlayer(week,pick.te)) or not(validateTwoOrLessPicks(player,pick.te,"TE")):
+            if not(validatePlayer(week,pick.te)) or not(validateTwoOrLessPicks(player,pick.te,"TE",week)):
                 return HttpResponse("Invalid Pick")
         pick.mod_time=timezone.now()
         pick.save()      
@@ -71,7 +71,7 @@ def submit(request,week):
         pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
         pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
         pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-        if validatePick(week,pick) and validateTwoOrLessPicksAll(player,pick):
+        if validatePick(week,pick) and validateTwoOrLessPicksAll(player,pick,week):
             pick.mod_time=timezone.now()
             pick.save()    
         else:
