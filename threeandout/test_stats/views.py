@@ -196,7 +196,7 @@ def selected(request, user):
     wrList = [x[1] for x in wrTmp]
     teList = [x[1] for x in teTmp]
     rbList = [x[1] for x in rbTmp]
-    return render(request, 'picks/selected.html', {'qb':qbList,'wr':wrList,'te':teList,'rb':rbList, user:user})
+    return render(request, 'picks/selected.html', {'qb':qbList,'wr':wrList,'te':teList,'rb':rbList, 'fflplayer':player.teamname})
 
 def updateDict(positionDict, player, week, showPending):
     playerPending = validatePlayer(week, player)
