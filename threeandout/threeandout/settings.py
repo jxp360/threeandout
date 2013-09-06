@@ -3,11 +3,22 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+if DEBUG:
+    EMAIL_HOST = 'localhost'
+    EMAIL_PORT = 25
+    EMAIL_HOST_USER = ''
+    EMAIL_HOST_PASSWORD = ''
+    EMAIL_USE_TLS = False
+    DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
+
+
 ADMINS = (
     ('Jeff Pfeiffenberger', 'jxp360@gmail.com'),
     ('Bryan Gregory', 'bryan.scott.gregory@googlemail.com'),
     ('Grant Faiks', 'grant.faiks@gmail.com'),
 )
+
+SITE_NAME='www.threeandoutfantasyfootball.com'
 
 MANAGERS = ADMINS
 dburl = '/data/test/dbs/threeandout.db'
@@ -112,6 +123,9 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '/data/threeandout/threeandout/templates',
+    '/data/threeandout_test/threeandout/templates',
+    '/data/threeandout/threeandout/threeandout/templates',
+    '/data/threeandout_test/threeandout/threeandout/templates',
 )
 
 LOGIN_URL = 'threeandout/login'

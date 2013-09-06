@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
 import pytz
 
-PICK_LOCKOUT_MINUTES = 10
+PICK_LOCKOUT_MINUTES = 60
 
 from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
 from test_stats.forms import FFLPlayerForm

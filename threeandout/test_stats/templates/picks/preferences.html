@@ -2,6 +2,7 @@
 {% block content %}
 
 <h1> Edit Preferences </h1>
+<h4><a href="{% url 'django.contrib.auth.views.password_change' %}">Change Password</a></h4>
 
 <table>
     <form method='post' action=''>{% csrf_token %}
@@ -9,7 +10,6 @@
         <tr><td></td><td><input type="submit" value="Submit" /></td>
     </form>
 </table>
-
 {% endblock %}
 
 {% block link_preferences_class %}active{% endblock %}
