@@ -14,6 +14,13 @@ class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
     team = models.CharField(max_length=200)
     position = models.CharField(max_length=2, choices=POSITIONS)
+    
+    def calculateyearlyscore(self):
+        #TODO: Calcuate the total score of all picks up to this point
+        totalPicks = NFLWeeklyStat.objects.filter(player=self)
+        return sum([x.score for x in totalPicks])
+
+    scoretodate = property(calculateyearlyscore)
 
 class NFLWeeklyStat(models.Model):
     week              = models.IntegerField()

@@ -1,59 +1,199 @@
 {% extends "base.html" %}
+
+{% block head %}
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> 
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablescroll.js"></script>
+<script type="text/javascript"> 
+	$(document).ready(function() 
+	    { 
+	        $("#QBs").tablesorter({sortList: [[3,1]]});
+	        $("#QBs").tableScroll({height:140});
+	        $("#RBs").tablesorter({sortList: [[3,1]]});
+	        $("#RBs").tableScroll({height:140});
+	        $("#WRs").tablesorter({sortList: [[3,1]]});
+	        $("#WRs").tableScroll({height:140});
+	        $("#TEs").tablesorter({sortList: [[3,1]]});
+	        $("#TEs").tableScroll({height:140});
+			setQB({{qb.id}})
+			setRB({{rb.id}})
+			setWR({{wr.id}})
+			setTE({{te.id}})
+	    } 
+	);
+</script>
+
+
+<script type="text/javascript"> 
+<!-- 
+function setQB(row) { 
+    // Clear all rows each time 
+    {% for QB in QBs %}
+        document.getElementById({{QB.id}}).style.backgroundColor = "#fff"; 
+    {%endfor%}
+    // set desired row 
+    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    var formInfo = document.forms['players'];
+    formInfo.QB.value = row;
+    return true; 
+    }
+
+function setRB(row) { 
+    // Clear all rows each time 
+    {% for RB in RBs %}
+        document.getElementById({{RB.id}}).style.backgroundColor = "#fff"; 
+    {%endfor%}
+    // set desired row 
+    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    var formInfo = document.forms['players'];
+    formInfo.RB.value = row;
+    return true; 
+    }
+
+function setWR(row) { 
+    // Clear all rows each time 
+    {% for WR in WRs %}
+        document.getElementById({{WR.id}}).style.backgroundColor = "#fff"; 
+    {%endfor%}
+    // set desired row 
+    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    var formInfo = document.forms['players'];
+    formInfo.WR.value = row;
+    return true; 
+    }
+    
+function setTE(row) { 
+    // Clear all rows each time 
+    {% for TE in TEs %}
+        document.getElementById({{TE.id}}).style.backgroundColor = "#fff"; 
+    {%endfor%}
+    // set desired row 
+    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    var formInfo = document.forms['players'];
+    formInfo.TE.value = row;
+    return true;     
+    } 
+
+</script>
+{% endblock %}
+
 {% block content %}
 
 <p>Make Your Picks For Week {{week}}</p>
 
 {% if currentpicks %}
 	<p> Your current picks for this week:<br>
-	QB: {{qb}} <br>
-	RB: {{rb}} <br>
-	WR: {{wr}} <br>
-	TE: {{te}} <br>
+	QB: {{qb.name}} <br>
+	RB: {{rb.name}} <br>
+	WR: {{wr.name}} <br>
+	TE: {{te.name}} <br>
 	</p>
 {%endif %}
 
 
 <p> 
-<form action= "{% url 'threeandout:submit' week %}" method="post">
+<form name="players" action= "{% url 'threeandout:submit' week %}" method="post">
 {% csrf_token %}
+
 Pick a QB: 
-<select name="QB">
-{% for QB in QBs %}
-        
-        <option value="{{ QB.id }}">{{QB.name }} - {{QB.team}}</option>
-{% endfor %}
-</select>
-</p>
+<table  border = 1 id="QBs" class="tablesorter">
+<thead>
+  <tr>
+    <th>Player</th>
+    <th>Team</th>
+    <th>Opponent</th>
+    <th>Score</th>
+  </tr>
+ </thead>
+ <tbody>
+  {% for QB in QBs %}
+  <tr id="{{QB.id}}">
+  	<td WIDTH="190" onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
+  	<td onclick="return setQB('{{QB.id}}')">{{QB.team}} </td>
+  	<td onclick="return setQB('{{QB.id}}')">Opponent </td>
+  	<td onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
 
-<p>
-Pick a RB:
-<select name="RB">
-{% for RB in RBs %}
-        
-        <option value="{{ RB.id }}">{{RB.name }} - {{RB.team}}</option>
-{% endfor %}
-</select>
-</p>
+<input type="hidden" name="QB" value="" size ="40" />
+<br>
 
-<p>
-Pick a WR:
-<select name="WR">
-{% for WR in WRs %}
-        
-        <option value="{{ WR.id }}">{{WR.name }} - {{WR.team}}</option>
-{% endfor %}
-</select>
-</p>
+Pick a RB: 
+<table  border = 1 id="RBs" class="tablesorter">
+<thead>
+  <tr>
+    <th>Player</th>
+    <th>Team</th>
+    <th>Opponent</th>
+    <th>Score</th>
+  </tr>
+ </thead>
+ <tbody>
+  {% for RB in RBs %}
+  <tr id="{{RB.id}}">
+  	<td WIDTH="190" onclick="return setRB('{{RB.id}}')">{{RB.name}} </td>
+  	<td onclick="return setRB('{{RB.id}}')">{{RB.team}} </td>
+  	<td onclick="return setRB('{{RB.id}}')">Opponent </td>
+  	<td onclick="return setRB('{{RB.id}}')">{{RB.scoretodate}} </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
 
-<p>
-Pick a TE:
-<select name="TE">
-{% for TE in TEs %}
-        
-        <option value="{{ TE.id }}">{{TE.name }}- {{TE.team}}</option>
-{% endfor %}
-</select>
-</p>
+<input type="hidden" name="RB" value="" size ="40" />
+<br>
+
+Pick a WR: 
+<table  border = 1 id="WRs" class="tablesorter">
+<thead>
+  <tr>
+    <th>Player</th>
+    <th>Team</th>
+    <th>Opponent</th>
+    <th>Score</th>
+  </tr>
+ </thead>
+ <tbody>
+  {% for WR in WRs %}
+  <tr id="{{WR.id}}">
+  	<td WIDTH="190" onclick="return setWR('{{WR.id}}')">{{WR.name}} </td>
+  	<td onclick="return setWR('{{WR.id}}')">{{WR.team}} </td>
+  	<td onclick="return setWR('{{WR.id}}')">Opponent </td>
+  	<td onclick="return setWR('{{WR.id}}')">{{WR.scoretodate}} </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<input type="hidden" name="WR" value="" size ="40" />
+<br>
+
+Pick a TE: 
+<table  border = 1 id="TEs" class="tablesorter">
+<thead>
+  <tr>
+    <th>Player</th>
+    <th>Team</th>
+    <th>Opponent</th>
+    <th>Score</th>
+  </tr>
+ </thead>
+ <tbody>
+  {% for TE in TEs %}
+  <tr id="{{TE.id}}">
+  	<td WIDTH="190" onclick="return setTE('{{TE.id}}')">{{TE.name}} </td>
+  	<td onclick="return setTE('{{TE.id}}')">{{TE.team}} </td>
+  	<td onclick="return setTE('{{TE.id}}')">Opponent </td>
+  	<td onclick="return setTE('{{TE.id}}')">{{TE.scoretodate}} </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<input type="hidden" name="TE" value="" size ="40" />
+
 
 <input type="submit" value="submit" />
 </form>

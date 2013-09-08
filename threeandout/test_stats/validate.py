@@ -45,17 +45,17 @@ def ValidPlayers(week,position,user):
     fflplayer = FFLPlayer.objects.get(user=user)
     players= NFLPlayer.objects.filter(position=position)
     validplayers = []
-    print "Number of Players" , len(players)
+    #print "Number of Players" , len(players)
     for player in players:
         time0 = time.time()
         a = validatePlayer(week,player) 
         time1 = time.time()
         b= validateTwoOrLessPicks(fflplayer,player,position,week)
         time2 = time.time()
-        print "delta", time1-time0, time2-time1      
+        #print "delta", time1-time0, time2-time1      
         if a and b:
             validplayers.append(player)
-    print "estimated total" ,(time2-time0)*len(players)
+    #print "estimated total" ,(time2-time0)*len(players)
             
     return validplayers
 

@@ -32,6 +32,7 @@ def picks(request):
     
 @login_required
 def submit(request,week):
+    print "POST" , request.POST
     player = FFLPlayer.objects.get(user=request.user)
     
     pickexists = False
@@ -92,7 +93,7 @@ def picksummary(request,week):
 
 @login_required
 def pickweek(request, week):
-
+    time0 = time.time()
     player = FFLPlayer.objects.get(user=request.user)
     try:
         pick = Picks.objects.get(week=week, fflPlayer=player)
@@ -103,10 +104,10 @@ def pickweek(request, week):
         te = None    
         currentpicks = False
     else:
-        qb = pick.qb.name
-        rb = pick.rb.name
-        wr = pick.wr.name
-        te = pick.te.name
+        qb = pick.qb
+        rb = pick.rb
+        wr = pick.wr
+        te = pick.te
         currentpicks = True
 
     QBs = ValidPlayers(week,'QB',request.user)
@@ -124,7 +125,8 @@ def pickweek(request, week):
         if not (validatePlayer(week,pick.te)): TEs = []            
 
 
-
+    time1 = time.time()
+    print "Delta" , time1-time0
     return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,'currentpicks':currentpicks})
 @login_required    
