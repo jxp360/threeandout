@@ -15,10 +15,18 @@
 	        $("#WRs").tableScroll({height:140});
 	        $("#TEs").tablesorter({sortList: [[3,1]]});
 	        $("#TEs").tableScroll({height:140});
-			setQB({{qb.id}})
-			setRB({{rb.id}})
-			setWR({{wr.id}})
-			setTE({{te.id}})
+	        {% if qb in QBs %}
+				setQB({{qb.id}});
+			{% endif %}
+			{% if rb in RBs %}
+				setRB({{rb.id}})
+			{% endif %}
+			{% if wr in WRs %}
+				setWR({{wr.id}})
+			{% endif %}
+			{% if te in TEs %}
+				setTE({{te.id}})
+			{% endif %}
 	    } 
 	);
 </script>
@@ -32,7 +40,7 @@ function setQB(row) {
         document.getElementById({{QB.id}}).style.backgroundColor = "#fff"; 
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    document.getElementById(row).style.backgroundColor = "#FFFF99";
     var formInfo = document.forms['players'];
     formInfo.QB.value = row;
     return true; 
@@ -44,7 +52,7 @@ function setRB(row) {
         document.getElementById({{RB.id}}).style.backgroundColor = "#fff"; 
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    document.getElementById(row).style.backgroundColor = "#FFFF99";
     var formInfo = document.forms['players'];
     formInfo.RB.value = row;
     return true; 
@@ -56,7 +64,7 @@ function setWR(row) {
         document.getElementById({{WR.id}}).style.backgroundColor = "#fff"; 
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    document.getElementById(row).style.backgroundColor = "#FFFF99"; 
     var formInfo = document.forms['players'];
     formInfo.WR.value = row;
     return true; 
@@ -68,11 +76,18 @@ function setTE(row) {
         document.getElementById({{TE.id}}).style.backgroundColor = "#fff"; 
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#aaa"; 
+    document.getElementById(row).style.backgroundColor = "#FFFF99";
     var formInfo = document.forms['players'];
     formInfo.TE.value = row;
     return true;     
     } 
+$.fn.tableScroll.defaults =
+{
+    flush: true, // makes the last thead and tbody column flush with the scrollbar
+    width: null, // width of the table (head, body and foot), null defaults to the tables natural width
+    height: 100, // height of the scrollable area
+    containerClass: 'tablescroll' // the plugin wraps the table in a div with this css class
+};
 
 </script>
 {% endblock %}
@@ -81,20 +96,11 @@ function setTE(row) {
 
 <p>Make Your Picks For Week {{week}}</p>
 
-{% if currentpicks %}
-	<p> Your current picks for this week:<br>
-	QB: {{qb.name}} <br>
-	RB: {{rb.name}} <br>
-	WR: {{wr.name}} <br>
-	TE: {{te.name}} <br>
-	</p>
-{%endif %}
-
-
 <p> 
 <form name="players" action= "{% url 'threeandout:submit' week %}" method="post">
 {% csrf_token %}
 
+{% if QBs %}
 Pick a QB: 
 <table  border = 1 id="QBs" class="tablesorter">
 <thead>
@@ -110,7 +116,7 @@ Pick a QB:
   <tr id="{{QB.id}}">
   	<td WIDTH="190" onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.team}} </td>
-  	<td onclick="return setQB('{{QB.id}}')">Opponent </td>
+  	<td onclick="return setQB('{{QB.id}}')">{{QB.opponent}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
   </tr>
   {% endfor %}
@@ -118,8 +124,11 @@ Pick a QB:
 </table>
 
 <input type="hidden" name="QB" value="" size ="40" />
-<br>
-
+{% else %}
+	QB: {{qb.name}}
+{% endif %}
+ <br> 
+{% if RBs %}
 Pick a RB: 
 <table  border = 1 id="RBs" class="tablesorter">
 <thead>
@@ -135,7 +144,7 @@ Pick a RB:
   <tr id="{{RB.id}}">
   	<td WIDTH="190" onclick="return setRB('{{RB.id}}')">{{RB.name}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.team}} </td>
-  	<td onclick="return setRB('{{RB.id}}')">Opponent </td>
+  	<td onclick="return setRB('{{RB.id}}')">{{RB.opponent}}</td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.scoretodate}} </td>
   </tr>
   {% endfor %}
@@ -143,8 +152,12 @@ Pick a RB:
 </table>
 
 <input type="hidden" name="RB" value="" size ="40" />
-<br>
+{% else %}
+	RB: {{rb.name}}
+{% endif %}
+ <br> 
 
+{% if WRs %}
 Pick a WR: 
 <table  border = 1 id="WRs" class="tablesorter">
 <thead>
@@ -160,7 +173,7 @@ Pick a WR:
   <tr id="{{WR.id}}">
   	<td WIDTH="190" onclick="return setWR('{{WR.id}}')">{{WR.name}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.team}} </td>
-  	<td onclick="return setWR('{{WR.id}}')">Opponent </td>
+  	<td onclick="return setWR('{{WR.id}}')">{{WR.opponent}}</td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.scoretodate}} </td>
   </tr>
   {% endfor %}
@@ -168,8 +181,12 @@ Pick a WR:
 </table>
 
 <input type="hidden" name="WR" value="" size ="40" />
-<br>
+{% else %}
+	WR: {{wr.name}}
+{% endif %}
+ <br> 
 
+{% if TEs %}
 Pick a TE: 
 <table  border = 1 id="TEs" class="tablesorter">
 <thead>
@@ -185,7 +202,7 @@ Pick a TE:
   <tr id="{{TE.id}}">
   	<td WIDTH="190" onclick="return setTE('{{TE.id}}')">{{TE.name}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.team}} </td>
-  	<td onclick="return setTE('{{TE.id}}')">Opponent </td>
+  	<td onclick="return setTE('{{TE.id}}')">{{TE.opponent}}</td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.scoretodate}} </td>
   </tr>
   {% endfor %}
@@ -193,7 +210,10 @@ Pick a TE:
 </table>
 
 <input type="hidden" name="TE" value="" size ="40" />
-
+{% else %}
+	TE: {{te.name}}
+{% endif %}
+ <br> 
 
 <input type="submit" value="submit" />
 </form>

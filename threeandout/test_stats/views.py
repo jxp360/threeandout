@@ -93,7 +93,6 @@ def picksummary(request,week):
 
 @login_required
 def pickweek(request, week):
-    time0 = time.time()
     player = FFLPlayer.objects.get(user=request.user)
     try:
         pick = Picks.objects.get(week=week, fflPlayer=player)
@@ -123,12 +122,19 @@ def pickweek(request, week):
         if not (validatePlayer(week,pick.wr)): WRs = []
     if te !=None:
         if not (validatePlayer(week,pick.te)): TEs = []            
+    
+    for QB in QBs:
+        QB.opponent=findOpponent(QB,week)
+    for RB in RBs:
+        RB.opponent=findOpponent(RB,week)
+    for WR in WRs:
+        WR.opponent=findOpponent(WR,week)
+    for TE in TEs:
+        TE.opponent=findOpponent(TE,week)
 
-
-    time1 = time.time()
-    print "Delta" , time1-time0
     return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
-                                                   'qb':qb,'rb':rb,'wr':wr,'te':te,'currentpicks':currentpicks})
+                                                   'qb':qb,'rb':rb,'wr':wr,'te':te,
+                                                   'currentpicks':currentpicks})
 @login_required    
 def weeklyresultssummary(request):
     weeks = range(1,18)
@@ -297,4 +303,15 @@ def registerUser(request):
     return render_to_response('picks/register.html', {
         'form': form,
     },context_instance=RequestContext(request))
+
+def findOpponent(player,week):
+        try:
+            opp = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team))).away
+        except ObjectDoesNotExist:
+            try:
+                opp = NFLSchedule.objects.get(Q(week=week)&(Q(away=player.team))).home
+            except ObjectDoesNotExist:
+                opp=""
+        print opp
+        return opp
 
