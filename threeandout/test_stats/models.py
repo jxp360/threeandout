@@ -20,7 +20,6 @@ class NFLPlayer(models.Model):
         return sum([x.score for x in totalPicks])
 
     scoretodate = property(calculateyearlyscore)
-    opponent = ""
 
 class NFLWeeklyStat(models.Model):
     week              = models.IntegerField()
