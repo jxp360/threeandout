@@ -43,12 +43,38 @@ def validatePlayer(week,player):
                          
 def ValidPlayers(week,position,user):
     fflplayer = FFLPlayer.objects.get(user=user)
-    players= NFLPlayer.objects.filter(position=position)
+    locktime = datetime.utcnow().replace(tzinfo=pytz.timezone('utc')) +timedelta(minutes=PICK_LOCKOUT_MINUTES)
+    locktime_str = time.strftime('%Y-%m-%d %H:%M:%S',locktime.timetuple())
+    
+    players= NFLPlayer.objects.raw("select test_stats_nflplayer.id,test_stats_nflplayer.name, \
+                                    test_stats_nflplayer.team,test_stats_nflschedule.home,test_stats_nflschedule.away\
+                                    from test_stats_nflplayer \
+                                    join test_stats_nflschedule \
+                                    on (test_stats_nflplayer.team=test_stats_nflschedule.home \
+                                    OR test_stats_nflplayer.team=test_stats_nflschedule.away) \
+                                    where (test_stats_nflschedule.week=%s) \
+                                    AND (test_stats_nflplayer.position=%s) \
+                                    AND (test_stats_nflschedule.kickoff>%s)", [week,position,locktime_str])
+
+    
+    pickLimitedPlayers= NFLPlayer.objects.raw("select test_stats_nflplayer.id, \
+                                    COUNT(test_stats_nflplayer.id) as 'numPicked' \
+                                    from test_stats_nflplayer \
+                                    join test_stats_picks \
+                                    on (test_stats_nflplayer.id=test_stats_picks.qb_id \
+                                    OR test_stats_nflplayer.id=test_stats_picks.rb_id \
+                                    OR test_stats_nflplayer.id=test_stats_picks.wr_id \
+                                    OR test_stats_nflplayer.id=test_stats_picks.te_id) \
+                                    where (test_stats_picks.week!=%s) \
+                                    GROUP BY test_stats_nflplayer.id \
+                                    HAVING numPicked>=3 ", [week])
+    limitedids=[]
     validplayers = []
+    for player in pickLimitedPlayers:
+        limitedids.append(player.id)
+    
     for player in players:
-        a = validatePlayer(week,player) 
-        b= validateTwoOrLessPicks(fflplayer,player,position,week)    
-        if a and b:
+        if player.id not in limitedids:
             validplayers.append(player)
             
     return validplayers
