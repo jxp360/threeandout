@@ -1,0 +1,8 @@
+Add MySQL as slave to settings.py
+python manage.py syncdb --slave
+python manage.py shell
+from to_slave import run
+run()
+
+If broken add if str(i) == 'user':
+  do(i)
