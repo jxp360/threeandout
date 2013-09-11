@@ -15,18 +15,19 @@
 	        $("#WRs").tableScroll({height:140});
 	        $("#TEs").tablesorter({sortList: [[3,1]]});
 	        $("#TEs").tableScroll({height:140});
-	        {% if qb in QBs %}
-				setQB({{qb.id}});
+		    {% if qb %}
+		    	setQB({{qb.id}});
+		    {% endif %}
+		    {% if rb %}
+				setRB({{rb.id}});
+		    {% endif %}
+		    {% if wr %}
+				setWR({{wr.id}});
 			{% endif %}
-			{% if rb in RBs %}
-				setRB({{rb.id}})
+		    {% if te %}
+				setTE({{te.id}});
 			{% endif %}
-			{% if wr in WRs %}
-				setWR({{wr.id}})
-			{% endif %}
-			{% if te in TEs %}
-				setTE({{te.id}})
-			{% endif %}
+
 	    } 
 	);
 </script>
@@ -116,7 +117,7 @@ Pick a QB:
   <tr id="{{QB.id}}">
   	<td WIDTH="190" onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.team}} </td>
-  	<td onclick="return setQB('{{QB.id}}')">{{QB.opponent}} </td>
+  	<td onclick="return setQB('{{QB.id}}')">{%if QB.team == QB.away%} {{QB.home}} {%else%} {{QB.away}} {%endif%}</td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
   </tr>
   {% endfor %}
@@ -144,7 +145,7 @@ Pick a RB:
   <tr id="{{RB.id}}">
   	<td WIDTH="190" onclick="return setRB('{{RB.id}}')">{{RB.name}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.team}} </td>
-  	<td onclick="return setRB('{{RB.id}}')">{{RB.opponent}}</td>
+  	<td onclick="return setRB('{{RB.id}}')">{%if RB.team == RB.away%} {{RB.home}} {%else%} {{RB.away}} {%endif%}</td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.scoretodate}} </td>
   </tr>
   {% endfor %}
@@ -173,7 +174,7 @@ Pick a WR:
   <tr id="{{WR.id}}">
   	<td WIDTH="190" onclick="return setWR('{{WR.id}}')">{{WR.name}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.team}} </td>
-  	<td onclick="return setWR('{{WR.id}}')">{{WR.opponent}}</td>
+  	<td onclick="return setWR('{{WR.id}}')">{%if WR.team == WR.away%} {{WR.home}} {%else%} {{WR.away}} {%endif%}</td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.scoretodate}} </td>
   </tr>
   {% endfor %}
@@ -202,7 +203,7 @@ Pick a TE:
   <tr id="{{TE.id}}">
   	<td WIDTH="190" onclick="return setTE('{{TE.id}}')">{{TE.name}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.team}} </td>
-  	<td onclick="return setTE('{{TE.id}}')">{{TE.opponent}}</td>
+  	<td onclick="return setTE('{{TE.id}}')">{%if TE.team == TE.away%} {{TE.home}} {%else%} {{TE.away}} {%endif%}</td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.scoretodate}} </td>
   </tr>
   {% endfor %}
