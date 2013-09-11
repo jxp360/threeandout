@@ -47,14 +47,18 @@ def ValidPlayers(week,position,user):
     locktime_str = time.strftime('%Y-%m-%d %H:%M:%S',locktime.timetuple())
     
     players= NFLPlayer.objects.raw("select test_stats_nflplayer.id,test_stats_nflplayer.name, \
-                                    test_stats_nflplayer.team,test_stats_nflschedule.home,test_stats_nflschedule.away\
+                                    test_stats_nflplayer.team,test_stats_nflschedule.home,test_stats_nflschedule.away,\
+                                    SUM(test_stats_nflweeklystat.score) as 'scoretodate' \
                                     from test_stats_nflplayer \
                                     join test_stats_nflschedule \
                                     on (test_stats_nflplayer.team=test_stats_nflschedule.home \
                                     OR test_stats_nflplayer.team=test_stats_nflschedule.away) \
+                                    join test_stats_nflweeklystat \
+                                    on (test_stats_nflplayer.id = test_stats_nflweeklystat.player_id) \
                                     where (test_stats_nflschedule.week=%s) \
                                     AND (test_stats_nflplayer.position=%s) \
-                                    AND (test_stats_nflschedule.kickoff>%s)", [week,position,locktime_str])
+                                    AND (test_stats_nflschedule.kickoff>%s) \
+                                    GROUP BY  test_stats_nflplayer.id", [week,position,locktime_str])
 
     
     pickLimitedPlayers= NFLPlayer.objects.raw("select test_stats_nflplayer.id, \
