@@ -60,7 +60,7 @@ class Picks(models.Model):
         if not len(stats) in (0,4):
           print "ERROR - we don't have enough stats!"
           print stats
-          raise RuntimeError("wrong number of stats retrieved")
+          #raise RuntimeError("wrong number of stats retrieved")
         return sum([x.score for x in stats])
     score = property(calculatescore)
 
