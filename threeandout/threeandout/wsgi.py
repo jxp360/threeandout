@@ -14,6 +14,7 @@ framework.
 
 """
 import os
+import sys
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use
@@ -30,3 +31,9 @@ application = get_wsgi_application()
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
+from django.contrib.auth.handlers.modwsgi import check_password
+from django.core.handlers.wsgi import WSGIHandler
+application = WSGIHandler()
+
+import threeandout.monitor
+threeandout.monitor.start(interval=1.0)
