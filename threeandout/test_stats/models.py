@@ -14,6 +14,12 @@ class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
     team = models.CharField(max_length=200)
     position = models.CharField(max_length=2, choices=POSITIONS)
+    
+    def calculateyearlyscore(self):
+        totalPicks = NFLWeeklyStat.objects.filter(player=self)
+        return sum([x.score for x in totalPicks])
+
+    scoretodate = property(calculateyearlyscore)
 
 class NFLWeeklyStat(models.Model):
     week              = models.IntegerField()
@@ -60,6 +66,8 @@ class Picks(models.Model):
         if not len(stats) in (0,4):
           print "ERROR - we don't have enough stats!"
           print stats
+          for stat in stats:
+              print stat.player.name
           raise RuntimeError("wrong number of stats retrieved")
         return sum([x.score for x in stats])
     score = property(calculatescore)
