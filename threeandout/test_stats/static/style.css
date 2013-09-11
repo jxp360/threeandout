@@ -148,12 +148,13 @@ a:hover {
 
 #menu {
 	overflow: hidden;
-	width: 1000px;
+	width: 1150px;
 	padding: 0px 0px;
-	margin: 0px auto 30px auto;
+	margin: 0px auto 20px auto;
 	background: #064C8A;
 	border-radius: 20px 0px 20px 0px;
-	font-size: 20px;
+	/* font-size: 20px; */
+	font-size: 12px;
 	color: #000000;
 }
 

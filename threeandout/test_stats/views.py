@@ -129,12 +129,21 @@ def pickweek(request, week):
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,
                                                    'currentpicks':currentpicks})
 @login_required    
+def currentstandings(request):
+    weeks = range(1,18)
+    players = FFLPlayer.objects.all()
+    tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
+    tmp.sort(reverse=True)
+    leaders = [{'user':x[1],'score':x[0], 'id':x[2], 'rank': idx} for idx,x in enumerate(tmp)]
+    return render(request, 'picks/currentstandings.html', {'scores':leaders})
+
+@login_required    
 def weeklyresultssummary(request):
     weeks = range(1,18)
     players = FFLPlayer.objects.all()
     tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
     tmp.sort(reverse=True)
-    leaders = [{'user':x[1],'score':x[0], 'id':x[2] } for x in tmp]
+    leaders = [{'user':x[1],'score':x[0], 'id':x[2], 'rank': idx} for idx,x in enumerate(tmp)]
     return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
 
 @login_required

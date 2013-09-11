@@ -19,6 +19,9 @@ urlpatterns = patterns('',
     # ex: /threeandout/rules
     url(r'rules/$', views.rules, name='rules'),
     
+    # ex: /threeandout/currentstandings
+    url(r'currentstandings/$', views.currentstandings, name='currentstandings'),
+
     # ex: /threeandout/weeklyresultssummary
     url(r'weeklyresultssummary/$', views.weeklyresultssummary, name='weeklyresultssummary'),
 

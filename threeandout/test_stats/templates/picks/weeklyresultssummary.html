@@ -4,22 +4,6 @@
 
 {% block content %}
 
-<h1> Current Leaders </h1>
-
-<table border>
-    <tr>
-    <td>user</td>
-    <td>score</td>
-    </tr>
-    {% for score in scores %}
-    <tr>
-    <td><a href="{% url 'threeandout:selected' score.id %}">{{score.user}}</a></td>
-    <td>{{score.score}}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-
 <h1> Weekly Results </h1>
 
 {% for week in weeks %}
