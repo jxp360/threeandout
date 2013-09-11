@@ -209,8 +209,8 @@ def updateDict(positionDict, player, week, showPending):
       except KeyError:
           d ={'name':name, 'pending':0, 'locked':0}
           positionDict[name]=d
-      if showPending:
-          d['pending']+=1
+      if showPending and playerPending:
+         d['pending']+=1
       else:
           d['locked']+=1
       
