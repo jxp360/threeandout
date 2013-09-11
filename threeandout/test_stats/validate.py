@@ -65,9 +65,10 @@ def ValidPlayers(week,position,user):
                                     OR test_stats_nflplayer.id=test_stats_picks.rb_id \
                                     OR test_stats_nflplayer.id=test_stats_picks.wr_id \
                                     OR test_stats_nflplayer.id=test_stats_picks.te_id) \
-                                    where (test_stats_picks.week!=%s) \
+                                    where test_stats_picks.week!=%s \
+                                    AND test_stats_picks.fflplayer_id=%s\
                                     GROUP BY test_stats_nflplayer.id \
-                                    HAVING numPicked>=3 ", [week])
+                                    HAVING numPicked>=3 ", [week,fflplayer.id])
     limitedids=[]
     validplayers = []
     for player in pickLimitedPlayers:
