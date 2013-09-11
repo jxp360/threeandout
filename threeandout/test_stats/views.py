@@ -113,6 +113,8 @@ def pickweek(request, week):
     RBs = ValidPlayers(week,'RB',request.user)
     WRs = ValidPlayers(week,'WR',request.user)   
     TEs = ValidPlayers(week,'TE',request.user) 
+
+    
     # If they already have picks and that pick is not valid then it cannot be changed
     if qb !=None:
         if not (validatePlayer(week,pick.qb)): QBs = []
@@ -123,15 +125,6 @@ def pickweek(request, week):
     if te !=None:
         if not (validatePlayer(week,pick.te)): TEs = []            
     
-    for QB in QBs:
-        QB.opponent=findOpponent(QB,week)
-    for RB in RBs:
-        RB.opponent=findOpponent(RB,week)
-    for WR in WRs:
-        WR.opponent=findOpponent(WR,week)
-    for TE in TEs:
-        TE.opponent=findOpponent(TE,week)
-
     return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,
                                                    'currentpicks':currentpicks})
@@ -312,6 +305,5 @@ def findOpponent(player,week):
                 opp = NFLSchedule.objects.get(Q(week=week)&(Q(away=player.team))).home
             except ObjectDoesNotExist:
                 opp=""
-        print opp
         return opp
 
