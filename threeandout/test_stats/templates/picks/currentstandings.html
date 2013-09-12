@@ -1,23 +1,40 @@
 {% extends "base.html" %}
 
+{% block head %}
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> 
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablesorter.js"></script>
+<script type="text/javascript"> 
+	$(document).ready(function() 
+	    { 
+	        $("#standings").tablesorter({sortList: [[1,1]]});
+	    } 
+	);
+
+</script>
+
+{% endblock %}
+
 {% block link_standings_class %}active{% endblock %}
 
 {% block content %}
 
+
 <h1> Current Standings </h1>
 
-<table border>
+<table  border = 1 id="standings" class="tablesorter">
+ <thead>
     <tr>
-    <td>rank</td>
-    <td>user</td>
-    <td>score</td>
+    <th>User</th>
+    <th>Score</th>
     </tr>
+ </thead>
+ <tbody>
     {% for score in scores %}
     <tr>
-    <td>{{score.rank}}</td>
-    <td><a href="{% url 'threeandout:selected' score.id %}">{{score.user}}</a></td>
+    <td><a href="{% url 'threeandout:selected' score.id %}">{{score.user}}</a></td> 
     <td>{{score.score}}</td>
     </tr>
     {% endfor %}
+</tbody>
 </table>
 {% endblock %}
