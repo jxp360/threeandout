@@ -134,7 +134,7 @@ def currentstandings(request):
     players = FFLPlayer.objects.all()
     tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
     tmp.sort(reverse=True)
-    leaders = [{'user':x[1],'score':x[0], 'id':x[2], 'rank': idx} for idx,x in enumerate(tmp)]
+    leaders = [{'user':x[1],'score':x[0], 'id':x[2], 'rank': idx+1} for idx,x in enumerate(tmp)]
     return render(request, 'picks/currentstandings.html', {'scores':leaders})
 
 @login_required    
