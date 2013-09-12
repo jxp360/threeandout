@@ -6,7 +6,7 @@
 <script type="text/javascript"> 
 	$(document).ready(function() 
 	    { 
-	        $("#standings").tablesorter({sortList: [[1,1]]});
+	        $("#standings").tablesorter({sortList: [[0,0]]});
 	    } 
 	);
 
@@ -24,6 +24,7 @@
 <table  border = 1 id="standings" class="tablesorter">
  <thead>
     <tr>
+    <th>Rank</th>
     <th>User</th>
     <th>Score</th>
     </tr>
@@ -31,6 +32,7 @@
  <tbody>
     {% for score in scores %}
     <tr>
+    <td>{{score.rank}}</td>
     <td><a href="{% url 'threeandout:selected' score.id %}">{{score.user}}</a></td> 
     <td>{{score.score}}</td>
     </tr>
