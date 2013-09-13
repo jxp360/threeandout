@@ -24,7 +24,7 @@ DATABASES = {
     'default': {'ENGINE': 'django.db.backends.mysql', 
                 'NAME': 'threeandout',
                 'USER': 'threeandout',
-                'PASSWORD': 'Thr33&0ut!',
+                'PASSWORD': 'Thr33&0ut',
                 'HOST': 'threeandout.c0bnvpjdlyf5.us-east-1.rds.amazonaws.com',
                 'PORT': 3306 }
 }
