@@ -50,10 +50,10 @@ a {
 a:hover {
 }
 
-th {
+.tablesorter th {
  font-size:16px; color: #FFFFFF; font-weight:bold; background-color:#3E577B; border-left:0; border-right:0; border-top:0; margin-bottom:3px;text-decoration:underline;cursor:pointer;text-align:left  }
 
-tr:nth-child(odd) {
+.tablesorter tr:nth-child(odd) {
   font-size:14px; color:  #000000; background-color: #FFFFFF
 }
 
