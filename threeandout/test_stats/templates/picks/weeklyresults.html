@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 
+{% block head %}
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> 
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablesorter.js"></script>
+<script type="text/javascript"> 
+	$(document).ready(function() 
+	    { 
+	        $("#results").tablesorter({sortList: [[1,1]]});
+	    } 
+	);
+
+</script>
+
+{% endblock %}
+
 {% block link_weeklyresults_class %}active{% endblock %}
 
 {% block content %}
@@ -8,20 +22,23 @@
 
 {% if ok %}
 
-<table border>
+<table  border = 1 id="results" class="tablesorter">
+ <thead>
     <tr>
-    <td>user</td>
-    <td>score</td>
-    <td>qb</td>
-    <td>qb score</td>
+    <th>User</th>
+    <th>Score</th>
+    <th>QB</th>
+    <th>QB score</th>
     
-    <td>rb</td>
-    <td> rb score</td>
-    <td>te</td>
-    <td>te score</td>
-    <td>wr</td>
-    <td>wr score</td>
+    <th>RB</th>
+    <th> RB score</th>
+    <th>WR</th>
+    <th>WR score</th>
+    <th>TE</th>
+    <th>TE score</th>
     </tr>
+ </thead>
+ <tbody>
     {% for pick in picks %}
     <tr>
     <td>{{pick.user}}</td>
@@ -30,12 +47,13 @@
     <td>{{pick.qbScore}}</td>
     <td>{{pick.rbName}}</td>
     <td>{{pick.rbScore}}</td>
-    <td>{{pick.teName}}</td>
-    <td>{{pick.teScore}}</td>
     <td>{{pick.wrName}}</td>
     <td>{{pick.wrScore}}</td>
+    <td>{{pick.teName}}</td>
+    <td>{{pick.teScore}}</td>
     </tr>
     {% endfor %}
+</tbody>
 </table>
 {% else %}
 
