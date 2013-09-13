@@ -56,6 +56,9 @@ a:hover {
 .tablesorter tr:nth-child(odd) {
   font-size:14px; color:  #000000; background-color: #FFFFFF
 }
+.tablesorter tr:nth-child(even) {
+  font-size:14px; color:  #000000; background-color: #BED1DF
+}
 
 
 
