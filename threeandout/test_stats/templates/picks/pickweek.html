@@ -108,19 +108,38 @@ Pick a QB:
 <table  border = 1 id="QBs" class="tablesorter">
 <thead>
   <tr>
-    <th>Player</th>
-    <th>Team</th>
-    <th>Opponent</th>
-    <th>Score</th>
+  	<th width="36%" colspan="3"> Player Information </th>
+  	<th width="64%" colspan="8">Season Stats </th>
+  
+  <tr>
+    <th width="20%">Player</th>
+    <th width="8%">Team</th>
+    <th width="8%">Opponent</th>
+    <th width="8%">Score</th>
+    <th width="8%">Pass Yds</th>
+    <th width="8%">Pass TDs</th>
+    <th width="8%">Int</th>
+    <th width="8%">Rush Yds</th>
+    <th width="8%">Rush TDs</th>
+    <th width="8%">Rec Yds</th>
+    <th width="8%">Rec TDs</th>
   </tr>
  </thead>
  <tbody>
   {% for QB in QBs %}
   <tr id="{{QB.id}}">
-  	<td WIDTH="190" onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
-  	<td onclick="return setQB('{{QB.id}}')">{{QB.team}} </td>
-  	<td onclick="return setQB('{{QB.id}}')">{%if QB.team == QB.away%} {{QB.home}} {%else%} {{QB.away}} {%endif%}</td>
-  	<td onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
+  	<td width="20%"onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
+  	<td width="8%"onclick="return setQB('{{QB.id}}')">{{QB.team}} </td>
+  	<td width="8%"onclick="return setQB('{{QB.id}}')">{%if QB.team == QB.away%} {{QB.home}} {%else%} {{QB.away}} {%endif%}</td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.passYds}} </td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.passTd}} </td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.interceptions}} </td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.rushYds}} </td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.rushTd}} </td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.recYds}} </td>
+  	<td width="8%" onclick="return setQB('{{QB.id}}')">{{QB.recTd}} </td>
+	
   </tr>
   {% endfor %}
 </tbody>
