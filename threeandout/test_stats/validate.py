@@ -48,16 +48,7 @@ def ValidPlayers(week,position,user):
     
     players= NFLPlayer.objects.raw("select test_stats_nflplayer.id,test_stats_nflplayer.name, \
                                     test_stats_nflplayer.team,test_stats_nflschedule.home,test_stats_nflschedule.away,\
-                                    SUM(test_stats_nflweeklystat.score) as 'scoretodate', \
-                                    test_stats_nflweeklystat.recTd, \
-                                    test_stats_nflweeklystat.fumbles, \
-                                    test_stats_nflweeklystat.interceptions, \
-                                    test_stats_nflweeklystat.passTd, \
-                                    test_stats_nflweeklystat.passYds, \
-                                    test_stats_nflweeklystat.fumbleRecoveryTDs, \
-                                    test_stats_nflweeklystat.rushYds, \
-                                    test_stats_nflweeklystat.recYds, \
-                                    test_stats_nflweeklystat.rushTd \
+                                    SUM(test_stats_nflweeklystat.score) as 'scoretodate' \
                                     from test_stats_nflplayer \
                                     join test_stats_nflschedule \
                                     on (test_stats_nflplayer.team=test_stats_nflschedule.home \
