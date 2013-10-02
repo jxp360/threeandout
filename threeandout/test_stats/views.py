@@ -169,15 +169,7 @@ def personalresults(request):
 
 @login_required
 def selected(request, user):
-    try:
-        userObj = User.objects.get(id=user)
-    except ObjectDoesNotExist:
-        return HttpResponse('Invalid User "%s"' %user)
-    #try:
-    #    player = FFLPlayer.objects.get(teamname=user)
-    #except ObjectDoesNotExist:
-    #    return HttpResponse('Invalid User "%s"' %user)
-    player = FFLPlayer.objects.get(user=userObj)
+    player = FFLPlayer.objects.get(id=user)
     picks = Picks.objects.filter(fflPlayer=player)
     qbs={}
     rbs={}
