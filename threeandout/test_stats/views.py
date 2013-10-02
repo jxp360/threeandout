@@ -15,7 +15,7 @@ import time
 import pytz
 from django.db.models import Q
 from validate import *
-from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
+from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat,Standing
 from test_stats.forms import FFLPlayerForm
 
 
@@ -130,18 +130,9 @@ def pickweek(request, week):
                                                    'currentpicks':currentpicks})
 @login_required    
 def currentstandings(request):
-    players = FFLPlayer.objects.all()
-    tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
-    tmp.sort(reverse=True)
-    leaders = [{'user':x[1],'score':x[0], 'id':x[2], 'rank': idx+1} for idx,x in enumerate(tmp)]
-    
-    for player in leaders:
-        picks = Picks.objects.filter(fflPlayer__teamname=player['user'])
-        for pick in picks:
-            if pick.score !=0:
-                player[pick.week] = pick.score
-    
-    return render(request, 'picks/currentstandings.html', {'scores':leaders})
+    standings = Standing.objects.all().order_by("-scoretodate")
+    return render(request, 'picks/currentstandings.html', {'scores':standings})
+
 
 @login_required    
 def weeklyresultssummary(request):

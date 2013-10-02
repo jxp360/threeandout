@@ -49,26 +49,26 @@
  <tbody>
     {% for score in scores %}
     <tr>
-    <td>{{score.rank}}</td>
-    <td><a href="{% url 'threeandout:selected' score.id %}">{{score.user}}</a></td> 
-    <td>{{score.score}}</td>
-    <td>{{score.1}}</td>
-    <td>{{score.2}}</td>
-    <td>{{score.3}}</td>
-    <td>{{score.4}}</td>
-    <td>{{score.5}}</td>
-    <td>{{score.6}}</td>
-    <td>{{score.7}}</td>
-    <td>{{score.8}}</td>
-    <td>{{score.9}}</td>
-    <td>{{score.10}}</td>
-    <td>{{score.11}}</td>
-    <td>{{score.12}}</td>
-    <td>{{score.13}}</td>
-    <td>{{score.14}}</td>
-    <td>{{score.15}}</td>
-    <td>{{score.16}}</td>
-    <td>{{score.17}}</td>
+    <td>{{forloop.counter}}</td>
+    <td><a href="{% url 'threeandout:selected' score.fflPlayer.id %}">{{score.fflPlayer.teamname}}</a></td> 
+    <td>{{score.scoretodate}}</td>
+    <td>{%if score.week1 != 0.0%} {{score.week1}} {%endif%}</td>
+    <td>{%if score.week2 != 0.0%} {{score.week2}}{%endif%}</td>
+    <td>{%if score.week3 != 0.0%} {{score.week3}}{%endif%}</td>
+    <td>{%if score.week4 != 0.0%} {{score.week4}}{%endif%}</td>
+    <td>{%if score.week5 != 0.0%} {{score.week5}}{%endif%}</td>
+    <td>{%if score.week6 != 0.0%} {{score.week6}}{%endif%}</td>
+    <td>{%if score.week7 != 0.0%} {{score.week7}}{%endif%}</td>
+    <td>{%if score.week8 != 0.0%} {{score.week8}}{%endif%}</td>
+    <td>{%if score.week9 != 0.0%} {{score.week9}}{%endif%}</td>
+    <td>{%if score.week10 != 0.0%} {{score.week10}}{%endif%}</td>
+    <td>{%if score.week11 != 0.0%} {{score.week11}}{%endif%}</td>
+    <td>{%if score.week12 != 0.0%} {{score.week12}}{%endif%}</td>
+    <td>{%if score.week13 != 0.0%} {{score.week13}}{%endif%}</td>
+    <td>{%if score.week14 != 0.0%} {{score.week14}}{%endif%}</td>
+    <td>{%if score.week15 != 0.0%} {{score.week15}}{%endif%}</td>
+    <td>{%if score.week16 != 0.0%} {{score.week16}}{%endif%}</td>
+    <td>{%if score.week17 != 0.0%} {{score.week17}}{%endif%}</td>
     
     </tr>
     {% endfor %}
