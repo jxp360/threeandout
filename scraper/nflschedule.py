@@ -130,6 +130,9 @@ class ScheduleScraper(object):
           dateInt = int(''.join([x for x in date if x.isdigit()]))
           date = datetime.date(year, monthNum, dateInt) 
         else:
+          if date==None:
+             print "FOUND A GAME WITHOUT A DATE -- skipping it!"
+             continue
           #we've got a new game -parse out home and away team
           home = str(tag.find(**{'class':['team-name home ', 'team-name home lost']}).text)
           away = str(tag.find(**{'class':['team-name away ', 'team-name away lost']}).text)
