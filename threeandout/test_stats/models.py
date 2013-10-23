@@ -14,6 +14,10 @@ class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
     team = models.CharField(max_length=200)
     position = models.CharField(max_length=2, choices=POSITIONS)
+    
+    def __unicode__(self):
+        return self.name
+    
 
 class NFLWeeklyStat(models.Model):
     week              = models.IntegerField()
@@ -42,6 +46,9 @@ class FFLPlayer(models.Model):
         return sum([x.score for x in totalPicks])
 
     scoretodate = property(calculateyearlyscore)
+    
+    def __unicode__(self):
+        return self.teamname
 
 class Picks(models.Model):
     week = models.IntegerField()
@@ -90,3 +97,6 @@ class Standing(models.Model):
     week15 = models.FloatField()
     week16 = models.FloatField()
     week17 = models.FloatField()
+    
+    def __unicode__(self):
+        return self.fflPlayer.teamname

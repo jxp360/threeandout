@@ -78,7 +78,7 @@ def submit(request,week):
         else:
             return HttpResponse("Invalid Pick")
     
-    return HttpResponseRedirect(reverse('threeandout:picksummary', args=(week)))
+    return HttpResponseRedirect(reverse('threeandout:picksummary', args=[week]))
 
 @login_required
 def picksummary(request,week):
