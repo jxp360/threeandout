@@ -48,6 +48,7 @@ def ValidPlayers(week,position,user):
     
     players= NFLPlayer.objects.raw("select test_stats_nflplayer.id,test_stats_nflplayer.name, \
                                     test_stats_nflplayer.team,test_stats_nflschedule.home,test_stats_nflschedule.away,\
+                                    COUNT(test_stats_nflplayer.id) as 'numPicked', \
                                     SUM(test_stats_nflweeklystat.score) as 'scoretodate' \
                                     from test_stats_nflplayer \
                                     join test_stats_nflschedule \
@@ -59,9 +60,9 @@ def ValidPlayers(week,position,user):
                                     AND (test_stats_nflplayer.position=%s) \
                                     AND (test_stats_nflschedule.kickoff>%s) \
                                     GROUP BY  test_stats_nflplayer.id", [week,position,locktime_str])
-
-    
-    pickLimitedPlayers= NFLPlayer.objects.raw("select test_stats_nflplayer.id, \
+         
+            
+    pickedPlayers= NFLPlayer.objects.raw("select test_stats_nflplayer.id, \
                                     COUNT(test_stats_nflplayer.id) as 'numPicked' \
                                     from test_stats_nflplayer \
                                     join test_stats_picks \
@@ -71,17 +72,22 @@ def ValidPlayers(week,position,user):
                                     OR test_stats_nflplayer.id=test_stats_picks.te_id) \
                                     where test_stats_picks.week!=%s \
                                     AND test_stats_picks.fflplayer_id=%s\
-                                    GROUP BY test_stats_nflplayer.id \
-                                    HAVING numPicked>=3 ", [week,fflplayer.id])
-    limitedids=[]
+                                    GROUP BY test_stats_nflplayer.id", [week,fflplayer.id])
     validplayers = []
-    for player in pickLimitedPlayers:
-        limitedids.append(player.id)
-    
+    # For each possible player check how often they have been picked 
     for player in players:
-        if player.id not in limitedids:
-            validplayers.append(player)
-            
+        for pickedPlayer in pickedPlayers:
+            if player.id == pickedPlayer.id:
+                player.numPicked = pickedPlayer.numPicked
+                if player.numPicked <3:
+                    validplayers.append(player)
+                break
+        #Player has never been picked
+        else:
+            player.numPicked = 0    
+            validplayers.append(player)   
+                
+                  
     return validplayers
 
 def validatePick(week,pick):
