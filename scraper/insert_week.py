@@ -30,6 +30,6 @@ def getStats(week, year):
 if __name__=="__main__":
   week=5
   year = 2013
-  getStats(week,year)
+  #getStats(week,year)
   buildStandings()
 
