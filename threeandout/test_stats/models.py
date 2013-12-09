@@ -100,3 +100,14 @@ class Standing(models.Model):
     
     def __unicode__(self):
         return self.fflPlayer.teamname
+
+class PlayoffStanding(models.Model):
+    fflPlayer = models.ForeignKey(FFLPlayer, related_name='playoffStandingPlayer')
+    scoretodate = models.FloatField()
+    week1 = models.FloatField()
+    week2 = models.FloatField()
+    week3 = models.FloatField()
+
+    def __unicode__(self):
+        return self.fflPlayer.teamname
+
