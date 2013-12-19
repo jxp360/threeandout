@@ -33,6 +33,7 @@ class NFLWeeklyStat(models.Model):
     rushTd            = models.IntegerField()
     player            = models.ForeignKey(NFLPlayer)
 
+
 class FFLPlayer(models.Model):
     user = models.ForeignKey(User)
     #name = models.CharField(max_length=200)
@@ -77,6 +78,7 @@ class NFLSchedule(models.Model):
     week = models.IntegerField()
     kickoff = models.DateTimeField(datetime.datetime.now)
 
+
 class Standing(models.Model):
     fflPlayer = models.ForeignKey(FFLPlayer, related_name='standingPlayer')
     scoretodate = models.FloatField()
@@ -100,6 +102,10 @@ class Standing(models.Model):
     
     def __unicode__(self):
         return self.fflPlayer.teamname
+
+
+class madePlayoffs(models.Model):
+    fflPlayer = models.ForeignKey(FFLPlayer)    
 
 class PlayoffStanding(models.Model):
     fflPlayer = models.ForeignKey(FFLPlayer, related_name='playoffStandingPlayer')
