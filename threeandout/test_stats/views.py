@@ -15,7 +15,7 @@ import time
 import pytz
 from django.db.models import Q
 from validate import *
-from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat,Standing
+from test_stats.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat,Standing,PlayoffStanding
 from test_stats.forms import FFLPlayerForm
 
 
@@ -133,6 +133,10 @@ def currentstandings(request):
     standings = Standing.objects.all().order_by("-scoretodate")
     return render(request, 'picks/currentstandings.html', {'scores':standings})
 
+@login_required    
+def playoffstandings(request):
+    standings = PlayoffStanding.objects.all().order_by("-scoretodate")
+    return render(request, 'picks/playoffstandings.html', {'scores':standings})
 
 @login_required    
 def weeklyresultssummary(request):
