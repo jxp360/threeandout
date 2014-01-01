@@ -71,8 +71,8 @@ if __name__=="__main__":
   if PLAYOFF_WEEK==1:
     games=[{'homeTeam':Colts,'awayTeam':Chiefs,'year':year,'month':month,'day':4,'hour':16,'minute':35},
            {'homeTeam':Eagles,'awayTeam':Saints,'year':year,'month':month,'day':4,'hour':20,'minute':10},
-           {'homeTeam':Bengals,'awayTeam':Chargers,'year':year,'month':month,'day':4,'hour':13,'minute':5},
-           {'homeTeam':Packers,'awayTeam':Fourtyniners,'year':year,'month':month,'day':4,'hour':16,'minute':40}]
+           {'homeTeam':Bengals,'awayTeam':Chargers,'year':year,'month':month,'day':5,'hour':13,'minute':5},
+           {'homeTeam':Packers,'awayTeam':Fourtyniners,'year':year,'month':month,'day':5,'hour':16,'minute':40}]
 
   elif PLAYOFF_WEEK==2:
     #fill this out when 2nd week of playoff schedule is available
