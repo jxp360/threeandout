@@ -22,6 +22,9 @@ urlpatterns = patterns('',
     # ex: /threeandout/currentstandings
     url(r'currentstandings/$', views.currentstandings, name='currentstandings'),
 
+    # ex: /threeandout/playoffstandings
+    url(r'playoffstandings/$', views.playoffstandings, name='playoffstandings'),
+
     # ex: /threeandout/weeklyresultssummary
     url(r'weeklyresultssummary/$', views.weeklyresultssummary, name='weeklyresultssummary'),
 

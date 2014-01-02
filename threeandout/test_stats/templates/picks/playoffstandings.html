@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> 
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablesorter.js"></script>
+<script type="text/javascript"> 
+	$(document).ready(function() 
+	    { 
+	        $("#standings").tablesorter({sortList: [[0,0]]});
+	    } 
+	);
+
+</script>
+
+{% endblock %}
+
+{% block link_standings_class %}active{% endblock %}
+
+{% block content %}
+
+
+<h1> Playoff Standings </h1>
+<a href="{% url 'threeandout:currentstandings' %}">Switch to Current Standings</a> 
+
+<table  border = 1 id="standings" class="tablesorter">
+ <thead>
+    <tr>
+    <th>Rank</th>
+    <th>User</th>
+    <th>Total Score</th>
+    <th>Wild Card Round</th>
+    <th>Divisional Round</th>
+    <th>Conference Championship Round</th>
+    </tr>
+ </thead>
+ <tbody>
+    {% for score in scores %}
+    <tr>
+    <td>{{forloop.counter}}</td>
+    <td><a href="{% url 'threeandout:selected' score.fflPlayer.id %}">{{score.fflPlayer.teamname}}</a></td> 
+    <td>{{score.scoretodate}}</td>
+    <td>{%if score.week1 != 0.0%} {{score.week1}} {%endif%}</td>
+    <td>{%if score.week2 != 0.0%} {{score.week2}}{%endif%}</td>
+    <td>{%if score.week3 != 0.0%} {{score.week3}}{%endif%}</td>
+
+    
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endblock %}

@@ -42,4 +42,26 @@ def buildStandings():
                             week17 = points[17],
                             )
         standing.save()
+
+def buildPlayoffStandings():
+    test_stats.models.PlayoffStanding.objects.all().delete()
     
+    fflplayers = test_stats.models.madePlayoffs.objects.all()
+
+    for playoffplayer in fflplayers:
+        fflplayer = playoffplayer.fflyplayer
+        points=[0] *3
+        for week in range(18,21):
+                stat = test_stats.models.Picks.objects.filter(week=week,fflPlayer=fflplayer)
+                if len(stat) == 1:
+                    points[week] = stat[0].score
+                elif len(stat) >1:
+                    print "This shouldn't happen"
+                
+        standing = test_stats.models.Standing(fflPlayer=fflplayer,
+                            scoretodate=fflplayer.scoretodate,
+                            week1 = points[1],
+                            week2 = points[2],
+                            week3 = points[3],
+                            )
+        standing.save()    
