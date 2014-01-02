@@ -5,11 +5,6 @@
 {% block content %}
 <h1> Make Your Picks </h1>
 
-{% for week in weeks %}
-    
-    <a href="{% url 'threeandout:pickweek' week %}">Make Picks for {{week}} </a><br>
-
-{% endfor %}
 
     <a href="{% url 'threeandout:pickweek' 18 %}">Make Picks for Wild Card Round of the Playoffs </a><br>
     <a href="{% url 'threeandout:pickweek' 19 %}">Make Picks for Divisional Round of the Playoffs </a><br>
