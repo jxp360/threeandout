@@ -1,5 +1,6 @@
 import mechanize
 from BeautifulSoup import BeautifulSoup
+from nflschedule import ScheduleScraper
 
 class NflScraper(object):
   """ Scrape off statistics from nfl.com
@@ -135,6 +136,15 @@ class NflScraper(object):
                   d['Team'] = second
               else:
                   d['Team'] = second[:viewIndex]
+              for team in ScheduleScraper.TEAM_MAP.values():
+                  if d['Team'].find(team) == 0:
+                     if d['Team'].find(team+'IR') == 0:
+                         d['Team'] = team + 'IR'
+                     elif d['Team'].find(team+'PUP') == 0:
+                         d['Team'] = team + 'PUP'
+                     else:
+                         d['Team'] = team
+                     break
           else:
               d['Team']="None"
           self.players.append(d)

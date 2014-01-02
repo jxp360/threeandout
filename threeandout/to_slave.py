@@ -11,9 +11,4 @@ def run():
  ContentType.objects.using('slave').all().delete()
 
  for i in ContentType.objects.all():
-  if str(i) == 'user':
-   do(i.model_class())
-
- for i in ContentType.objects.all():
-  if not str(i) == 'user':
-   do(i.model_class())
+  do(i.model_class())
