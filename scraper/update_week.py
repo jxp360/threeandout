@@ -4,21 +4,35 @@ import os
 if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
   os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings' 
 import nflstats
+import playoffstats
 import test_stats.models
 from build_standings import buildStandings
 
-def getStats(week, year):
-  s = nflstats.NflScraper()
+def getStats(week, year,forcePlayoffScraper=False):
+  if week >18 or forcePlayoffScraper:
+    print "using playoffstats"
+    s = playoffstats.NflScraper()
+  else:
+    print "using regular stats"
+    s = nflstats.NflScraper()
   stats = s.scrapeWeek(int(week),int(year))
   for player in stats:
     args = {}
     for scraperKey, modelKey in s.PLAYER_MAP.items():  
-      args[modelKey]=player[scraperKey]
+      try:
+        args[modelKey]=player[scraperKey]
+      except KeyError:
+        pass
+        #print 'player has no key "%s"' %scraperKey
     dbPlayers = test_stats.models.NFLPlayer.objects.filter(**args)
     if len(dbPlayers)==1:
       statArgs={}
       for scraperKey, modelKey in s.STATS_MAP.items():
-        statArgs[modelKey]=player[scraperKey]
+        try:
+          statArgs[modelKey]=player[scraperKey]
+        except KeyError:
+          #print 'player missing key "%s"' %scraperKey
+          statArgs[modelKey]=0
       statArgs['player']=dbPlayers[0]
       statArgs['week']=week
       updateStats = test_stats.models.NFLWeeklyStat.objects.filter(player=dbPlayers[0], week=week)
@@ -27,7 +41,13 @@ def getStats(week, year):
         playerStat = test_stats.models.NFLWeeklyStat.objects.get(player=dbPlayers[0], week=week)
         print '%s already has %s points this week, updating to %s points' % (dbPlayers[0].name, str(playerStat.score), player['Points'])
         for scraperKey, modelKey in s.STATS_MAP.items():
-          setattr(playerStat,modelKey, player[scraperKey])
+          try:
+            value=player[scraperKey]
+          except KeyError:
+            value=0
+            #print 'player missing key "%s"' %scraperKey
+          setattr(playerStat,modelKey, value)
+     
           #tmpPS = getattr(playerStat,modelKey)
           #tmpPS = player[scraperKey]
         playerStat.save()
