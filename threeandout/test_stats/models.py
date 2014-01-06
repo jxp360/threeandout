@@ -105,7 +105,10 @@ class Standing(models.Model):
 
 
 class madePlayoffs(models.Model):
-    fflPlayer = models.ForeignKey(FFLPlayer)    
+    fflPlayer = models.ForeignKey(FFLPlayer)   
+    
+    def __unicode__(self):
+        return self.fflPlayer.teamname 
 
 class PlayoffStanding(models.Model):
     fflPlayer = models.ForeignKey(FFLPlayer, related_name='playoffStandingPlayer')
