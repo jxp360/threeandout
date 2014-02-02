@@ -51,7 +51,7 @@ def insertGames(week,games):
 if __name__=="__main__":
   #This is set-up for the 2013 season (2014 playoffs)
   #change PLAYOFF_WEEK and update the games list for each week to do the insertion
-  PLAYOFF_WEEK=1
+  PLAYOFF_WEEK=3
 
   year=2014
   month=1
@@ -76,15 +76,15 @@ if __name__=="__main__":
 
   elif PLAYOFF_WEEK==2:
     #fill this out when 2nd week of playoff schedule is available
-    games=[{'homeTeam':Patriots,'awayTeam':TBD,'year':year,'month':month,'day':TBD,'hour':TBD,'minute':TBD},
-           {'homeTeam':Broncos,'awayTeam':TBD,'year':year,'month':month,'day':TBD,'hour':TBD,'minute':TBD},
-           {'homeTeam':Seahawks,'awayTeam':TBD,'year':year,'month':month,'day':TBD,'hour':TBD,'minute':TBD},
-           {'homeTeam':Panthers,'awayTeam':TBD,'year':year,'month':month,'day':TBD,'hour':TBD,'minute':TBD}]
+    games=[{'homeTeam':Patriots,'awayTeam':Colts,'year':year,'month':month,'day':11,'hour':20,'minute':15},
+           {'homeTeam':Broncos,'awayTeam':Chargers,'year':year,'month':month,'day':12,'hour':16,'minute':40},
+           {'homeTeam':Seahawks,'awayTeam':Saints,'year':year,'month':month,'day':11,'hour':16,'minute':35},
+           {'homeTeam':Panthers,'awayTeam':Fourtyniners,'year':year,'month':month,'day':12,'hour':13,'minute':05}]
 
   elif PLAYOFF_WEEK==3:
     #fill this out when 3rd week of playoff schedule is available
-    games=[{'homeTeam':TBD,'awayTeam':TBD,'year':year,'month':month,'day':TBD,'hour':TBD,'minute':TBD},
-           {'homeTeam':TBD,'awayTeam':TBD,'year':year,'month':month,'day':TBD,'hour':TBD,'minute':TBD}]
+    games=[{'homeTeam':Broncos,'awayTeam':Patriots,'year':year,'month':month,'day':19,'hour':15,'minute':00},
+           {'homeTeam':Seahawks,'awayTeam':Fourtyniners,'year':year,'month':month,'day':19,'hour':18,'minute':30}]
 
   else:
     print "invalid PLAYOF_WEEK %s" %PLAYOFF_WEEK

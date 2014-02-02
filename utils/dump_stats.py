@@ -44,4 +44,4 @@ def getCsv(week,csvFileName):
   f.close()
 
 if __name__=="__main__":
-  getCsv(5,'tmp.csv')
+  getCsv(18,'tmp.csv')

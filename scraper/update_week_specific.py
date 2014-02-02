@@ -48,5 +48,6 @@ if __name__=="__main__":
   year = 2013
   print week
   print delta 
-  getStats(11,year)
+  week = 18  
+  #getStats(18,year)
   buildStandings()  

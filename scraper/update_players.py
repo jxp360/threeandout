@@ -12,7 +12,7 @@ if test_stats.models.NFLPlayer.objects.count() ==0:
 else:
   print "players in database", test_stats.models.NFLPlayer.objects.count()
 s = nflstats.NflScraper()
-stats = s.scrapeWeek(5,2013)
+stats = s.scrapeWeek(15,2013)
 manualUpdatesNeeded=[]
 for player in stats:
   args = {}

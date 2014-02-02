@@ -19,6 +19,10 @@ ADMINS = (
 
 SITE_NAME='www.threeandoutfantasyfootball.com'
 
+dburl = '/data/test/dbs/threeandout.db'
+
+
+
 MANAGERS = ADMINS
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.mysql', 
@@ -26,7 +30,11 @@ DATABASES = {
                 'USER': 'threeandout',
                 'PASSWORD': 'Thr33&0ut',
                 'HOST': 'threeandout.c0bnvpjdlyf5.us-east-1.rds.amazonaws.com',
-                'PORT': 3306 }
+                'PORT': 3306 },
+    'slave': {'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': dburl,
+                }
+
 }
 
 

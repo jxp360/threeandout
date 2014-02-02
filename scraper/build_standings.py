@@ -13,8 +13,8 @@ def buildStandings():
     fflplayers = test_stats.models.FFLPlayer.objects.all()
 
     for fflplayer in fflplayers:
-        points=[0] *18
-        for week in range(1,18):
+        points=[0] *21
+        for week in range(1,21):
                 stat = test_stats.models.Picks.objects.filter(week=week,fflPlayer=fflplayer)
                 if len(stat) == 1:
                     points[week] = stat[0].score

@@ -43,6 +43,7 @@ class FFLPlayer(models.Model):
     
     def calculateyearlyscore(self):
         #TODO: Calcuate the total score of all picks up to this point
+        #totalPicks = Picks.objects.filter(fflPlayer=self).filter(week__lte=17)
         totalPicks = Picks.objects.filter(fflPlayer=self)
         return sum([x.score for x in totalPicks])
 

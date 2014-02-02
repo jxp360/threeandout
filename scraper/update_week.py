@@ -9,7 +9,7 @@ import test_stats.models
 from build_standings import buildStandings
 
 def getStats(week, year,forcePlayoffScraper=False):
-  if week >18 or forcePlayoffScraper:
+  if week >=18 or forcePlayoffScraper:
     print "using playoffstats"
     s = playoffstats.NflScraper()
   else:
