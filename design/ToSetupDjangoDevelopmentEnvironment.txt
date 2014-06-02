@@ -1,0 +1,29 @@
+Assumptions:
+* Using Centos 6.4
+* Have and know how to use github account
+* You have EPEL repos installed on the system and they are enabled
+* git is installed
+
+
+Steps To Setup Django Development Environment
+1) Install pip -> sudo yum install python-pip
+2) Install virtualenv -> sudo pip install virtualenvwrapper
+3) Setup virtual env
+  A) Add the following to your .basrhc file:
+    export WORKON_HOME=$HOME/.virtualenvs
+    export PROJECT_HOME=/directory/you/do/work #i recommend /data/threeandout
+    source /usr/bin/virtualenvwrapper.sh
+  B) Source your .basrhc file
+  C) Create your virtual environment -> mkvirtualenv ENVIRONMENT_NAME
+(whatever you want, say, threeandout)
+  D) You type deactivate to leave
+  E) To go into an environment, type 'workon ENVIRONMENT_NAME'
+4) Clone the threeandout repo -> git clone
+http://github.com/jxp360/threeandout.git
+5) While in the virtual environment, install all dev dependecies -> pip
+install -r /path/to/requirements/dev.txt
+6) Go to root of threeand out and syncdb ->
+python manage.py syncdb --settings=threeandout.settings.dev
+7) Run the server ->
+python manager.py runserver 0:80 --settings=threeandout.setings.dev
+

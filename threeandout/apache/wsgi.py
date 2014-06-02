@@ -35,5 +35,5 @@ from django.contrib.auth.handlers.modwsgi import check_password
 from django.core.handlers.wsgi import WSGIHandler
 application = WSGIHandler()
 
-import threeandout.monitor
-threeandout.monitor.start(interval=1.0)
+import apache.monitor
+apache.monitor.start(interval=1.0)

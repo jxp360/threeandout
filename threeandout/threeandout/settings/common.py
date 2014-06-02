@@ -1,18 +1,9 @@
 # Django settings for threeandout project.
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
-
+import os
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 ADMINS = (
-    ('Jeff Pfeiffenberger', 'jxp360@gmail.com'), )
+    ('Jeff Pfeiffenberger', 'jxp360@gmail.com'),
     ('Bryan Gregory', 'bryan.scott.gregory@googlemail.com'),
     ('Grant Faiks', 'grant.faiks@gmail.com'),
 )
@@ -20,17 +11,6 @@ ADMINS = (
 SITE_NAME='www.threeandoutfantasyfootball.com'
 
 MANAGERS = ADMINS
-dburl = '/data/test/dbs/threeandout.db'
-import os
-if os.environ.has_key('THREEANDOUT_DB'):
-    dburl = os.environ['THREEANDOUT_DB']
-print 'DBURL = %s' % dburl
-DATABASES = {
-    'default': {'ENGINE': 'django.db.backends.sqlite3', 
-                'NAME': dburl,
-                }
-}
-
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -61,7 +41,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = PROJECT_PATH + '/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -72,7 +52,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = PROJECT_PATH + '/media/static/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -122,8 +102,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/data/threeandout_test/threeandout/templates',
-    '/data/threeandout_test/threeandout/threeandout/templates',
+    PROJECT_PATH + '/media/static/templates',
 )
 
 LOGIN_URL = 'threeandout/login'
@@ -142,35 +121,6 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'test_stats',
+    'apps.ff_core',
 )
 
-
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
-}

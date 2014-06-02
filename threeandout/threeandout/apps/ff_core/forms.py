@@ -1,6 +1,6 @@
 from django import forms
 
-from test_stats.models import FFLPlayer
+from apps.ff_core.models import FFLPlayer
 
 class FFLPlayerForm(forms.ModelForm):
     class Meta:

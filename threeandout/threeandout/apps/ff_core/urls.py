@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth import views as authviews
-from test_stats import views
+from apps.ff_core import views
 
 urlpatterns = patterns('',
 
