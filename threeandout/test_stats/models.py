@@ -10,9 +10,17 @@ POSITIONS = (
     ('TE', 'Tight End'),
 )
 
+class NFLTeam(models.Model):
+    city = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=3)
+    
+    def __unicode__(self):
+        return self.name
+
 class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
-    team = models.CharField(max_length=200)
+    team = models.ForeignKey(NFLTeam)
     position = models.CharField(max_length=2, choices=POSITIONS)
     
     def __unicode__(self):
@@ -74,8 +82,8 @@ class Picks(models.Model):
     score = property(calculatescore)
 
 class NFLSchedule(models.Model):
-    home = models.CharField(max_length=200)
-    away = models.CharField(max_length=200)
+    home = models.ForeignKey(NFLTeam, related_name='homeTeam')
+    away = models.ForeignKey(NFLTeam, related_name='awayTeam')
     week = models.IntegerField()
     kickoff = models.DateTimeField(datetime.datetime.now)
 

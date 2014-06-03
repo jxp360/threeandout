@@ -13,6 +13,8 @@ def hasNotStarted(game, buffer=timedelta(0)):
 def validateTwoOrLessPicks(fflplayer, player,position,week):
     # Count the number of times a pick for the given FFLplayer matches the NFL player
     # Exclude the picking week because re-picking a player does not increase the number of uses
+    #TODO: Fix this
+    return True
     if position == "QB":
         allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,qb=player).exclude(week=week).count()
         return (allUserMatches)<=2
@@ -31,14 +33,19 @@ def validateTwoOrLessPicksAll(fflplayer,pick,week):
              validateTwoOrLessPicks(fflplayer,pick.rb,"RB",week) and 
              validateTwoOrLessPicks(fflplayer,pick.wr,"WR",week) and 
              validateTwoOrLessPicks(fflplayer,pick.te,"TE",week))
+    #TODO: Fix this
+    return True
     return valid
 
     
 def validatePlayer(week,player):
+    #TODO: Fix this
+    return True
     try:
-        game = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team) | Q(away=player.team)))
+        game = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team.short_name) | Q(away=player.team.short_name)))
     except:
         return False
+
     return hasNotStarted(game, timedelta(minutes=PICK_LOCKOUT_MINUTES))
                          
 def ValidPlayers(week,position,user):
@@ -46,6 +53,9 @@ def ValidPlayers(week,position,user):
     locktime = datetime.utcnow().replace(tzinfo=pytz.timezone('utc')) +timedelta(minutes=PICK_LOCKOUT_MINUTES)
     locktime_str = time.strftime('%Y-%m-%d %H:%M:%S',locktime.timetuple())
     
+    validplayers=NFLPlayer.objects.filter(position=position)
+    #TODO: Fix this
+    """
     players= NFLPlayer.objects.raw("select test_stats_nflplayer.id,test_stats_nflplayer.name, \
                                     test_stats_nflplayer.team,test_stats_nflschedule.home,test_stats_nflschedule.away,\
                                     COUNT(test_stats_nflplayer.id) as 'numPicked', \
@@ -86,7 +96,8 @@ def ValidPlayers(week,position,user):
         else:
             player.numPicked = 0    
             validplayers.append(player)   
-                
+    
+    """            
                   
     return validplayers
 
