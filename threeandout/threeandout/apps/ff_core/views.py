@@ -20,15 +20,15 @@ from threeandout.apps.ff_core.forms import FFLPlayerForm
 
 
 def index(request):
-    return render(request, 'picks/index.html', {})
+    return render(request, 'ff_core/index.html', {})
 
 def rules(request):
-    return render(request, 'picks/rules.html', {})
+    return render(request, 'ff_core/rules.html', {})
 
 @login_required
 def picks(request):
     weeks = range(1,18)
-    return render(request, 'picks/pick.html', {'weeks':weeks})
+    return render(request, 'ff_core/pick.html', {'weeks':weeks})
     
 @login_required
 def submit(request,week):
@@ -89,7 +89,7 @@ def picksummary(request,week):
     wr = pick.wr.name
     te = pick.te.name
 
-    return render(request, 'picks/picksummary.html', {'week':week,'qb':qb,'rb':rb,'wr':wr,'te':te})
+    return render(request, 'ff_core/picksummary.html', {'week':week,'qb':qb,'rb':rb,'wr':wr,'te':te})
 
 @login_required
 def pickweek(request, week):
@@ -125,18 +125,18 @@ def pickweek(request, week):
     if te !=None:
         if not (validatePlayer(week,pick.te)): TEs = []            
     
-    return render(request, 'picks/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
+    return render(request, 'ff_core/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,
                                                    'currentpicks':currentpicks})
 @login_required    
 def currentstandings(request):
     standings = Standing.objects.all().order_by("-scoretodate")
-    return render(request, 'picks/currentstandings.html', {'scores':standings})
+    return render(request, 'ff_core/currentstandings.html', {'scores':standings})
 
 @login_required    
 def playoffstandings(request):
     standings = PlayoffStanding.objects.all().order_by("-scoretodate")
-    return render(request, 'picks/playoffstandings.html', {'scores':standings})
+    return render(request, 'ff_core/playoffstandings.html', {'scores':standings})
 
 @login_required    
 def weeklyresultssummary(request):
@@ -145,7 +145,7 @@ def weeklyresultssummary(request):
     tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
     tmp.sort(reverse=True)
     leaders = [{'user':x[1],'score':x[0], 'id':x[2], 'rank': idx} for idx,x in enumerate(tmp)]
-    return render(request, 'picks/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
+    return render(request, 'ff_core/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
 
 @login_required
 def weeklyresults(request,week):
@@ -162,14 +162,14 @@ def weeklyresults(request,week):
     else:
         pickData = []
     
-    return render(request, 'picks/weeklyresults.html', {'week':week, 'picks':pickData, 'ok':okToDisplay})
+    return render(request, 'ff_core/weeklyresults.html', {'week':week, 'picks':pickData, 'ok':okToDisplay})
 
 @login_required
 def personalresults(request):
     player = FFLPlayer.objects.get(user=request.user)
     picks = Picks.objects.filter(fflPlayer=player).order_by('week')
     pickData= [getPickData(pick) for pick in picks]
-    return render(request, 'picks/personalresults.html', {'picks':pickData})
+    return render(request, 'ff_core/personalresults.html', {'picks':pickData})
 
 @login_required
 def selected(request, user):
@@ -200,7 +200,7 @@ def selected(request, user):
     wrList = [x[1] for x in wrTmp]
     teList = [x[1] for x in teTmp]
     rbList = [x[1] for x in rbTmp]
-    return render(request, 'picks/selected.html', {'qb':qbList,'wr':wrList,'te':teList,'rb':rbList, 'fflplayer':player.teamname})
+    return render(request, 'ff_core/selected.html', {'qb':qbList,'wr':wrList,'te':teList,'rb':rbList, 'fflplayer':player.teamname})
 
 def updateDict(positionDict, player, week, showPending):
     playerPending = validatePlayer(week, player)
@@ -262,7 +262,7 @@ def editPreferences(request):
             return HttpResponseRedirect('/threeandout/picks/')
     else:
         form = FFLPlayerForm(instance=ffl)
-    return render_to_response('picks/preferences.html', {
+    return render_to_response('ff_core/preferences.html', {
                                   'form': form,
                                   'title': 'Edit Preferences' },
                                   context_instance=RequestContext(request))
@@ -295,7 +295,7 @@ def registerUser(request):
     else:
         form = UserCreateForm() # An unbound form
     
-    return render_to_response('picks/register.html', {
+    return render_to_response('ff_core/register.html', {
         'form': form,
     },context_instance=RequestContext(request))
 

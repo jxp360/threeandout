@@ -2,6 +2,9 @@ Assumptions:
 * Using Centos 6.4
 * Have and know how to use github account
 * You have EPEL repos installed on the system and they are enabled
+  wget
+http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+  sudo rpm -ivh epel-release-6-8.noarch.rpm
 * git is installed
 
 
@@ -20,10 +23,11 @@ Steps To Setup Django Development Environment
   E) To go into an environment, type 'workon ENVIRONMENT_NAME'
 4) Clone the threeandout repo -> git clone
 http://github.com/jxp360/threeandout.git
-5) While in the virtual environment, install all dev dependecies -> pip
+5) Install yum install python-devel
+6) While in the virtual environment, install all dev dependecies -> pip
 install -r /path/to/requirements/dev.txt
-6) Go to root of threeand out and syncdb ->
+7) Go to root of threeand out and syncdb ->
 python manage.py syncdb --settings=threeandout.settings.dev
-7) Run the server ->
-python manager.py runserver 0:80 --settings=threeandout.setings.dev
+8) Run the server ->
+python manager.py runserver localhost:8000 --settings=threeandout.settings.dev
 
