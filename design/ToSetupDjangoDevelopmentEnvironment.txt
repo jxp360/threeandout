@@ -23,6 +23,8 @@ Steps To Setup Django Development Environment
   E) To go into an environment, type 'workon ENVIRONMENT_NAME'
 4) Clone the threeandout repo -> git clone
 http://github.com/jxp360/threeandout.git
+5) Checkout the develop branch, git checkout develop in the
+/data/threeandout/threeandout directory
 5) Install yum install python-devel
 6) While in the virtual environment, install all dev dependecies -> pip
 install -r /path/to/requirements/dev.txt
