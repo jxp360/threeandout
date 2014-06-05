@@ -1,4 +1,4 @@
-from apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
+from threeandout.apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
 from datetime import datetime, timedelta
 import time
 import pytz

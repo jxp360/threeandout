@@ -15,8 +15,8 @@ import time
 import pytz
 from django.db.models import Q
 from validate import *
-from apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat,Standing,PlayoffStanding
-from apps.ff_core.forms import FFLPlayerForm
+from threeandout.apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat,Standing,PlayoffStanding
+from threeandout.apps.ff_core.forms import FFLPlayerForm
 
 
 def index(request):

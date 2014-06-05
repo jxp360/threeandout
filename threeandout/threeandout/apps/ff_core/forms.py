@@ -1,6 +1,6 @@
 from django import forms
 
-from apps.ff_core.models import FFLPlayer
+from threeandout.apps.ff_core.models import FFLPlayer
 
 class FFLPlayerForm(forms.ModelForm):
     class Meta:

@@ -12,7 +12,7 @@ if DEBUG:
     EMAIL_USE_TLS = False
     DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
 
-dburl = '/data/test/dbs/threeandout.db'
+dburl = '/data/threeandout/dbs/threeandout.db'
 import os
 if os.environ.has_key('THREEANDOUT_DB'):
     dburl = os.environ['THREEANDOUT_DB']

@@ -121,6 +121,6 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'apps.ff_core',
+    'threeandout.apps.ff_core',
 )
 

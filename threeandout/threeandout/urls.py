@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url=reverse_lazy('threeandout:index'))),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^threeandout/', include('apps.ff_core.urls',namespace="threeandout")),
+    url(r'^threeandout/', include('threeandout.apps.ff_core.urls',namespace="threeandout")),
     url(r'^threeandout/login/$', 'django.contrib.auth.views.login',{'template_name':"picks/login.html"}),
     url(r'^threeandout/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/threeandout/login/'}),
     url(r'^threeandout/password/reset/$', 'django.contrib.auth.views.password_reset', {'template_name': "registration/password_reset_form.html", 'post_reset_redirect' : '/threeandout/password/reset/done/'}, name="password_reset"),
