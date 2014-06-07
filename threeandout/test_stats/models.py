@@ -40,6 +40,9 @@ class NFLWeeklyStat(models.Model):
     recYds            = models.IntegerField()
     rushTd            = models.IntegerField()
     player            = models.ForeignKey(NFLPlayer)
+    
+    def __unicode__(self):
+        return self.player.team.short_name + " week:" +str(self.week)    
 
 
 class FFLPlayer(models.Model):
@@ -82,10 +85,13 @@ class Picks(models.Model):
     score = property(calculatescore)
 
 class NFLSchedule(models.Model):
-    home = models.ForeignKey(NFLTeam, related_name='homeTeam')
-    away = models.ForeignKey(NFLTeam, related_name='awayTeam')
+    home = models.ForeignKey(NFLTeam, related_name='homeGames')
+    away = models.ForeignKey(NFLTeam, related_name='awayGames')
     week = models.IntegerField()
     kickoff = models.DateTimeField(datetime.datetime.now)
+
+    def __unicode__(self):
+        return self.home.short_name + " vs " + self.away.short_name
 
 
 class Standing(models.Model):
