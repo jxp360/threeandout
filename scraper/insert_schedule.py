@@ -2,16 +2,16 @@ import sys
 sys.path.append('../threeandout')
 import os
 if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
-  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings' 
+  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings.dev' 
 import nflschedule 
-import test_stats.models
+import threeandout.apps.ff_core.models as models
 from django.core.exceptions import ObjectDoesNotExist
 
-if test_stats.models.NFLSchedule.objects.count() !=0:
+if models.NFLSchedule.objects.count() !=0:
   print "you already have schedule -- aborting insert"
   sys.exit()
 else:
-  print "no games in database", test_stats.models.NFLPlayer.objects.count()
+  print "no games in database", models.NFLPlayer.objects.count()
 s = nflschedule.ScheduleScraper()
 for i in xrange(1,18):
   print "doing week %s" %i
@@ -22,16 +22,16 @@ for i in xrange(1,18):
         args['week'] = game['week']
         args['kickoff'] = game['kickoff']
         try:
-            args['home'] = test_stats.models.NFLTeam.objects.get(short_name = game['home'])
+            args['home'] = models.NFLTeam.objects.get(short_name = game['home'])
         except ObjectDoesNotExist:
             print game['home']
             
         try:
-            args['away'] = test_stats.models.NFLTeam.objects.get(short_name = game['away'])
+            args['away'] = models.NFLTeam.objects.get(short_name = game['away'])
         except ObjectDoesNotExist:
             print game['away']
             
-    dbSchedule = test_stats.models.NFLSchedule(**args)
+    dbSchedule = models.NFLSchedule(**args)
     dbSchedule.save()
 
 

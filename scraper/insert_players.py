@@ -2,16 +2,16 @@ import sys
 sys.path.append('../threeandout')
 import os
 if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
-  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings' 
+  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings.dev' 
 import nflstats
-import test_stats.models
+import threeandout.apps.ff_core.models as models
 from django.core.exceptions import ObjectDoesNotExist
 
-if test_stats.models.NFLPlayer.objects.count() !=0:
+if models.NFLPlayer.objects.count() !=0:
   print "you already have players -- aborting insert"
   sys.exit()
 else:
-  print "no players in database", test_stats.models.NFLPlayer.objects.count()
+  print "no players in database", models.NFLPlayer.objects.count()
 s = nflstats.NflScraper()
 stats = s.scrapeWeek(1,2014)
 fields = ('name', 'team', 'position')
@@ -20,8 +20,8 @@ for player in stats:
   for scraperKey, modelKey in s.PLAYER_MAP.items():  
     args[modelKey]=player[scraperKey]
   try:
-        args['team'] = test_stats.models.NFLTeam.objects.get(short_name = player['Team'])
-        dbPlayer = test_stats.models.NFLPlayer(**args)
+        args['team'] = models.NFLTeam.objects.get(short_name = player['Team'])
+        dbPlayer = models.NFLPlayer(**args)
         dbPlayer.save()
   except ObjectDoesNotExist:
         if player['Team'] != 'None' : print "Team Not Found" , player['Team']
