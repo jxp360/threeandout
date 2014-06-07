@@ -6,6 +6,7 @@ if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
 import nflstats
 import playoffstats
 import test_stats.models
+from django.core.exceptions import ObjectDoesNotExist
 from build_standings import buildStandings
 
 def getStats(week, year,forcePlayoffScraper=False):
@@ -24,7 +25,11 @@ def getStats(week, year,forcePlayoffScraper=False):
       except KeyError:
         pass
         #print 'player has no key "%s"' %scraperKey
-    dbPlayers = test_stats.models.NFLPlayer.objects.filter(**args)
+    try:  
+       args['team'] = test_stats.models.NFLTeam.objects.get(short_name = player['Team'])
+       dbPlayers = test_stats.models.NFLPlayer.objects.filter(**args)
+    except ObjectDoesNotExist:
+       dbPlayers = []      
     if len(dbPlayers)==1:
       statArgs={}
       for scraperKey, modelKey in s.STATS_MAP.items():
@@ -65,7 +70,7 @@ if __name__=="__main__":
   current = datetime.datetime.utcnow()
   delta = current - startGame
   week = (delta.days/7)+1
-  year = 2013
+  year = 2014
   print week
   print delta 
   getStats(week,year)
