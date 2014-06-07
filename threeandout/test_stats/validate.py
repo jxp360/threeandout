@@ -35,7 +35,8 @@ def validateTwoOrLessPicksAll(fflplayer,pick,week):
              validateTwoOrLessPicks(fflplayer,pick.te,"TE",week))
     return valid
 
-    
+# Validate a give player's game has not started when picked
+# Used to validate when a pick is submitted    
 def validatePlayer(week,player):
     try:
         game = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team) | Q(away=player.team)))
@@ -43,20 +44,17 @@ def validatePlayer(week,player):
         return False
 
     return hasNotStarted(game, timedelta(minutes=PICK_LOCKOUT_MINUTES))
-                         
+
+# Returns a list of players than could be picked by a given user on a given week.
+# Used the load the table on the pick page                         
 def ValidPlayers(week,position,user):
     fflplayer = FFLPlayer.objects.get(user=user)
     locktime = datetime.utcnow().replace(tzinfo=pytz.timezone('utc')) +timedelta(minutes=PICK_LOCKOUT_MINUTES)
     locktime_str = time.strftime('%Y-%m-%d %H:%M:%S',locktime.timetuple())
-    
-    #validplayers=NFLPlayer.objects.filter(position=position)
-    #TODO: Fix this
-    # annotates don't work
-    # Limiting players to only people you have already picked at least once
-    #players = NFLPlayer.objects.annotate(scoretodate=Sum("nflweeklystat__score")).filter(position=position).filter((Q(team__homeGames__week=week) | Q(team__awayGames__week=week)) 
-    #                                                            & Q(team__homeGames__kickoff__gt=locktime)& Q(team__awayGames__kickoff__gt=locktime)).filter(qbpicks__fflPlayer=fflplayer).distinct().annotate(numPicked=Count("qbpicks")).order_by("-scoretodate")
-    #players = NFLPlayer.objects.filter(team__homeGames__kickoff>locktime)
-    
+
+    # Find all NFL Players at the given position who's game has not yet started
+    # Grab their score to date, home and away team for display purposes 
+    # numPicked is not actually computed correctly in this query, it is just a placeholder so the object has this field later
     players= NFLPlayer.objects.raw("select test_stats_nflplayer.id, \
                                     test_stats_nflteam.name as 'teamName', \
                                     test_stats_nflplayer.name, \
@@ -81,7 +79,8 @@ def ValidPlayers(week,position,user):
                                     AND (test_stats_nflschedule.kickoff>%s) \
                                     GROUP BY  test_stats_nflplayer.id", [week,position,locktime_str])
 
-     
+    # Query the Picks for this particular FFL Player
+    # Exclude the current week because they are editing that week for this query 
     pickedPlayers= NFLPlayer.objects.raw("select test_stats_nflplayer.id, \
                                     COUNT(test_stats_nflplayer.id) as 'numPicked' \
                                     from test_stats_nflplayer \
@@ -98,18 +97,17 @@ def ValidPlayers(week,position,user):
     count = 0 
     for player in pickedPlayers:
         pickedPlayerDict[player.id] =player
-    # For each possible player check how often they have been picked 
+    # Remove the players picked more than three times from the list of all players and load numPicked 
     for player in players:
         count+=1
         if player.id in pickedPlayerDict:
                 player.numPicked = pickedPlayerDict[player.id].numPicked
                 if player.numPicked <3:
                     validplayers.append(player)
-        #Player has never been picked
+        #Player has never been picked by this FFLPlayer
         else:
             player.numPicked = 0    
-            validplayers.append(player)   
-    print "count" , count, len(validplayers)            
+            validplayers.append(player)             
     return validplayers
 
 def validatePick(week,pick):
