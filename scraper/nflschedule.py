@@ -40,7 +40,7 @@ class ScheduleScraper(object):
               "Texans"    :'HOU', 
               "Packers"   :'GB', 
               "Redskins"  :'WAS', 
-              "Jaguars"   :'JAC', 
+              "Jaguars"   :'JAX', 
               "Chiefs"    :'KC', 
               "Eagles"    :'PHI', 
               "Buccaneers":'TB', 

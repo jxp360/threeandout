@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import time
 import pytz
 from django.db.models import Q
+from django.db.models import Count,Sum
 
 PICK_LOCKOUT_MINUTES = 10
 
@@ -13,6 +14,7 @@ def hasNotStarted(game, buffer=timedelta(0)):
 def validateTwoOrLessPicks(fflplayer, player,position,week):
     # Count the number of times a pick for the given FFLplayer matches the NFL player
     # Exclude the picking week because re-picking a player does not increase the number of uses
+
     if position == "QB":
         allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,qb=player).exclude(week=week).count()
         return (allUserMatches)<=2
@@ -33,35 +35,52 @@ def validateTwoOrLessPicksAll(fflplayer,pick,week):
              validateTwoOrLessPicks(fflplayer,pick.te,"TE",week))
     return valid
 
-    
+# Validate a give player's game has not started when picked
+# Used to validate when a pick is submitted    
 def validatePlayer(week,player):
     try:
         game = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team) | Q(away=player.team)))
     except:
         return False
+
     return hasNotStarted(game, timedelta(minutes=PICK_LOCKOUT_MINUTES))
-                         
+
+# Returns a list of players than could be picked by a given user on a given week.
+# Used the load the table on the pick page                         
 def ValidPlayers(week,position,user):
     fflplayer = FFLPlayer.objects.get(user=user)
     locktime = datetime.utcnow().replace(tzinfo=pytz.timezone('utc')) +timedelta(minutes=PICK_LOCKOUT_MINUTES)
     locktime_str = time.strftime('%Y-%m-%d %H:%M:%S',locktime.timetuple())
-    
-    players= NFLPlayer.objects.raw("select ff_core_nflplayer.id,ff_core_nflplayer.name, \
-                                    ff_core_nflplayer.team,ff_core_nflschedule.home,ff_core_nflschedule.away,\
+
+    # Find all NFL Players at the given position who's game has not yet started
+    # Grab their score to date, home and away team for display purposes 
+    # numPicked is not actually computed correctly in this query, it is just a placeholder so the object has this field later
+    players= NFLPlayer.objects.raw("select ff_core_nflplayer.id, \
+                                    ff_core_nflteam.name as 'teamName', \
+                                    ff_core_nflplayer.name, \
+                                    awayteam.name as 'away',\
+                                    hometeam.name as 'home',\
                                     COUNT(ff_core_nflplayer.id) as 'numPicked', \
                                     SUM(ff_core_nflweeklystat.score) as 'scoretodate' \
                                     from ff_core_nflplayer \
+                                    join ff_core_nflteam \
+                                    on ff_core_nflplayer.team_id=ff_core_nflteam.id \
                                     join ff_core_nflschedule \
-                                    on (ff_core_nflplayer.team=ff_core_nflschedule.home \
-                                    OR ff_core_nflplayer.team=ff_core_nflschedule.away) \
-                                    join ff_core_nflweeklystat \
+                                    on (ff_core_nflteam.id=ff_core_nflschedule.home_id \
+                                    OR ff_core_nflteam.id=ff_core_nflschedule.away_id) \
+                                    join ff_core_nflteam awayteam \
+                                    on ff_core_nflschedule.away_id=awayteam.id \
+                                    join ff_core_nflteam hometeam \
+                                    on ff_core_nflschedule.home_id=hometeam.id \
+                                    left join ff_core_nflweeklystat \
                                     on (ff_core_nflplayer.id = ff_core_nflweeklystat.player_id) \
                                     where (ff_core_nflschedule.week=%s) \
                                     AND (ff_core_nflplayer.position=%s) \
                                     AND (ff_core_nflschedule.kickoff>%s) \
                                     GROUP BY  ff_core_nflplayer.id", [week,position,locktime_str])
-         
-            
+
+    # Query the Picks for this particular FFL Player
+    # Exclude the current week because they are editing that week for this query 
     pickedPlayers= NFLPlayer.objects.raw("select ff_core_nflplayer.id, \
                                     COUNT(ff_core_nflplayer.id) as 'numPicked' \
                                     from ff_core_nflplayer \
@@ -74,20 +93,21 @@ def ValidPlayers(week,position,user):
                                     AND ff_core_picks.fflplayer_id=%s\
                                     GROUP BY ff_core_nflplayer.id", [week,fflplayer.id])
     validplayers = []
-    # For each possible player check how often they have been picked 
+    pickedPlayerDict = {}
+    count = 0 
+    for player in pickedPlayers:
+        pickedPlayerDict[player.id] =player
+    # Remove the players picked more than three times from the list of all players and load numPicked 
     for player in players:
-        for pickedPlayer in pickedPlayers:
-            if player.id == pickedPlayer.id:
-                player.numPicked = pickedPlayer.numPicked
+        count+=1
+        if player.id in pickedPlayerDict:
+                player.numPicked = pickedPlayerDict[player.id].numPicked
                 if player.numPicked <3:
                     validplayers.append(player)
-                break
-        #Player has never been picked
+        #Player has never been picked by this FFLPlayer
         else:
             player.numPicked = 0    
-            validplayers.append(player)   
-                
-                  
+            validplayers.append(player)             
     return validplayers
 
 def validatePick(week,pick):

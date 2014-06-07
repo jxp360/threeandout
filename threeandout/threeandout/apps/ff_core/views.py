@@ -301,10 +301,10 @@ def registerUser(request):
 
 def findOpponent(player,week):
         try:
-            opp = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team))).away
+            opp = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team.short_name))).away
         except ObjectDoesNotExist:
             try:
-                opp = NFLSchedule.objects.get(Q(week=week)&(Q(away=player.team))).home
+                opp = NFLSchedule.objects.get(Q(week=week)&(Q(away=player.team.short_name))).home
             except ObjectDoesNotExist:
                 opp=""
         return opp

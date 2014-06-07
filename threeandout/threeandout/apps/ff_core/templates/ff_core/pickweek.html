@@ -119,8 +119,8 @@ Pick a QB:
   {% for QB in QBs %}
   <tr id="{{QB.id}}">
   	<td WIDTH="190" onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
-  	<td onclick="return setQB('{{QB.id}}')">{{QB.team}} </td>
-  	<td onclick="return setQB('{{QB.id}}')">{%if QB.team == QB.away%} {{QB.home}} {%else%} {{QB.away}} {%endif%}</td>
+  	<td onclick="return setQB('{{QB.id}}')">{{QB.teamName}} </td>
+  	<td onclick="return setQB('{{QB.id}}')">{%if QB.teamName == QB.away%} {{QB.home}} {%else%} {{QB.away}} {%endif%}</td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.numPicked}} </td>
   </tr>
