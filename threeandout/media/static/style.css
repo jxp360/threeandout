@@ -9,7 +9,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background: #EFEFEF url(images/sandpaper.png) repeat;
-	font-family: 'Oswald', sans-serif;
+	/* font-family: 'Oswald', sans-serif; */
 	font-size: 16px;
 	font-weight: 200;
 	color: #000000;
