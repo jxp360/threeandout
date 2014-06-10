@@ -29,7 +29,7 @@ http://github.com/jxp360/threeandout.git
 6) While in the virtual environment, install all dev dependecies -> pip
 install -r /path/to/requirements/dev.txt
 7) Go to root of threeand out and syncdb ->
-python manage.py syncdb --settings=threeandout.settings.dev
+python manage.py syncdb --settings=threeandout.settings.dev (this assumues you have aa data directory already made for the database: /data/threeandout/dbs/)
 8) Run the server ->
 python manager.py runserver localhost:8000 --settings=threeandout.settings.dev
 
