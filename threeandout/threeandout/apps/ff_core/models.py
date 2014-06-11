@@ -22,7 +22,7 @@ class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
     team = models.ForeignKey(NFLTeam)
     position = models.CharField(max_length=2, choices=POSITIONS)
-    
+    nfldb_id = models.IntegerField()
     def __unicode__(self):
         return self.name
     
