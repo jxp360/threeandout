@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -14,10 +15,11 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    url(r'^$', RedirectView.as_view(url=reverse_lazy('threeandout:index'))),
+    url(r'^$', TemplateView.as_view(template_name='main.html'), name='main'),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^threeandout/', include('threeandout.apps.ff_core.urls',namespace="threeandout")),
+    url(r'^threeandout/main/$', RedirectView.as_view(url=reverse_lazy('main'))),
     url(r'^threeandout/login/$', 'django.contrib.auth.views.login',{'template_name':"ff_core/login.html"}),
     url(r'^threeandout/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/threeandout/login/'}),
     url(r'^threeandout/password/reset/$', 'django.contrib.auth.views.password_reset', {'template_name': "registration/password_reset_form.html", 'post_reset_redirect' : '/threeandout/password/reset/done/'}, name="password_reset"),

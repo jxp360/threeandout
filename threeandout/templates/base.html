@@ -4,77 +4,111 @@
     <meta charset="utf-8">
     {% load staticfiles %}
     {% load bootstrap3 %}
-    {% bootstrap_javascript %}
     {% bootstrap_messages %}
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="{% static 'js/jquery-ui-1.10.0.custom.min.js' %}"></script>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <!-- <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">        
+    <!-- <link href="{% static 'css/jquery-ui-1.10.0.custom.min.css' %}" rel="stylesheet"> 
+    <link href="{% static 'css/base-admin-3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base-admin-3-responsive.css' %}" rel="stylesheet">
+    -->
 
-    <title>Three and Out Fantasy FootballPiffy Golf</title>
+    <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" />
+    <!-- <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/style.css /> -->
+    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/jquery.tablescroll.css />
     
+    <script src="http://code.jquery.com/jquery-1.10.1.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/jquery-ui-1.10.0.custom.min.js' %}"></script>
+    {% bootstrap_javascript %}
+
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">    
-    
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">        
-    <link href="{% static 'css/jquery-ui-1.10.0.custom.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/base-admin-3.css' %}" rel="stylesheet">
-    <link href="{% static 'css/base-admin-3-responsive.css' %}" rel="stylesheet">
-    
-    <!-- <link href="{% static 'css/dashboard.css' %}" rel="stylesheet"> -->   
-    <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/style.css />
-    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/jquery.tablescroll.css />
+
+    <title>Three and Out Fantasy Football</title>
     {% block head %}{% endblock %}
 </head>
 
 <body>
 
-<nav class="navbar navbar-inverse" role="navigation">
+<nav class="navbar navbar-default" role="navigation">
 
         <div class="container">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
       <i class="icon-cog"></i>
     </button>
-    <a class="navbar-brand" href="index.html">Three&Out</a>
+    <a class="navbar-brand" href="index.html">Three And Out Fantasy Football</a>
   </div>
 
+  {% if user.is_authenticated %}
+
   <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse navbar-ex1-collapse">
+  <div class="collapse navbar-collapse navbar-responsive-collapse">
+    <ul class="nav navbar-nav">
+      {% block link_makepicks_class %}<li class="">{% endblock %}
+        <a href="{% url 'threeandout:picks' %}">
+          <i class="fa fa-heart"></i>
+          <span>Picks</span>
+        </a>
+      </li>
+      {% block link_standings_class %}<li class="dropdown">{% endblock %}
+        <a href="{% url 'threeandout:currentstandings' %}" class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa icon-user"></i>
+          <span>Standings</span>
+          <b class="caret"></b>
+        </a>
+      </li>
+      {% block link_results_class %}<li class="dropdown">{% endblock %}
+        <a href="{url 'threeandout:weeklyresultssummary' %}" class="dropdown-toggle" data-toggle="dropdown">
+          <i class="icon-flag"></i>
+          <span>Results</span>
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'threeandout:weeklyresultssummary' %}">Weekly Results</a></li>
+          <li><a href="{% url 'threeandout:personalresults' %}">Personal Results</a></li>
+        </ul>
+      </li>
+      {% block link_rules %}<li class="">{% endblock %}
+        <a href="{% url 'threeandout:rules' %}" title="">
+          <i class="icon-home"></i>
+          <span>Rules</span>
+        </a>
+      </li>
+      {% block link_preferences_class %}<li class="">{% endblock %}
+        <a href="{% url 'threeandout:editPreferences' %}" title="">
+          <i class="icon-home"></i>
+          <span>Settings</span>
+        </a>
+      </li>
+    </ul>
+    {% endif %}
     <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown">
-
-                        <a href="javscript:;" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="icon-cog"></i>
-                                Settings
-                                <b class="caret"></b>
-                        </a>
-
-                        <ul class="dropdown-menu">
-                                <li class="{% block link_preferences_class %}{% endblock %}"><a href="{% url 'threeandout:editPreferences' %}" title="">Account Settings</a></li>
-                        </ul>
-
-                </li>
-
-                <li class="dropdown">
-
-                        <a href="javscript:;" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="icon-user"></i>
-                                <b class="caret"></b>
-                        </a>
-
-                        <ul class="dropdown-menu">
-                                <li><a href="{% url "django.contrib.auth.views.logout" %}" title="">Logout</a></li>
-                        </ul>
-
-                </li>
+      {% if user.is_authenticated %}
+      <li class="">
+        <a href="{% url "django.contrib.auth.views.logout" %}" title="">
+          <i class="fa icon-cog"></i>
+          <span>Logout</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="">
+        <a href="login">
+          <i class="fa icon-cog"></i>
+          <span>Login</span>
+        </a>
+      </li>
+      {% endif %}
+     
     </ul>
 
     <!-- 
@@ -87,77 +121,21 @@
 </div> <!-- /.container -->
 </nav>
 
-<div class="subnavbar">
-    <div class="subnavbar-inner">
-        <div class="container">
-            <a href="javascript:;" class="subnav-toggle" data-toggle="collapse" data-target=".subnav-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <i class="icon-reorder"></i>
-            </a>
-            <div class="collapse subnav-collapse">
-                <ul class="mainnav">
-                    {% block link_makepicks_class %}<li class="active">{% endblock %}
-                        <a href="{% url 'threeandout:picks' %}">
-                            <i class="fa fa-heart fa-fw"></i>
-                            <span>Picks</span>
-                        </a>
-                    </li>
-
-                    {% block link_standings_class %}<li class="dropdown">{% endblock %}
-                        <a href="{% url 'threeandout:currentstandings' %}" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-user"></i>
-                            <span>Standings</span>
-                        </a>
-                    </li>
-                    {% block link_results_class %}<li class="dropdown">{% endblock %}
-                        <a href="{url 'threeandout:weeklyresultssummary' %}" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-flag"></i>
-                            <span>Results</span>
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'threeandout:weeklyresultssummary' %}">Weekly Results</a></li>
-                            <li><a href="{% url 'threeandout:personalresults' %}">Personal Results</a></li>
-                        </ul>
-                    </li>
-                    {% block link_rules %}<li class="dropdown">{% endblock %}
-                        <a href="{% url 'threeandout:rules' %}" title="">
-                            <i class="icon-home"></i>
-                            <span>Rules</span>
-                        </a>
-                    </li>
-                </ul>
-            </div> <!-- /.subnav-collapse -->
-        </div> <!-- /container -->
-    </div> <!-- /subnavbar-inner -->
-</div> <!-- /subnavbar -->
-
-
-{% if user.is_authenticated %}
     {% block content %}
     {% endblock %}
-{% else %}
-    <h1> Please login </h1>
-{% endif %}
 
-<div class="footer">
-
-        <div class="container">
-
-                <div class="row">
-
-                        <div id="footer-copyright" class="col-md-6">
-                                &copy; ThreeAndOut, Inc.
-                        </div> <!-- /span6 -->
-
-                        <div id="footer-terms" class="col-md-6">
-                                Theme by <a href="index.html" target="_blank">Three And Out</a>
-                        </div> <!-- /.span6 -->
-
-                </div> <!-- /row -->
-
-        </div> <!-- /container -->
-</div> <!-- /footer -->
+<footer>
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="footer-copyright" class="col-md-6">
+        &copy; ThreeAndOut, Inc.
+      </div> <!-- /span6 -->
+      <div id="footer-terms" class="col-md-6">
+        Theme by <a href="index.html" target="_blank">Three And Out</a>
+      <div> <!-- /.span6 -->
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+</footer>
 
 <!-- Placed at the end of the document so the pages load faster -->
 

@@ -1,9 +1,9 @@
 
-n () {
+function n () {
 	
 	Application.init ();
 	
-});
+};
 
 
 
