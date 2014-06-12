@@ -22,13 +22,20 @@ class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
     team = models.ForeignKey(NFLTeam)
     position = models.CharField(max_length=2, choices=POSITIONS)
-    nfldb_id = models.IntegerField()
+    nfldb_id = models.CharField(max_length=10)
     def __unicode__(self):
         return self.name
-    
+
+class NFLSchedule(models.Model):
+    home = models.ForeignKey(NFLTeam, related_name='homeGames')
+    away = models.ForeignKey(NFLTeam, related_name='awayGames')
+    week = models.IntegerField()
+    kickoff = models.DateTimeField(datetime.datetime.now)
+    nfldb_id = models.CharField(max_length=10)
+    def __unicode__(self):
+        return self.away.short_name + " @ " + self.home.short_name
 
 class NFLWeeklyStat(models.Model):
-    week              = models.IntegerField()
     score             = models.FloatField()
     recTd             = models.IntegerField() 
     fumbles           = models.IntegerField()
@@ -40,6 +47,7 @@ class NFLWeeklyStat(models.Model):
     recYds            = models.IntegerField()
     rushTd            = models.IntegerField()
     player            = models.ForeignKey(NFLPlayer)
+    game              = models.ForeignKey(NFLSchedule)    
     
     def __unicode__(self):
         return self.player.team.short_name + " week:" +str(self.week)    
@@ -83,16 +91,6 @@ class Picks(models.Model):
           #raise RuntimeError("wrong number of stats retrieved")
         return sum([x.score for x in stats])
     score = property(calculatescore)
-
-class NFLSchedule(models.Model):
-    home = models.ForeignKey(NFLTeam, related_name='homeGames')
-    away = models.ForeignKey(NFLTeam, related_name='awayGames')
-    week = models.IntegerField()
-    kickoff = models.DateTimeField(datetime.datetime.now)
-
-    def __unicode__(self):
-        return self.home.short_name + " vs " + self.away.short_name
-
 
 class Standing(models.Model):
     fflPlayer = models.ForeignKey(FFLPlayer, related_name='standingPlayer')
