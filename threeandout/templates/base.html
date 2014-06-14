@@ -46,7 +46,8 @@
       <span class="icon-bar"></span>
       <i class="icon-cog"></i>
     </button>
-    <a class="navbar-brand" href="index.html">Three And Out Fantasy Football</a>
+    <a class="navbar-brand " href="{% url 'main' %}">
+    Three And Out Fantasy Football</a>
   </div>
 
   {% if user.is_authenticated %}
@@ -56,7 +57,7 @@
     <ul class="nav navbar-nav">
       {% block link_makepicks_class %}<li class="">{% endblock %}
         <a href="{% url 'threeandout:picks' %}">
-          <i class="fa fa-heart"></i>
+          <i class="fa fa-cog"></i>
           <span>Picks</span>
         </a>
       </li>
@@ -78,7 +79,7 @@
           <li><a href="{% url 'threeandout:personalresults' %}">Personal Results</a></li>
         </ul>
       </li>
-      {% block link_rules %}<li class="">{% endblock %}
+      {% block link_rules_class %}<li class="">{% endblock %}
         <a href="{% url 'threeandout:rules' %}" title="">
           <i class="icon-home"></i>
           <span>Rules</span>
@@ -100,11 +101,16 @@
           <span>Logout</span>
         </a>
       </li>
+      <li class="">
+        <p class="navbar-text">Signed in as {{ user.get_username }}</p>
+      </li>  
       {% else %}
       <li class="">
-        <a href="login">
+        <a class="btn btn-default navbar-btn" href="{% url 'django.contrib.auth.views.login' %}">Login</a>
+        <!-- <a href="{% url 'django.contrib.auth.views.login' %}">
+          <button type="button" class="btn btn-default navbar-btn">Sign in</button> 
           <i class="fa icon-cog"></i>
-          <span>Login</span>
+          <span>Login</span> -->
         </a>
       </li>
       {% endif %}
@@ -131,7 +137,7 @@
         &copy; ThreeAndOut, Inc.
       </div> <!-- /span6 -->
       <div id="footer-terms" class="col-md-6">
-        Theme by <a href="index.html" target="_blank">Three And Out</a>
+        Theme by <a href="{% url 'main' %}" target="_blank">Three And Out</a>
       <div> <!-- /.span6 -->
     </div> <!-- /row -->
   </div> <!-- /container -->

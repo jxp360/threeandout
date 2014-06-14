@@ -3651,6 +3651,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 @media (min-width: 768px) {
   .navbar-header {
     float: left;
+    text-align: left;
   }
 }
 .navbar-collapse {
