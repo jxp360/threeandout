@@ -1,0 +1,4 @@
+1)  Delete old db
+2)  Run python insert_team.py
+3)  Run python insert_schedule.py
+4)
