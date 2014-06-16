@@ -13,11 +13,11 @@
 
     <form class="form form-horizontal" method="post" action="{% url 'django.contrib.auth.views.login' %}">
       {% csrf_token %}
-      {% bootstrap_form form layout='horizontal' %}
+      {% bootstrap_form form layout="horizontal" %}
       {% buttons layout="horizontal" %}
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary btn-sm">Login</button>
         <a href="{% url 'django.contrib.auth.views.password_reset' %}">
-          <button type="button" class="btn btn-primary">Forgot Password?</button> 
+          <button type="button" class="btn btn-primary btn-sm">Forgot Password?</button> 
         </a>
       {% endbuttons %}
     </form>

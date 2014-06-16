@@ -6,19 +6,15 @@
     {% load bootstrap3 %}
     {% bootstrap_messages %}
 
-    <!-- <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/tablesorter.css' %}" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">        
-    <!-- <link href="{% static 'css/jquery-ui-1.10.0.custom.min.css' %}" rel="stylesheet"> 
-    <link href="{% static 'css/base-admin-3.css' %}" rel="stylesheet">
-    <link href="{% static 'css/base-admin-3-responsive.css' %}" rel="stylesheet">
-    -->
 
     <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" />
-    <!-- <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/style.css /> -->
-    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/jquery.tablescroll.css />
+    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/css/jquery.tablescroll.css />
+    <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/css/theme.bootstrap.css />
     
     <script src="http://code.jquery.com/jquery-1.10.1.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
@@ -106,11 +102,10 @@
       </li>  
       {% else %}
       <li class="">
-        <a class="btn btn-default navbar-btn" href="{% url 'django.contrib.auth.views.login' %}">Login</a>
-        <!-- <a href="{% url 'django.contrib.auth.views.login' %}">
-          <button type="button" class="btn btn-default navbar-btn">Sign in</button> 
-          <i class="fa icon-cog"></i>
-          <span>Login</span> -->
+        <!-- <a class="btn btn-default navbar-btn" href="{% url 'django.contrib.auth.views.login' %}">Login</a> -->
+        <a href="{% url 'django.contrib.auth.views.login' %}">
+          <i class="fa fa-cog"></i>
+          <span>Login</span>
         </a>
       </li>
       {% endif %}
@@ -150,6 +145,8 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.resize.min.js"></script>
 
 <script src="{% static 'js/Application.js' %}"></script>
+<script src="{% static 'js/jquery.tablesorter.min.js' %}"></script>
+<!-- <script src="{% static 'js/jquery.tablesorter.widgets.js' %}"></script> -->
 
 
   </body>

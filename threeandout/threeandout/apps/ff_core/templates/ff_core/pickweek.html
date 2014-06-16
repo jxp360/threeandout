@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
-{% block link_makepicks_class %}active{% endblock %}
+{% block link_makepicks_class %}<li class="active">{% endblock %}
 
 {% block head %}
-<script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> 
-<script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablescroll.js"></script>
+<!-- <script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> --> 
+<script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}/js/widget-scroller.js"></script>
+<!-- <script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablescroll.js"></script> -->
 <script type="text/javascript"> 
 	$(document).ready(function() 
 	    { 
@@ -103,9 +104,10 @@ $.fn.tableScroll.defaults =
 <form name="players" action= "{% url 'threeandout:submit' week %}" method="post">
 {% csrf_token %}
 
+
 {% if QBs %}
 Pick a QB: 
-<table  border = 1 id="QBs" class="tablesorter">
+<table  border = 1 id="QBs" class="tablesorter-bootstrap">
 <thead>
   <tr>
     <th>Player</th>
