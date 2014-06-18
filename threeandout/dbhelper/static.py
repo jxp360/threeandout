@@ -5,6 +5,7 @@ import nfldb
 
 import datetime
 import sys
+import score
 
 now = datetime.datetime.now()
 CURRENT_SEASON = now.year
@@ -55,6 +56,9 @@ def import_teams():
       team = models.NFLTeam(short_name = t[0], city=t[1], name=t[2])
       team.save()
     print "sync done",  models.NFLTeam.objects.count()
+    for team in models.NFLTeam.objects.all():
+      TEAMS[team.short_name]=team
+
   else:
     print "teams have already been imported"
 
@@ -99,7 +103,8 @@ def sync_schedule():
   """
   q, db = getNflDbQuery()
   #games=q.game(season_year=CURRENT_SEASON, season_type='Regular').as_games()
-  games=q.game(season_year=CURRENT_SEASON).as_games()
+  print "for now only doing the regular season.  TBD fix that"
+  games=q.game(season_year=CURRENT_SEASON, season_type='Regular').as_games()
   db.close()
   hasher = Hasher(models.NFLSchedule.objects.all())
   #djangoGames = models.NFLSchedule.objects.all()
@@ -107,6 +112,7 @@ def sync_schedule():
   #for game in djangoGames:
   #  d[game.nfldb_id]=game
   print "checking games", len(games)
+  defaultScore = models.ScoringSystem.objects.get(function='default')
   for game in games:
     gameID = game.gsis_id
     kickoff = game.start_time
@@ -121,26 +127,44 @@ def sync_schedule():
       save = True
       homeTeam = TEAMS[game.home_team]
       awayTeam = TEAMS[game.away_team]
-      djangoGame = models.NFLSchedule(home =homeTeam, away =awayTeam, week = game.week, kickoff = kickoff, nfldb_id = gameID)
+      print "TO DO - need to sort out difference between their week and our week via preseason & postseason"
+      djangoGame = models.NFLSchedule(home =homeTeam, away =awayTeam, week = game.week, kickoff = kickoff, nfldb_id = gameID, scoring_system=defaultScore)
     if save:
       djangoGame.save()
   print "total games in schedule = %s"%models.NFLSchedule.objects.count()
 
 class StatSyncher(object):
+  #key is django key
+  #value is nfldb key
+  MAP = {'recTd'             : 'receiving_tds',
+         'fumbles'           : 'fumbles_lost',
+         'interceptions'     : 'passing_int',
+         'passTd'            : 'passing_tds',
+         'passYds'           : 'passing_yds',
+         'fumbleRecoveryTDs' : 'fumbles_rec_tds',
+         'rushYds'           : 'rushing_yds',
+         'recYds'            : 'receiving_yds',
+         'rushTd'            : 'rushing_tds'}
   def __init__(self):
     self.playerHasher = Hasher(models.NFLPlayer.objects.all())
 
-  def sync_game(self, djangoGame, scoreGame):
+  def sync_game(self, djangoGame,forceRescore=False):
     db = nfldb.connect()
     q = nfldb.Query(db)
     gameID = djangoGame.nfldb_id
     print "**** gameID %s *****" %gameID
+    print "game = %s" %djangoGame
     q.game(gsis_id=gameID)
-    gameStats=q.as_aggregate()
     nflDbGame = q.as_games()[0]
-    for playPlayer in gameStats:
-      print "ID = ", playPlayer.player_id, playPlayer.player.full_name 
-      if playPlayer.player.position.name in ("QB", "WR", "TE", "RB"):
+    players = q.as_players()
+    for player in players:
+      if player.position.name in ("QB", "WR", "TE", "RB"):
+        q = nfldb.Query(db).game(gsis_id=gameID)
+        gameStats = q.player(player_id=player.player_id).as_aggregate()
+        assert(len(gameStats)==1)
+        playPlayer=gameStats[0] 
+
+        print "ID = ", playPlayer.player_id, playPlayer.player.full_name, playPlayer.player.team 
         djangoPlayer      = self.playerHasher.get(playPlayer.player_id)
         if djangoPlayer==None:
           print "SOMETHING HAS GONE VERY WRONG HERE.  A human must look at this!"
@@ -150,70 +174,42 @@ class StatSyncher(object):
         count = res.count()
         if count==0:       
           #new player
-          score = scoreGame(playPlayer, nflDbGame)
-          djangoStat = models.NFLWeeklyStat(score             = score,
-                                     recTd             = playPlayer.receiving_tds,
-                                     fumbles           = playPlayer.fumbles_tot,
-                                     interceptions     = playPlayer.passing_int,
-                                     passTd            = playPlayer.passing_tds,
-                                     passYds           = playPlayer.passing_yds,
-                                     fumbleRecoveryTDs = playPlayer.fumbles_rec_tds,
-                                     rushYds           = playPlayer.rushing_yds,
-                                     recYds            = playPlayer.receiving_yds,
-                                     rushTd            = playPlayer.rushing_tds,
-                                     player            = djangoPlayer,
-                                     game              = djangoGame)
+          pts = score.score(playPlayer, nflDbGame, djangoGame.scoring_system.function)
+          d={'score'  : pts,
+             'player' : djangoPlayer,
+             'game'   :  djangoGame}
+          for key, value in self.MAP.items():
+            d[key] =getattr(playPlayer,value)
+          
+          djangoStat = models.NFLWeeklyStat(**d)
           djangoStat.save()
         elif count==1:
           #update stats if required
           save = False
           djangoStat = res.get()
-          if djangoStat.recTd             != playPlayer.receiving_tds:
-             djangoStat.recTd              = playPlayer.receiving_tds
-             save = True
-          if djangoStat.fumbles           != playPlayer.fumbles_tot:
-             djangoStat.fumbles            = playPlayer.fumbles_tot
-             save = True
-          if djangoStat.interceptions     != playPlayer.passing_int:
-             djangoStat.interceptions      = playPlayer.passint_int
-             save = True
-          if djangoStat.passTd            != playPlayer.passing_tds:
-             djangoStat.passTd             = playPlayer.passing_tds
-             save = True
-          if djangoStat.passYds           != playPlayer.passing_yds:
-             djangoStat.passYds            = playPlayer.passing_yds
-             save = True
-          if djangoStat.fumbleRecoveryTDs != playPlayer.fumbles_rec_tds:
-             djangoStat.fumbleRecoveryTDs  = playPlayer.fumbles_rec_tds
-             save = True
-          if djangoStat.rushYds           != playPlayer.rushing_yds:
-             djangoStat.rushYds            = playPlayer.rushing_yds
-             save = True
-          if djangoStat.recYds            != playPlayer.receiving_yds:
-             djangoStat.recYds             = playPlayer.receiving_yds
-             save = True
-          if djangoStat.rushTd            != playPlayer.rushing_tds:
-             djangoStat.rushTd             = playPlayer.rushing_tds
-             save = True
+          for key, value in self.MAP.items():
+            newVal = getattr(playPlayer,value)
+            oldVal = getattr(djangoStat, key)
+            if newVal!=oldVal:
+              setattr(djangoStat,key,newVal)
+              save = True
+          if save or forceRescore:          
+            pts = score.score(playPlayer, nflDbGame, djangoGame.scoring_system.function)
+            if pts!= djangoStat.score:
+              djangoStat.score=pts
+              save=True
           if save:
-            djangoStat.score = scoreGame(playPlayer, nflDbGame)
             djangoStat.save()
     db.close()
-  def sync_week(self, weekNum):
+  def sync_week(self, weekNum, forceRescore=False):
     games = models.NFLSchedule.objects.filter(week=weekNum)
-    scoreGame = self.getScoreSystem(weekNum)
     for game in games:
-      self.sync_game(game, scoreGame)
+      self.sync_game(game,forceRescore)
 
 
   def syncAll(self,maxWeek=19):
     for i in xrange(1,maxWeek+1):
       self.sync_week(i)
-
-  def getScoreSystem(self, weekId):
-    def noPoints(*args):
-      return 0
-    return noPoints
 
 if __name__=="__main__":
   import_teams()
@@ -224,6 +220,6 @@ if __name__=="__main__":
     return 9
   ss = StatSyncher()
   #ss.sync_game(game,null)
-  ss.sync_week(2)
+  ss.sync_week(8,True)
 
 

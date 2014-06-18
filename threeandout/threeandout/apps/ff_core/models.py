@@ -26,12 +26,16 @@ class NFLPlayer(models.Model):
     def __unicode__(self):
         return self.name
 
+class ScoringSystem(models.Model):
+    function=models.CharField(max_length=100)
+
 class NFLSchedule(models.Model):
     home = models.ForeignKey(NFLTeam, related_name='homeGames')
     away = models.ForeignKey(NFLTeam, related_name='awayGames')
     week = models.IntegerField()
     kickoff = models.DateTimeField(datetime.datetime.now)
     nfldb_id = models.CharField(max_length=10)
+    scoring_system = models.ForeignKey(ScoringSystem)
     def __unicode__(self):
         return self.away.short_name + " @ " + self.home.short_name
 
@@ -50,7 +54,7 @@ class NFLWeeklyStat(models.Model):
     game              = models.ForeignKey(NFLSchedule)    
     
     def __unicode__(self):
-        return self.player.team.short_name + " week:" +str(self.week)    
+        return self.player.name + " " +self.player.team.short_name + " week:" + str(self.game.week)
 
 
 class FFLPlayer(models.Model):
