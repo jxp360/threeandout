@@ -104,7 +104,7 @@ def sync_schedule():
   q, db = getNflDbQuery()
   #games=q.game(season_year=CURRENT_SEASON, season_type='Regular').as_games()
   print "for now only doing the regular season.  TBD fix that"
-  games=q.game(season_year=CURRENT_SEASON, season_type='Regular').as_games()
+  games=q.game(season_year=CURRENT_SEASON).as_games()
   db.close()
   hasher = Hasher(models.NFLSchedule.objects.all())
   #djangoGames = models.NFLSchedule.objects.all()
@@ -127,8 +127,7 @@ def sync_schedule():
       save = True
       homeTeam = TEAMS[game.home_team]
       awayTeam = TEAMS[game.away_team]
-      print "TO DO - need to sort out difference between their week and our week via preseason & postseason"
-      djangoGame = models.NFLSchedule(home =homeTeam, away =awayTeam, week = game.week, kickoff = kickoff, nfldb_id = gameID, scoring_system=defaultScore)
+      djangoGame = models.NFLSchedule(home =homeTeam, away =awayTeam, week = game.week, season_type=game.season_type, kickoff = kickoff, nfldb_id = gameID, scoring_system=defaultScore)
     if save:
       djangoGame.save()
   print "total games in schedule = %s"%models.NFLSchedule.objects.count()
@@ -153,9 +152,12 @@ class StatSyncher(object):
     q = nfldb.Query(db)
     gameID = djangoGame.nfldb_id
     print "**** gameID %s *****" %gameID
-    print "game = %s" %djangoGame
+    print "game = %s - %s week %s " %(djangoGame, djangoGame.season_type, djangoGame.week)
     q.game(gsis_id=gameID)
     nflDbGame = q.as_games()[0]
+    hasStarted = nflDbGame.is_playing or nflDbGame.finished
+    if not hasStarted:
+      return 
     players = q.as_players()
     for player in players:
       if player.position.name in ("QB", "WR", "TE", "RB"):
@@ -175,9 +177,14 @@ class StatSyncher(object):
         if count==0:       
           #new player
           pts = score.score(playPlayer, nflDbGame, djangoGame.scoring_system.function)
-          d={'score'  : pts,
-             'player' : djangoPlayer,
-             'game'   :  djangoGame}
+          if djangoGame.scoring_system.function !="default":
+             defaultScore = score.default(playPlayer, nflDbGame)
+          else:
+             defaultScore = pts
+          d={'score'        : pts,
+             'player'       : djangoPlayer,
+             'game'         : djangoGame,
+             'defaultScore' : defaultScore}
           for key, value in self.MAP.items():
             d[key] =getattr(playPlayer,value)
           
@@ -198,28 +205,36 @@ class StatSyncher(object):
             if pts!= djangoStat.score:
               djangoStat.score=pts
               save=True
+            if djangoGame.scoring_system.function !="default":
+              defaultScore = score.default(playPlayer, nflDbGame)
+            else:
+              defaultScore = pts
+            if defaultScore != djangoStat.defaultScore:
+              djangoStat.defaultScore=defaultScore
+              save=True
           if save:
             djangoStat.save()
     db.close()
-  def sync_week(self, weekNum, forceRescore=False):
-    games = models.NFLSchedule.objects.filter(week=weekNum)
+  def sync_games(self, forceRescore=False, **filterargs):
+    if filterargs:
+      games = models.NFLSchedule.objects.filter(**filterargs)
+    else:
+      games = models.NFLSchedule.objects.filter(**filterargs)
     for game in games:
       self.sync_game(game,forceRescore)
-
 
   def syncAll(self,maxWeek=19):
     for i in xrange(1,maxWeek+1):
       self.sync_week(i)
 
+
 if __name__=="__main__":
   import_teams()
-  sync_players()
   sync_schedule()
+  sync_players()
   game = models.NFLSchedule.objects.all()[0]
-  def null(*args):
-    return 9
   ss = StatSyncher()
   #ss.sync_game(game,null)
-  ss.sync_week(8,True)
+  ss.sync_games(True)
 
 

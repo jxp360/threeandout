@@ -2,14 +2,29 @@ import django_env
 from django.core.exceptions import ObjectDoesNotExist
 
 models = django_env.models
-
+import nfldb
 
 def score(playPlayer, nflDbGame, methodName):
+    """Main method to apply a scoring system in this module
+    """
     meth=globals()[methodName]
     value = meth(playPlayer, nflDbGame)
     return value
 
+def _getTeam(playPlayer,nflDbGame):
+    """ helper method to get the team a player played on in a given game.
+        Use this method to see what team the player WAS on the game when it was played in case they've been dropped/traded, etc.
+    """
+    db = nfldb.connect()
+    q = nfldb.Query(db).game(gsis_id=nflDbGame.gsis_id)
+    drives = q.player(player_id=player.player_id).as_drive()
+    if drives:
+      drive = drives[0]
+      return drive.pos_team
+
 def addIfMissing(meths):
+    """Add methods to the Scoring System database
+    """
     for meth in meths:
       methName = meth.__name__
       try:
@@ -49,4 +64,29 @@ def times2(playPlayer, nflDbGame):
   """
   return 2*default(playPlayer,nflDbGame)
 
-addIfMissing([default,times2])
+def _attrTimesX(playPlayer, nflDbGame,attr,X):
+  score = default(playPlayer,nflDbGame)
+  team = _getTeam(playPlayer,nflDbGame)
+  if team== getattr(nflDbGame,attr):
+    score*=X
+  return score
+
+def winnerTimes2(playPlayer, nflDbGame):
+  return _attrTimesX(playPlayer, nflDbGame,'winner',2)
+
+def looserTimes2(playPlayer, nflDbGame):
+  return _attrTimesX(playPlayer,nflDbGame,'loser',2)
+
+def homeTimes2(playPlayer,nflDbGame):
+  return _attrTimesX(playPlayer, nflDbGame, 'home_team',2)
+
+def awayTimes2(playPlayer,nflDbGame):
+  return _attrTimesX(playPlayer, nflDbGame, 'away_team',2)
+  
+#here is where we make sure the methods are in the database
+addIfMissing([default,
+              times2, 
+              winnerTimes2, 
+              looserTimes2,
+              homeTimes2,
+              awayTimes2])

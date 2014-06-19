@@ -33,6 +33,7 @@ class NFLSchedule(models.Model):
     home = models.ForeignKey(NFLTeam, related_name='homeGames')
     away = models.ForeignKey(NFLTeam, related_name='awayGames')
     week = models.IntegerField()
+    season_type =  models.CharField(max_length=10)
     kickoff = models.DateTimeField(datetime.datetime.now)
     nfldb_id = models.CharField(max_length=10)
     scoring_system = models.ForeignKey(ScoringSystem)
@@ -41,6 +42,7 @@ class NFLSchedule(models.Model):
 
 class NFLWeeklyStat(models.Model):
     score             = models.FloatField()
+    defaultScore      = models.FloatField()
     recTd             = models.IntegerField() 
     fumbles           = models.IntegerField()
     interceptions     = models.IntegerField() 
