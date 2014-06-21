@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
 {% block link_makepicks_class %}<li class="active">{% endblock %}
-
+{% load static %}
 {% block head %}
-<!-- <script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> --> 
-<script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}/js/widget-scroller.js"></script>
-<!-- <script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablescroll.js"></script> -->
+<script type="text/javascript" src="{% static 'js/jquery.tablesorter.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/widget-scroller.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.tablescroll.js' %}"></script>
 <script type="text/javascript"> 
 	$(document).ready(function() 
 	    { 
@@ -41,10 +40,12 @@
 function setQB(row) { 
     // Clear all rows each time 
     {% for QB in QBs %}
-        document.getElementById({{QB.id}}).style.backgroundColor = "#fff"; 
+        document.getElementById({{QB.id}}).style.backgroundColor = "#272722"; 
+       // document.getElementById({{QB.id}}).addClass("info")
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#FFFF99";
+    document.getElementById(row).style.backgroundColor = "#999966";
+    //document.getElementById({{QB.id}}).addClass("success")
     var formInfo = document.forms['players'];
     formInfo.QB.value = row;
     return true; 
@@ -107,7 +108,7 @@ $.fn.tableScroll.defaults =
 
 {% if QBs %}
 Pick a QB: 
-<table  border = 1 id="QBs" class="tablesorter-bootstrap">
+<table  border = 1 id="QBs" class="table table-hover tablesorter">
 <thead>
   <tr>
     <th>Player</th>
@@ -120,7 +121,7 @@ Pick a QB:
  <tbody>
   {% for QB in QBs %}
   <tr id="{{QB.id}}">
-  	<td WIDTH="190" onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
+  	<td onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.teamName}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{%if QB.teamName == QB.away%} {{QB.home}} {%else%} {{QB.away}} {%endif%}</td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
