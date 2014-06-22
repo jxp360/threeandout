@@ -20,3 +20,6 @@ I also followed the instructions to Import the nfldb database by downloading the
 
 You will need to modify $HOME/.config/nfldb/config.ini to include the password you used earlier for nfldb user
 
+
+I also installed python-psycopg2 with yum install python-psycopg2 inorder to get pip install nfldb to work
+

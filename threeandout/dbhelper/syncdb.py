@@ -92,7 +92,7 @@ def sync_players():
         djangoPlayer.team=teamID
     else:
       #new player here
-      djangoPlayer = models.NFLPlayer(name = player.full_name, team = teamID, position = player.position.value, nfldb_id=ID)
+      djangoPlayer = models.NFLPlayer(name = player.full_name, team = teamID, position = str(player.position), nfldb_id=ID)
       save =True
     if save:
       djangoPlayer.save() 
@@ -235,6 +235,6 @@ if __name__=="__main__":
   game = models.NFLSchedule.objects.all()[0]
   ss = StatSyncher()
   #ss.sync_game(game,null)
-  ss.sync_games(True)
+  #ss.sync_games(True)
 
 

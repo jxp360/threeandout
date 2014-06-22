@@ -79,6 +79,7 @@ class FFLPlayer(models.Model):
 
 class Picks(models.Model):
     week = models.IntegerField()
+    season_type =  models.CharField(max_length=10)
     qb = models.ForeignKey(NFLPlayer, related_name='qbpicks')
     rb = models.ForeignKey(NFLPlayer, related_name='rbpicks')
     te = models.ForeignKey(NFLPlayer, related_name='tepicks')
@@ -89,7 +90,7 @@ class Picks(models.Model):
     def calculatescore(self):
         #query the NFLWeeklyStats for the players for this week
         #query for each of my players and the right week
-        query = (Q(player=self.qb) | Q(player=self.rb) | Q(player=self.wr) | Q(player=self.te)) & Q(week=self.week)
+        query = (Q(player=self.qb) | Q(player=self.rb) | Q(player=self.wr) | Q(player=self.te)) & Q(game__week=self.week) & Q(game__season_type=self.season_type)
         stats = NFLWeeklyStat.objects.filter(query)
         if not len(stats) in (0,4):
           print "ERROR - we don't have enough stats!"
