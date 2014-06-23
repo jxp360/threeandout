@@ -3,21 +3,16 @@
 {% block link_makepicks_class %}<li class="active">{% endblock %}
 
 {% block head %}
-<!-- <script type="text/javascript" src="{{ STATIC_URL }}/jquery-latest.js"></script> --> 
 <script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}/js/widget-scroller.js"></script>
-<!-- <script type="text/javascript" src="{{ STATIC_URL }}/jquery.tablescroll.js"></script> -->
+<script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.floatThead.js"></script>
+
 <script type="text/javascript"> 
 	$(document).ready(function() 
 	    { 
-	        $("#QBs").tablesorter({sortList: [[3,1]]});
-	        $("#QBs").tableScroll({height:140});
-	        $("#RBs").tablesorter({sortList: [[3,1]]});
-	        $("#RBs").tableScroll({height:140});
-	        $("#WRs").tablesorter({sortList: [[3,1]]});
-	        $("#WRs").tableScroll({height:140});
-	        $("#TEs").tablesorter({sortList: [[3,1]]});
-	        $("#TEs").tableScroll({height:140});
+                    $("#QB-table").tablesorter({sortList: [[3,1]]}); 
+                    $("#RB-table").tablesorter({sortList: [[3,1]]}); 
+                    $("#WR-table").tablesorter({sortList: [[3,1]]}); 
+                    $("#TE-table").tablesorter({sortList: [[3,1]]}); 
 		    {% if qb %}
 		    	setQB({{qb.id}});
 		    {% endif %}
@@ -30,21 +25,19 @@
 		    {% if te %}
 				setTE({{te.id}});
 			{% endif %}
-
 	    } 
 	);
 </script>
 
 
 <script type="text/javascript"> 
-<!-- 
+
 function setQB(row) { 
-    // Clear all rows each time 
-    {% for QB in QBs %}
-        document.getElementById({{QB.id}}).style.backgroundColor = "#fff"; 
-    {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#FFFF99";
+    {% for QB in QBs %}
+        document.getElementById({{QB.id}}).classList.remove("info");
+    {%endfor%}
+    document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
     formInfo.QB.value = row;
     return true; 
@@ -53,10 +46,10 @@ function setQB(row) {
 function setRB(row) { 
     // Clear all rows each time 
     {% for RB in RBs %}
-        document.getElementById({{RB.id}}).style.backgroundColor = "#fff"; 
+        document.getElementById({{RB.id}}).classList.remove("info");
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#FFFF99";
+    document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
     formInfo.RB.value = row;
     return true; 
@@ -65,10 +58,10 @@ function setRB(row) {
 function setWR(row) { 
     // Clear all rows each time 
     {% for WR in WRs %}
-        document.getElementById({{WR.id}}).style.backgroundColor = "#fff"; 
+        document.getElementById({{WR.id}}).classList.remove("info");
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#FFFF99"; 
+    document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
     formInfo.WR.value = row;
     return true; 
@@ -77,26 +70,21 @@ function setWR(row) {
 function setTE(row) { 
     // Clear all rows each time 
     {% for TE in TEs %}
-        document.getElementById({{TE.id}}).style.backgroundColor = "#fff"; 
+        document.getElementById({{TE.id}}).classList.remove("info");
     {%endfor%}
     // set desired row 
-    document.getElementById(row).style.backgroundColor = "#FFFF99";
+    document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
     formInfo.TE.value = row;
     return true;     
     } 
-$.fn.tableScroll.defaults =
-{
-    flush: true, // makes the last thead and tbody column flush with the scrollbar
-    width: null, // width of the table (head, body and foot), null defaults to the tables natural width
-    height: 100, // height of the scrollable area
-    containerClass: 'tablescroll' // the plugin wraps the table in a div with this css class
-};
 
 </script>
 {% endblock %}
 
 {% block content %}
+
+
 
 <p>Make Your Picks For Week {{week}}</p>
 
@@ -106,10 +94,12 @@ $.fn.tableScroll.defaults =
 
 
 {% if QBs %}
-Pick a QB: 
-<table  border = 1 id="QBs" class="tablesorter-bootstrap">
+<p>Pick a QB:</p>
+<div class="row">
+<div class="col-sm-6">
+<table id="QB-table" class="table table-striped table-bordered pick-table-scroll table-condensed sorter-bootstrap"> 
 <thead>
-  <tr>
+  <tr role="row">
     <th>Player</th>
     <th>Team</th>
     <th>Opponent</th>
@@ -129,6 +119,8 @@ Pick a QB:
   {% endfor %}
 </tbody>
 </table>
+</div>
+</div>
 
 <input type="hidden" name="QB" value="" size ="40" />
 {% else %}
@@ -136,8 +128,10 @@ Pick a QB:
 {% endif %}
  <br> 
 {% if RBs %}
-Pick a RB: 
-<table  border = 1 id="RBs" class="tablesorter">
+<p>Pick a RB:</p>
+<div class="row">
+<div class="col-sm-6">
+<table id="RB-table" class="table table-striped table-bordered pick-table-scroll sorter-bootstrap"> 
 <thead>
   <tr>
     <th>Player</th>
@@ -159,6 +153,9 @@ Pick a RB:
   {% endfor %}
 </tbody>
 </table>
+</div>
+</div>
+</div>
 
 <input type="hidden" name="RB" value="" size ="40" />
 {% else %}
@@ -167,8 +164,10 @@ Pick a RB:
  <br> 
 
 {% if WRs %}
-Pick a WR: 
-<table  border = 1 id="WRs" class="tablesorter">
+<p>Pick a WR:</p> 
+<div class="row">
+<div class="col-sm-6">
+<table id="WR-table" class="table table-striped table-bordered pick-table-scroll table-condensed sorter-bootstrap"> 
 <thead>
   <tr>
     <th>Player</th>
@@ -190,6 +189,8 @@ Pick a WR:
   {% endfor %}
 </tbody>
 </table>
+</div>
+</div>
 
 <input type="hidden" name="WR" value="" size ="40" />
 {% else %}
@@ -198,8 +199,10 @@ Pick a WR:
  <br> 
 
 {% if TEs %}
-Pick a TE: 
-<table  border = 1 id="TEs" class="tablesorter">
+<p>Pick a TE: </p>
+<div class="row">
+<div class="col-sm-6">
+<table id="TE-table" class="table table-striped table-bordered pick-table-scroll table-condensed sorter-bootstrap"> 
 <thead>
   <tr>
     <th>Player</th>
@@ -221,13 +224,14 @@ Pick a TE:
   {% endfor %}
 </tbody>
 </table>
+</div>
+</div>
 
 <input type="hidden" name="TE" value="" size ="40" />
 {% else %}
 	TE: {{te.name}}
 {% endif %}
  <br> 
-
-<input type="submit" value="submit" />
+ <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% endblock %}

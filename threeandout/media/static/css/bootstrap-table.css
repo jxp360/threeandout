@@ -1,0 +1,42 @@
+.pick-table-scroll {  
+    width: 100%;
+    overflow: auto;
+}
+
+.pick-table-scroll > thead,
+.pick-table-scroll > tbody,
+.pick-table-scroll > thead > tr,
+.pick-table-scroll > tbody > tr,
+.pick-table-scroll > thead > tr > th,
+.pick-table-scroll > tbody > tr > td {
+    display: block;
+}
+
+.pick-table-scroll > tbody > tr:after,
+.pick-table-scroll > thead > tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.pick-table-scroll > tbody {
+    overflow-y: auto;
+    height: 150px;
+}
+
+.pick-table-scroll > tbody > tr > td,
+.pick-table-scroll > thead > tr > th {
+    width: 20%;
+    float: left;
+}
+
+.pick-table-scroll > thead,
+.pick-table-scroll > thead > tr {
+    width: calc(100% - 6px);
+}
+
+.table-highlight {
+    color: red;
+}
+
