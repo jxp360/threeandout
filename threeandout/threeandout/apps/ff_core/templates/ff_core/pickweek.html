@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block link_makepicks_class %}<li class="active">{% endblock %}
-
+{% load static %}
 {% block head %}
 <script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.floatThead.js"></script>
-
 <script type="text/javascript"> 
 	$(document).ready(function() 
 	    { 
@@ -110,7 +109,7 @@ function setTE(row) {
  <tbody>
   {% for QB in QBs %}
   <tr id="{{QB.id}}">
-  	<td WIDTH="190" onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
+  	<td onclick="return setQB('{{QB.id}}')">{{QB.name}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.teamName}} </td>
   	<td onclick="return setQB('{{QB.id}}')">{%if QB.teamName == QB.away%} {{QB.home}} {%else%} {{QB.away}} {%endif%}</td>
   	<td onclick="return setQB('{{QB.id}}')">{{QB.scoretodate}} </td>
