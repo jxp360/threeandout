@@ -150,7 +150,7 @@ Pick a RB:
   <tr id="{{RB.id}}">
   	<td WIDTH="190" onclick="return setRB('{{RB.id}}')">{{RB.name}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.team}} </td>
-  	<td onclick="return setRB('{{RB.id}}')">{%if RB.team == RB.away%} {{RB.home}} {%else%} {{RB.away}} {%endif%}</td>
+  	<td onclick="return setRB('{{RB.id}}')">{%if RB.teamName == RB.away%} {{RB.home}} {%else%} {{RB.away}} {%endif%}</td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.scoretodate}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.numPicked}} </td>
   </tr>
@@ -181,7 +181,7 @@ Pick a WR:
   <tr id="{{WR.id}}">
   	<td WIDTH="190" onclick="return setWR('{{WR.id}}')">{{WR.name}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.team}} </td>
-  	<td onclick="return setWR('{{WR.id}}')">{%if WR.team == WR.away%} {{WR.home}} {%else%} {{WR.away}} {%endif%}</td>
+  	<td onclick="return setWR('{{WR.id}}')">{%if WR.teamName == WR.away%} {{WR.home}} {%else%} {{WR.away}} {%endif%}</td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.scoretodate}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.numPicked}} </td>
   </tr>
@@ -212,7 +212,7 @@ Pick a TE:
   <tr id="{{TE.id}}">
   	<td WIDTH="190" onclick="return setTE('{{TE.id}}')">{{TE.name}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.team}} </td>
-  	<td onclick="return setTE('{{TE.id}}')">{%if TE.team == TE.away%} {{TE.home}} {%else%} {{TE.away}} {%endif%}</td>
+  	<td onclick="return setTE('{{TE.id}}')">{%if TE.teamName == TE.away%} {{TE.home}} {%else%} {{TE.away}} {%endif%}</td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.scoretodate}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.numPicked}} </td>
   </tr>
