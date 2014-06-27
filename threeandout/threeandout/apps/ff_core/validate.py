@@ -91,10 +91,11 @@ def ValidPlayers(week,season_type,position,user):
                                     OR ff_core_nflplayer.id=ff_core_picks.rb_id \
                                     OR ff_core_nflplayer.id=ff_core_picks.wr_id \
                                     OR ff_core_nflplayer.id=ff_core_picks.te_id) \
-                                    where ff_core_picks.week!=%s \
+                                    where  not (ff_core_picks.week=%s AND ff_core_picks.season_type=%s) \
+                                    AND ff_core_picks.season_type!=%s \
                                     AND ff_core_picks.fflplayer_id=%s \
-                                    GROUP BY ff_core_nflplayer.id", [week,fflplayer.id])
-    #TODO: if Picking week 1 of playoffs this will exclude picks from week 1 of regular season
+                                    GROUP BY ff_core_nflplayer.id", [week,season_type,"Preseason",fflplayer.id])
+    
     
     validplayers = []
     pickedPlayerDict = {}
