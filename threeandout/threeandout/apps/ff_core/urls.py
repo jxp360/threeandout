@@ -37,6 +37,9 @@ urlpatterns = patterns('',
     # ex: /threeandout/weeklyresults/5/Regular
     url(r'^weeklyresults/(?P<week>\d+)/(?P<season_type>\bRegular|Preseason|Postseason\b)/$', views.weeklyresults, name='weeklyresults'),
 
+    # ex: /threeandout/picks/current
+    url(r'^picks/current/$', views.pickcurrentweek, name='pickcurrentweek'),
+
     # For pickweek, submit, and picksummary if the season_type is not specified it defaults to regular season
     # ex: /threeandout/picks/5/
     url(r'^picks/(?P<week>\d+)/$', views.pickweek, name='pickweek'),

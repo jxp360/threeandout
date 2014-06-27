@@ -77,8 +77,7 @@ def submit(request,week,season_type="Regular"):
         else:
             return HttpResponse("Invalid Pick")
     
-    #TODO: Add season_type to url
-    return HttpResponseRedirect(reverse('threeandout:picksummary', args=[week]))
+    return HttpResponseRedirect(reverse('threeandout:picksummary', args=(week,season_type)))
 
 @login_required
 def picksummary(request,week,season_type="Regular"):
@@ -90,6 +89,18 @@ def picksummary(request,week,season_type="Regular"):
     te = pick.te.name
 
     return render(request, 'ff_core/picksummary.html', {'week':week,'qb':qb,'rb':rb,'wr':wr,'te':te})
+
+@login_required
+def pickcurrentweek(request):
+    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
+    bufferTime = timedelta(minutes=-240)
+    # The closest game that hasn't started is the "current" week
+    # It is delayed by 4 hours so that if you go to check who you picked in the final game of the week it won't move to the next week yet
+    game = NFLSchedule.objects.filter(kickoff__gt=now+bufferTime).order_by("kickoff").first()
+    week = game.week
+    season_type = game.season_type
+    print week,season_type
+    return HttpResponseRedirect(reverse('threeandout:pickweek',args=(week,season_type)))
 
 @login_required
 def pickweek(request, week,season_type="Regular"):
