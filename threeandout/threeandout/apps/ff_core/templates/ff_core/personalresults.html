@@ -7,6 +7,7 @@
 <h1> Personal Results </h1>
 <table border>
     <tr>
+    <td>Season</td>
     <td>week</td>
     <td>score</td>
     <td>qb</td>
@@ -21,6 +22,7 @@
     </tr>
     {% for pick in picks %}
     <tr>
+    <td>{{pick.season_type}}</td>
     <td>{{pick.week}}</td>
     <td>{{pick.score}}</td>
     <td>{{pick.qbName}}</td>

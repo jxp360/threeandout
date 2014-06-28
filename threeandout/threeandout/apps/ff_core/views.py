@@ -88,7 +88,7 @@ def picksummary(request,week,season_type="Regular"):
     wr = pick.wr.name
     te = pick.te.name
 
-    return render(request, 'ff_core/picksummary.html', {'week':week,'qb':qb,'rb':rb,'wr':wr,'te':te})
+    return render(request, 'ff_core/picksummary.html', {'week':week,'season_type':season_type,'qb':qb,'rb':rb,'wr':wr,'te':te})
 
 @login_required
 def pickcurrentweek(request):
@@ -136,7 +136,7 @@ def pickweek(request, week,season_type="Regular"):
     if te !=None:
         if not (validatePlayer(week,season_type,pick.te)): TEs = []            
     
-    return render(request, 'ff_core/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
+    return render(request, 'ff_core/pickweek.html', {'week':week,'season_type':season_type,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,
                                                    'currentpicks':currentpicks})
 @login_required    
@@ -163,7 +163,6 @@ def weeklyresults(request,week,season_type="Regular"):
     lastGame = getLastGame(week) 
     #you've got to love the double negative here -- its like coding with a 6 year old!
     okToDisplay = not hasNotStarted(lastGame)
-    #for debugging --
     if okToDisplay:
         picks = Picks.objects.filter(week=week,season_type=season_type)
         tmpList = [(x.score,x) for x in picks]
@@ -172,14 +171,17 @@ def weeklyresults(request,week,season_type="Regular"):
     else:
         pickData = []
     
-    return render(request, 'ff_core/weeklyresults.html', {'week':week, 'picks':pickData, 'ok':okToDisplay})
+    return render(request, 'ff_core/weeklyresults.html', {'week':week, 'season_type':season_type,'picks':pickData, 'ok':okToDisplay})
 
 @login_required
 def personalresults(request):
-    #TODO Currently only shows regular season
     player = FFLPlayer.objects.get(user=request.user)
     picks = Picks.objects.filter(fflPlayer=player).filter(season_type="Regular").order_by('week')
+    picksPostseason = Picks.objects.filter(fflPlayer=player).filter(season_type="Postseason").order_by('week')
     pickData= [getPickData(pick,season_type="Regular") for pick in picks]
+    for pick in picksPostseason:
+        print "Post season picks" , pick.week
+        pickData.append(getPickData(pick,season_type="Postseason"))
     return render(request, 'ff_core/personalresults.html', {'picks':pickData})
 
 @login_required

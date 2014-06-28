@@ -97,10 +97,10 @@ $.fn.tableScroll.defaults =
 
 {% block content %}
 
-<p>Make Your Picks For Week {{week}}</p>
+<p>Make Your Picks For Week {{week}} {{season_type}}</p>
 
 <p> 
-<form name="players" action= "{% url 'threeandout:submit' week %}" method="post">
+<form name="players" action= "{% url 'threeandout:submit' week=week season_type=season_type%}" method="post">
 {% csrf_token %}
 
 {% if QBs %}
