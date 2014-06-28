@@ -34,7 +34,13 @@ urlpatterns = patterns('',
     # ex: /threeandout/weeklyresults/5/
     url(r'^weeklyresults/(?P<week>\d+)/$', views.weeklyresults, name='weeklyresults'),
 
-    
+    # ex: /threeandout/weeklyresults/5/Regular
+    url(r'^weeklyresults/(?P<week>\d+)/(?P<season_type>\bRegular|Preseason|Postseason\b)/$', views.weeklyresults, name='weeklyresults'),
+
+    # ex: /threeandout/picks/current
+    url(r'^picks/current/$', views.pickcurrentweek, name='pickcurrentweek'),
+
+    # For pickweek, submit, and picksummary if the season_type is not specified it defaults to regular season
     # ex: /threeandout/picks/5/
     url(r'^picks/(?P<week>\d+)/$', views.pickweek, name='pickweek'),
 
@@ -42,8 +48,18 @@ urlpatterns = patterns('',
     url(r'^picks/(?P<week>\d+)/submit/$', views.submit, name='submit'),    
     
     # ex: /threeandout/picks/5/picksummary
-    url(r'^picks/(?P<week>\d+)/picksummary/$', views.picksummary, name='picksummary'), 
-    #url(r'^login/$', authviews.login, name='login'),
+    url(r'^picks/(?P<week>\d+)/picksummary/$', views.picksummary, name='picksummary'),
+    
+    # ex: /threeandout/picks/5/Regular
+    url(r'^picks/(?P<week>\d+)/(?P<season_type>\bRegular|Preseason|Postseason\b)/$', views.pickweek, name='pickweek'),
+   # url(r'^picks/(?P<week>\d+)/(?P<season>[0-9A-Za-z_\-]+)/$', views.pickweek, name='pickweek'),
+
+    # ex: /threeandout/picks/5/Regular/submit
+    url(r'^picks/(?P<week>\d+)/(?P<season_type>\bRegular|Preseason|Postseason\b)/submit/$', views.submit, name='submit'),    
+    
+    # ex: /threeandout/picks/5/Regular/picksummary
+    url(r'^picks/(?P<week>\d+)/(?P<season_type>\bRegular|Preseason|Postseason\b)/picksummary/$', views.picksummary, name='picksummary'),
+     
     
     # ex: /threeandout/selected/1
     url(r'^selected/(?P<user>\d+)/$', views.selected, name='selected'),

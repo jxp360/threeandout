@@ -83,12 +83,10 @@ function setTE(row) {
 
 {% block content %}
 
-
-
-<p>Make Your Picks For Week {{week}}</p>
+<p>Make Your Picks For Week {{week}} {{season_type}}</p>
 
 <p> 
-<form name="players" action= "{% url 'threeandout:submit' week %}" method="post">
+<form name="players" action= "{% url 'threeandout:submit' week=week season_type=season_type%}" method="post">
 {% csrf_token %}
 
 
@@ -145,7 +143,7 @@ function setTE(row) {
   <tr id="{{RB.id}}">
   	<td WIDTH="190" onclick="return setRB('{{RB.id}}')">{{RB.name}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.team}} </td>
-  	<td onclick="return setRB('{{RB.id}}')">{%if RB.team == RB.away%} {{RB.home}} {%else%} {{RB.away}} {%endif%}</td>
+  	<td onclick="return setRB('{{RB.id}}')">{%if RB.teamName == RB.away%} {{RB.home}} {%else%} {{RB.away}} {%endif%}</td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.scoretodate}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.numPicked}} </td>
   </tr>
@@ -181,7 +179,7 @@ function setTE(row) {
   <tr id="{{WR.id}}">
   	<td WIDTH="190" onclick="return setWR('{{WR.id}}')">{{WR.name}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.team}} </td>
-  	<td onclick="return setWR('{{WR.id}}')">{%if WR.team == WR.away%} {{WR.home}} {%else%} {{WR.away}} {%endif%}</td>
+  	<td onclick="return setWR('{{WR.id}}')">{%if WR.teamName == WR.away%} {{WR.home}} {%else%} {{WR.away}} {%endif%}</td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.scoretodate}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.numPicked}} </td>
   </tr>
@@ -216,7 +214,7 @@ function setTE(row) {
   <tr id="{{TE.id}}">
   	<td WIDTH="190" onclick="return setTE('{{TE.id}}')">{{TE.name}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.team}} </td>
-  	<td onclick="return setTE('{{TE.id}}')">{%if TE.team == TE.away%} {{TE.home}} {%else%} {{TE.away}} {%endif%}</td>
+  	<td onclick="return setTE('{{TE.id}}')">{%if TE.teamName == TE.away%} {{TE.home}} {%else%} {{TE.away}} {%endif%}</td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.scoretodate}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.numPicked}} </td>
   </tr>
