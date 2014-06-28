@@ -280,18 +280,20 @@ def editPreferences(request):
                                   context_instance=RequestContext(request))
 
 class UserCreateForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    teamname = forms.CharField(required=True)
+    email = forms.EmailField(label='Email Address',required=True,help_text="Used for Lost Password Link and League Updates")
+    teamname = forms.CharField(label='Team Name',required=True)
+    displayName = forms.CharField(label='Displayed Owner Name',required=False,help_text="Displayed to other users as the owner of your team")
+    EnableAutoPick = forms.BooleanField(label='Enable Auto Pick',required=True,help_text="Enable the auto pick feature")
 
     class Meta:
         model = User
-        fields = ( "username", "email", "teamname" )
+        fields = ( "username", "email", "teamname","displayName","EnableAutoPick" )
     
     def save(self, commit=True):
         if not commit:
             raise NotImplementedError("Can't create User and FFLPlayer without database save")
         user = super(UserCreateForm, self).save(commit=True)
-        newplayer = FFLPlayer(user=user,league=0, email=self.cleaned_data['email'], teamname=self.cleaned_data['teamname'])
+        newplayer = FFLPlayer(user=user,league=0, email=self.cleaned_data['email'], displayName=self.cleaned_data['displayName'],teamname=self.cleaned_data['teamname'],autoPickPreference=self.cleaned_data['EnableAutoPick'])
         newplayer.save()
         return user, newplayer
    
