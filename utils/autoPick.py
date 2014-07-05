@@ -35,10 +35,24 @@ def bestPlayerAvailable(FFLPlayer,week,season_type,position):
         if datetime.date.weekday(kickoff) != 3: # Thursday Game
             return player
 
+def manualPick():
+    bestPlayersNames ={}
+    # 2013 Points Leaders at their positions
+    bestPlayersNames['QB'] = "Peyton Manning"
+    bestPlayersNames['RB'] = "Jamaal Charles"
+    bestPlayersNames['WR'] = "Demaryius Thomas"
+    bestPlayersNames['TE'] = "Jimmy Graham"
+
+    bestPlayers = {}
+    for position in bestPlayersNames.keys():
+        print bestPlayersNames[position]
+        bestPlayers[position] = NFLPlayer.objects.get(name=bestPlayersNames[position])
+    
+    return bestPlayers
 
 def autoPickWeek(FFLPlayer,week,season_type):
     
-    # If the user already has a pick for this weekand seaon_type then don't pick
+    # If the user already has a pick for this week and seaon_type then don't pick
     try:
         Picks.objects.get(fflPlayer=FFLPlayer, week=week,season_type=season_type)
     except ObjectDoesNotExist:
@@ -48,21 +62,34 @@ def autoPickWeek(FFLPlayer,week,season_type):
         return
 
     pick = Picks(week=week,season_type=season_type, fflPlayer=FFLPlayer)
-    pick.qb = bestPlayerAvailable(FFLPlayer,week,season_type,"QB")
-    pick.rb = bestPlayerAvailable(FFLPlayer,week,season_type,"RB")
-    pick.wr = bestPlayerAvailable(FFLPlayer,week,season_type,"WR")
-    pick.te = bestPlayerAvailable(FFLPlayer,week,season_type,"TE")
+    
+    # For the first week of the season just the best players from last year
+    if week==1 and season_type=="Regular":
+        bestPlayers = manualPick()
+        pick.qb = bestPlayers["QB"]
+        pick.rb = bestPlayers["RB"]
+        pick.wr = bestPlayers["WR"]
+        pick.te = bestPlayers["TE"]  
+    
+    else:
+        pick.qb = bestPlayerAvailable(FFLPlayer,week,season_type,"QB")
+        pick.rb = bestPlayerAvailable(FFLPlayer,week,season_type,"RB")
+        pick.wr = bestPlayerAvailable(FFLPlayer,week,season_type,"WR")
+        pick.te = bestPlayerAvailable(FFLPlayer,week,season_type,"TE")
+   
+    # Validate the Pick
     if validatePick(week,season_type,pick) and validateTwoOrLessPicksAll(player,pick,week):
         pick.mod_time=timezone.now()
         pick.save()    
     else:
-        print "Error Invalid Auto-Pick" , FFLPlayer.teamname
+        print "Error Invalid Auto-Pick, no Auto Pick made" , FFLPlayer.teamname
 
 if __name__=="__main__":
     
     week,season_type = findCurrentWeek()
+    week =1
+    season_type = "Regular"
     players = FFLPlayer.objects.all()
     for player in players:
-        print player.teamname
         autoPickWeek(player,week,season_type)
     
