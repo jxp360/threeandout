@@ -13,21 +13,18 @@ DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
 
 
 DATABASES = {
-    'default': {'ENGINE': 'django.db.backends.mysql', 
+    'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2', 
                 'NAME': 'threeandout',
                 'USER': 'threeandout',
-                'PASSWORD': 'Thr33&0ut',
-                'HOST': 'threeandout.c0bnvpjdlyf5.us-east-1.rds.amazonaws.com',
-                'PORT': 3306 },
-    'slave': {'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': dburl,
-                }
+                'PASSWORD': 'Thr33&0ut!',
+                'HOST': 'threeandout-ops.cjftsjpuovni.us-east-1.rds.amazonaws.com',
+                'PORT': 5432 },
 
 }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['www.threeandoutfantasyfootball.com','threeandoutfantasyfootball.com','107.22.174.163']
+ALLOWED_HOSTS = ['www.threeandoutfantasyfootball.com','threeandoutfantasyfootball.com','54.86.69.247']
 
 LOGGING = {
     'version': 1,
