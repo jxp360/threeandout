@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "pick.html" %}
 
-{% block link_makepicks_class %}<li class="active">{% endblock %}
 {% load static %}
+{% block link_makepicks_class %}<li class="active">{% endblock %}
 {% block head %}
 <script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.floatThead.js"></script>
@@ -81,7 +81,9 @@ function setTE(row) {
 </script>
 {% endblock %}
 
-{% block content %}
+{% block btn_text %}Week {{week}} {% endblock %}
+
+{% block pick_content %}
 
 <p>Make Your Picks For Week {{week}} {{season_type}}</p>
 

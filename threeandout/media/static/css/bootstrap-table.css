@@ -40,3 +40,9 @@
     color: red;
 }
 
+.dropdown-menu {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+ 
