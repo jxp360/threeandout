@@ -104,7 +104,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_PATH, 'templates'),
-    os.path.join(PROJECT_PATH, 'apps', 'ff_core', 'templates'),
+    os.path.join(PROJECT_PATH, 'threeandout', 'apps', 'ff_core', 'templates', 'ff_core'),
 )
 
 LOGIN_URL = 'threeandout/login'

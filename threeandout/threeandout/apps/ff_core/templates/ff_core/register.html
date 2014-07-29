@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
+{% load bootstrap3 %}
+{% bootstrap_messages %}
 
 <h1> Registration Form </h1>
 
-<table>
-    <form method='post' action=''>{% csrf_token %}
-        {{ form }}
-        <tr><td></td><td><input type="submit" value="Submit" /></td>
+<div class="row">
+  <div class="col-sm-4 col-sm-offset-1">
+    <form class="form form-horizontal" method="post" action="">
+      {% csrf_token %}
+      {% bootstrap_form form layout='vertical' %}
+      {% buttons layout="horizontal" %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      {% endbuttons %}
     </form>
-</table>
+  </div>
+</div>
 
 {% endblock %}

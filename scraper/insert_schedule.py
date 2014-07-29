@@ -23,6 +23,7 @@ for i in xrange(1,18):
     for key in s.KEYS:  
         args['week'] = game['week']
         args['kickoff'] = game['kickoff']
+        print dir(args['kickoff'])
         try:
             args['home'] = models.NFLTeam.objects.get(short_name = game['home'])
         except ObjectDoesNotExist:

@@ -17,9 +17,7 @@
     <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/css/theme.bootstrap.css />
     <link rel="stylesheet" type="text/css" href={{ STATIC_URL }}/css/bootstrap-table.css />
     
-    <script src="http://code.jquery.com/jquery-1.10.1.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <script src="{% static 'js/jquery-ui-1.10.0.custom.min.js' %}"></script>
     <script src="{% static 'js/jquery.floatThead.min.js' %}"></script>
     {% bootstrap_javascript %}
@@ -54,16 +52,15 @@
   <div class="collapse navbar-collapse navbar-responsive-collapse">
     <ul class="nav navbar-nav">
       {% block link_makepicks_class %}<li class="">{% endblock %}
-        <a href="{% url 'threeandout:picks' %}">
+        <a href="{% url 'threeandout:pickcurrentweek' %}">
           <i class="fa fa-cog"></i>
           <span>Picks</span>
         </a>
       </li>
-      {% block link_standings_class %}<li class="dropdown">{% endblock %}
-        <a href="{% url 'threeandout:currentstandings' %}" class="dropdown-toggle" data-toggle="dropdown">
+      {% block link_standings_class %}<li class="">{% endblock %}
+        <a href="{% url 'threeandout:currentstandings' %}" >
           <i class="fa icon-user"></i>
           <span>Standings</span>
-          <b class="caret"></b>
         </a>
       </li>
       {% block link_results_class %}<li class="dropdown">{% endblock %}
