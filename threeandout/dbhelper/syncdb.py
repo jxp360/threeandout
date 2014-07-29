@@ -14,7 +14,7 @@ if now.month<3:
   CURRENT_SEASON=CURRENT_SEASON-1
 
 print "FOR DEBUG ONLY - lets use last year because it has data!"
-CURRENT_SEASON=CURRENT_SEASON-1
+#CURRENT_SEASON=CURRENT_SEASON-1
 
 TEAMS={} #keys are short abbreviation, id is django object
 for team in models.NFLTeam.objects.all():
@@ -69,7 +69,8 @@ def sync_players():
   nfldbPlayers =[]
   for position in ('QB', 'TE', 'WR', 'RB'):
     q, db = getNflDbQuery()
-    nfldbPlayers.extend(q.player(season_year=CURRENT_SEASON,position=position).as_players())
+    q.game(season_year=CURRENT_SEASON)
+    nfldbPlayers.extend(q.player(position=position).as_players())
     db.close()
   hasher  = Hasher(models.NFLPlayer.objects.all())
   #djangoPlayers = models.NFLPlayer.objects.all()

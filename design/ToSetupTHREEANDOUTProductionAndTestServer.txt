@@ -21,5 +21,29 @@ source /usr/local/bin/virtualenvwrapper.sh
 19) workon production
 20) pip install -r requirements.txt (/data/threeandout)
 21) sudo yum install mod_wsgi
+22) 
+createuser -h threeandout-ops.cjftsjpuovni.us-east-1.rds.amazonaws.com -p 5432 -U threeandout -E -P nfldb
+Enter password for new role:
+Enter it again:
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create databases? (y/n) y
+Shall the new role be allowed to create more new roles? (y/n) n
+
+
+23) createdb -h threeandout-ops.cjftsjpuovni.us-east-1.rds.amazonaws.com -p 5432 -U nfldb nfldb
+24) psql -h threeandout-ops.cjftsjpuovni.us-east-1.rds.amazonaws.com -p 5432 -U threeandout -c 'CREATE EXTENSION fuzzystrmatch;' nfldb
+25) psql -h threeandout-ops.cjftsjpuovni.us-east-1.rds.amazonaws.com -p 5432 -U nfldb nfldb < nfldb.sql
+26) mkdir -p /home/ops/.config/nfldb
+27) cp ~/.virtualenvs/production/share/nfldb/config.ini.sample ~/.config/nfldb/config.ini
+28) Edit ~/.config/nfldb/config.ini, change password and hostname
+29) yum install libxdlt-devel
+30) pip install lxml
+31) Change all total_second places in nfldb/nflgame
+ (td.microseconds + (td.seconds + td.days * 24 * 3600)
+ 
+
+
+
+
 
 
