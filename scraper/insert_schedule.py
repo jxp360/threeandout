@@ -1,9 +1,11 @@
 import sys
 sys.path.append('../threeandout')
+
 import os
-if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
-  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings.dev' 
-import nflschedule 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threeandout.settings.dev')
+from django.conf import settings
+
+import nflschedule
 import threeandout.apps.ff_core.models as models
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -21,6 +23,7 @@ for i in xrange(1,18):
     for key in s.KEYS:  
         args['week'] = game['week']
         args['kickoff'] = game['kickoff']
+        print dir(args['kickoff'])
         try:
             args['home'] = models.NFLTeam.objects.get(short_name = game['home'])
         except ObjectDoesNotExist:
@@ -30,7 +33,9 @@ for i in xrange(1,18):
             args['away'] = models.NFLTeam.objects.get(short_name = game['away'])
         except ObjectDoesNotExist:
             print game['away']
-            
+        
+
+    print args    
     dbSchedule = models.NFLSchedule(**args)
     dbSchedule.save()
 

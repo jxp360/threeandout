@@ -1,15 +1,29 @@
 {% extends "base.html" %}
+{% load bootstrap3 %}
+{% bootstrap_messages %}
+{% block link_preferences_class %}<li class="active">{% endblock %}
 {% block content %}
 
-<h1> Edit Preferences </h1>
-<h4><a href="{% url 'django.contrib.auth.views.password_change' %}">Change Password</a></h4>
-
-<table>
-    <form method='post' action=''>{% csrf_token %}
-        {{ form }}
-        <tr><td></td><td><input type="submit" value="Submit" /></td>
+<div class="row">
+  <div class="col-md-8 col-md-offset-1">
+    <h1> Edit Preferences </h1>
+    <a href="{% url 'django.contrib.auth.views.password_change' %}">
+      <button type="button" class="btn btn-primary">Change Password</button>
+    </a>
+    <h3> </h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <form class="form form-horizontal" method="post" action="">
+      {% csrf_token %}
+      {% bootstrap_form form layout='horizontal' %}
+      {% buttons layout="horizontal" %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      {% endbuttons %}
     </form>
-</table>
+  </div>
+</div>
+
 {% endblock %}
 
-{% block link_preferences_class %}active{% endblock %}

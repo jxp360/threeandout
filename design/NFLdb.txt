@@ -1,0 +1,25 @@
+nfldb requires its own database.  The instructions for nfldb are https://github.com/BurntSushi/nfldb/wiki/Installation
+
+I followed the link given to https://wiki.postgresql.org/wiki/Detailed_installation_guides which helps setting up postgresql for your os
+
+After you have a working postgresql server up then you can loosly follow the instructions under "Creating a database" for the nfldb.  I did have to modify the /etc/postgresql/9.1/main/pg_hba.conf as follows:
+
+local   all             postgres                                peer
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     md5
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+
+
+I also followed the instructions to Import the nfldb database by downloading the zip and recomend you do this as well to keep the inital sync time down (it is long enough already!)
+
+You will need to modify $HOME/.config/nfldb/config.ini to include the password you used earlier for nfldb user
+
+
+I also installed python-psycopg2 with yum install python-psycopg2 inorder to get pip install nfldb to work
+

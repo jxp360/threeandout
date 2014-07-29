@@ -31,14 +31,13 @@ def picks(request):
     return render(request, 'ff_core/pick.html', {'weeks':weeks})
     
 @login_required
-def submit(request,week):
-    print "POST" , request.POST
+def submit(request,week,season_type="Regular"):
     player = FFLPlayer.objects.get(user=request.user)
     
     pickexists = False
     try:
         # A Pick that that user and week already exists
-        pick = Picks.objects.get(week=week, fflPlayer=player)
+        pick = Picks.objects.get(week=week,season_type=season_type, fflPlayer=player)
         pickexists = True
     except ObjectDoesNotExist:
         pickexists = False
@@ -46,56 +45,68 @@ def submit(request,week):
     
     if pickexists: 
         # If the  current pick.player is valid then ok to change it
-        if validatePlayer(week,pick.qb):
+        if validatePlayer(week,season_type,pick.qb):
             pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
-            if not(validatePlayer(week,pick.qb)) or not(validateTwoOrLessPicks(player,pick.qb,"QB",week)):
+            if not(validatePlayer(week,season_type,pick.qb)) or not(validateTwoOrLessPicks(player,pick.qb,"QB",week)):
                 return HttpResponse("Invalid Pick")
-        if validatePlayer(week,pick.rb):
+        if validatePlayer(week,season_type,pick.rb):
             pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
-            if not(validatePlayer(week,pick.rb))  or not(validateTwoOrLessPicks(player,pick.rb,"RB",week)):
+            if not(validatePlayer(week,season_type,pick.rb))  or not(validateTwoOrLessPicks(player,pick.rb,"RB",week)):
                 return HttpResponse("Invalid Pick")
-        if validatePlayer(week,pick.wr):
+        if validatePlayer(week,season_type,pick.wr):
             pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
-            if not(validatePlayer(week,pick.wr)) or not(validateTwoOrLessPicks(player,pick.wr,"WR",week)):
+            if not(validatePlayer(week,season_type,pick.wr)) or not(validateTwoOrLessPicks(player,pick.wr,"WR",week)):
                 return HttpResponse("Invalid Pick")
-        if validatePlayer(week,pick.te):
+        if validatePlayer(week,season_type,pick.te):
             pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-            if not(validatePlayer(week,pick.te)) or not(validateTwoOrLessPicks(player,pick.te,"TE",week)):
+            if not(validatePlayer(week,season_type,pick.te)) or not(validateTwoOrLessPicks(player,pick.te,"TE",week)):
                 return HttpResponse("Invalid Pick")
         pick.mod_time=timezone.now()
         pick.save()      
            
     else:
         #Make Totally New Pick
-        pick = Picks(week=week, fflPlayer=player)
+        pick = Picks(week=week,season_type=season_type, fflPlayer=player)
         pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
         pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
         pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
         pick.te = NFLPlayer.objects.get(pk=request.POST["TE"])
-        if validatePick(week,pick) and validateTwoOrLessPicksAll(player,pick,week):
+        if validatePick(week,season_type,pick) and validateTwoOrLessPicksAll(player,pick,week):
             pick.mod_time=timezone.now()
             pick.save()    
         else:
             return HttpResponse("Invalid Pick")
     
-    return HttpResponseRedirect(reverse('threeandout:picksummary', args=[week]))
+    return HttpResponseRedirect(reverse('threeandout:picksummary', args=(week,season_type)))
 
 @login_required
-def picksummary(request,week):
+def picksummary(request,week,season_type="Regular"):
     player = FFLPlayer.objects.get(user=request.user)
-    pick =  Picks.objects.get(week=week, fflPlayer=player)
+    pick =  Picks.objects.get(week=week,season_type=season_type,fflPlayer=player)
     qb = pick.qb.name
     rb = pick.rb.name
     wr = pick.wr.name
     te = pick.te.name
 
-    return render(request, 'ff_core/picksummary.html', {'week':week,'qb':qb,'rb':rb,'wr':wr,'te':te})
+    return render(request, 'ff_core/picksummary.html', {'week':week,'season_type':season_type,'qb':qb,'rb':rb,'wr':wr,'te':te})
 
 @login_required
-def pickweek(request, week):
+def pickcurrentweek(request):
+    now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
+    bufferTime = timedelta(minutes=-240)
+    # The closest game that hasn't started is the "current" week
+    # It is delayed by 4 hours so that if you go to check who you picked in the final game of the week it won't move to the next week yet
+    game = NFLSchedule.objects.filter(kickoff__gt=now+bufferTime).order_by("kickoff").first()
+    week = game.week
+    season_type = game.season_type
+    print week,season_type
+    return HttpResponseRedirect(reverse('threeandout:pickweek',args=(week,season_type)))
+
+@login_required
+def pickweek(request, week,season_type="Regular"):
     player = FFLPlayer.objects.get(user=request.user)
     try:
-        pick = Picks.objects.get(week=week, fflPlayer=player)
+        pick = Picks.objects.get(week=week, fflPlayer=player,season_type=season_type)
     except ObjectDoesNotExist:
         qb = None
         rb = None
@@ -109,23 +120,23 @@ def pickweek(request, week):
         te = pick.te
         currentpicks = True
 
-    QBs = ValidPlayers(week,'QB',request.user)
-    RBs = ValidPlayers(week,'RB',request.user)
-    WRs = ValidPlayers(week,'WR',request.user)   
-    TEs = ValidPlayers(week,'TE',request.user) 
+    QBs = ValidPlayers(week,season_type,'QB',request.user)
+    RBs = ValidPlayers(week,season_type,'RB',request.user)
+    WRs = ValidPlayers(week,season_type,'WR',request.user)   
+    TEs = ValidPlayers(week,season_type,'TE',request.user) 
 
     
     # If they already have picks and that pick is not valid then it cannot be changed
     if qb !=None:
-        if not (validatePlayer(week,pick.qb)): QBs = []
+        if not (validatePlayer(week,season_type,pick.qb)): QBs = []
     if rb !=None:
-        if not (validatePlayer(week,pick.rb)): RBs = []
+        if not (validatePlayer(week,season_type,pick.rb)): RBs = []
     if wr !=None:
-        if not (validatePlayer(week,pick.wr)): WRs = []
+        if not (validatePlayer(week,season_type,pick.wr)): WRs = []
     if te !=None:
-        if not (validatePlayer(week,pick.te)): TEs = []            
+        if not (validatePlayer(week,season_type,pick.te)): TEs = []            
     
-    return render(request, 'ff_core/pickweek.html', {'week':week,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
+    return render(request, 'ff_core/pickweek.html', {'week':week,'season_type':season_type,'QBs': QBs,'RBs': RBs,'WRs': WRs,'TEs': TEs,
                                                    'qb':qb,'rb':rb,'wr':wr,'te':te,
                                                    'currentpicks':currentpicks})
 @login_required    
@@ -148,27 +159,29 @@ def weeklyresultssummary(request):
     return render(request, 'ff_core/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
 
 @login_required
-def weeklyresults(request,week):
+def weeklyresults(request,week,season_type="Regular"):
     lastGame = getLastGame(week) 
     #you've got to love the double negative here -- its like coding with a 6 year old!
     okToDisplay = not hasNotStarted(lastGame)
-    #for debugging --
     if okToDisplay:
-        picks = Picks.objects.filter(week=week)
+        picks = Picks.objects.filter(week=week,season_type=season_type)
         tmpList = [(x.score,x) for x in picks]
         tmpList.sort(reverse=True)
-        sortedPicks = [x[1] for x in tmpList]
-        pickData = [getPickData(x) for x in picks]
+        pickData = [getPickData(x,season_type) for x in picks]
     else:
         pickData = []
     
-    return render(request, 'ff_core/weeklyresults.html', {'week':week, 'picks':pickData, 'ok':okToDisplay})
+    return render(request, 'ff_core/weeklyresults.html', {'week':week, 'season_type':season_type,'picks':pickData, 'ok':okToDisplay})
 
 @login_required
 def personalresults(request):
     player = FFLPlayer.objects.get(user=request.user)
-    picks = Picks.objects.filter(fflPlayer=player).order_by('week')
-    pickData= [getPickData(pick) for pick in picks]
+    picks = Picks.objects.filter(fflPlayer=player).filter(season_type="Regular").order_by('week')
+    picksPostseason = Picks.objects.filter(fflPlayer=player).filter(season_type="Postseason").order_by('week')
+    pickData= [getPickData(pick,season_type="Regular") for pick in picks]
+    for pick in picksPostseason:
+        print "Post season picks" , pick.week
+        pickData.append(getPickData(pick,season_type="Postseason"))
     return render(request, 'ff_core/personalresults.html', {'picks':pickData})
 
 @login_required
@@ -184,10 +197,11 @@ def selected(request, user):
 
     for pick in picks:
         week = pick.week
-        updateDict(qbs,pick.qb, week, showPending)
-        updateDict(rbs,pick.rb, week, showPending)
-        updateDict(wrs,pick.wr, week, showPending)
-        updateDict(tes,pick.te, week, showPending)
+        season_type = pick.season_type
+        updateDict(qbs,pick.qb, week,season_type, showPending)
+        updateDict(rbs,pick.rb, week,season_type, showPending)
+        updateDict(wrs,pick.wr, week,season_type, showPending)
+        updateDict(tes,pick.te, week,season_type, showPending)
     qbTmp = [x for x in qbs.items()]
     wrTmp = [x for x in wrs.items()]
     teTmp = [x for x in tes.items()]
@@ -202,8 +216,8 @@ def selected(request, user):
     rbList = [x[1] for x in rbTmp]
     return render(request, 'ff_core/selected.html', {'qb':qbList,'wr':wrList,'te':teList,'rb':rbList, 'fflplayer':player.teamname})
 
-def updateDict(positionDict, player, week, showPending):
-    playerPending = validatePlayer(week, player)
+def updateDict(positionDict, player, week,season_type, showPending):
+    playerPending = validatePlayer(week,season_type, player)
     if showPending or not playerPending:
       name = player.name
       try:
@@ -216,26 +230,26 @@ def updateDict(positionDict, player, week, showPending):
       else:
           d['locked']+=1
       
-def getPickData(pick):
+def getPickData(pick,season_type="Regular"):
       try:
-        qbScore = NFLWeeklyStat.objects.get(player=pick.qb, week=pick.week).score
+        qbScore = NFLWeeklyStat.objects.get(player=pick.qb, game__week=pick.week,game__season_type=season_type).score
       except ObjectDoesNotExist:
         qbScore = '-'
       try:
-        rbScore = NFLWeeklyStat.objects.get(player=pick.rb, week=pick.week).score
+        rbScore = NFLWeeklyStat.objects.get(player=pick.rb, game__week=pick.week,game__season_type=season_type).score
       except ObjectDoesNotExist:
         rbScore = '-'
       try:
-        wrScore = NFLWeeklyStat.objects.get(player=pick.wr, week=pick.week).score
+        wrScore = NFLWeeklyStat.objects.get(player=pick.wr, game__week=pick.week,game__season_type=season_type).score
       except ObjectDoesNotExist:
         wrScore = '-'
       try:
-        teScore = NFLWeeklyStat.objects.get(player=pick.te, week=pick.week).score
+        teScore = NFLWeeklyStat.objects.get(player=pick.te, game__week=pick.week,game__season_type=season_type).score
       except ObjectDoesNotExist:
         teScore = '-'
-
       d={'user':pick.fflPlayer.teamname,
          'week':pick.week,
+         'season_type':season_type,
          'score':pick.score,
          'qbName':pick.qb.name,
          'qbScore':qbScore,
@@ -268,18 +282,20 @@ def editPreferences(request):
                                   context_instance=RequestContext(request))
 
 class UserCreateForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    teamname = forms.CharField(required=True)
+    email = forms.EmailField(label='Email Address',required=True,help_text="Used for Lost Password Link and League Updates")
+    teamname = forms.CharField(label='Team Name',required=True)
+    displayName = forms.CharField(label='Displayed Owner Name',required=False,help_text="Displayed to other users as the owner of your team")
+    EnableAutoPick = forms.BooleanField(label='Enable Auto Pick',required=True,help_text="Enable the auto pick feature")
 
     class Meta:
         model = User
-        fields = ( "username", "email", "teamname" )
+        fields = ( "username", "email", "teamname","displayName","EnableAutoPick" )
     
     def save(self, commit=True):
         if not commit:
             raise NotImplementedError("Can't create User and FFLPlayer without database save")
         user = super(UserCreateForm, self).save(commit=True)
-        newplayer = FFLPlayer(user=user,league=0, email=self.cleaned_data['email'], teamname=self.cleaned_data['teamname'])
+        newplayer = FFLPlayer(user=user,league=0, email=self.cleaned_data['email'], displayName=self.cleaned_data['displayName'],teamname=self.cleaned_data['teamname'],autoPickPreference=self.cleaned_data['EnableAutoPick'])
         newplayer.save()
         return user, newplayer
    

@@ -37,9 +37,9 @@ def validateTwoOrLessPicksAll(fflplayer,pick,week):
 
 # Validate a give player's game has not started when picked
 # Used to validate when a pick is submitted    
-def validatePlayer(week,player):
+def validatePlayer(week,season_type,player):
     try:
-        game = NFLSchedule.objects.get(Q(week=week)&(Q(home=player.team) | Q(away=player.team)))
+        game = NFLSchedule.objects.get(Q(week=week)&Q(season_type=season_type)&(Q(home=player.team) | Q(away=player.team)))
     except:
         return False
 
@@ -47,7 +47,7 @@ def validatePlayer(week,player):
 
 # Returns a list of players than could be picked by a given user on a given week.
 # Used the load the table on the pick page                         
-def ValidPlayers(week,position,user):
+def ValidPlayers(week,season_type,position,user):
     fflplayer = FFLPlayer.objects.get(user=user)
     locktime = datetime.utcnow().replace(tzinfo=pytz.timezone('utc')) +timedelta(minutes=PICK_LOCKOUT_MINUTES)
     locktime_str = time.strftime('%Y-%m-%d %H:%M:%S',locktime.timetuple())
@@ -75,10 +75,12 @@ def ValidPlayers(week,position,user):
                                     left join ff_core_nflweeklystat \
                                     on (ff_core_nflplayer.id = ff_core_nflweeklystat.player_id) \
                                     where (ff_core_nflschedule.week=%s) \
+                                    AND (ff_core_nflschedule.season_type=%s) \
                                     AND (ff_core_nflplayer.position=%s) \
                                     AND (ff_core_nflschedule.kickoff>%s) \
-                                    GROUP BY  ff_core_nflplayer.id", [week,position,locktime_str])
+                                    GROUP BY  ff_core_nflplayer.id", [week,season_type,position,locktime_str])
 
+ 
     # Query the Picks for this particular FFL Player
     # Exclude the current week because they are editing that week for this query 
     pickedPlayers= NFLPlayer.objects.raw("select ff_core_nflplayer.id, \
@@ -89,9 +91,12 @@ def ValidPlayers(week,position,user):
                                     OR ff_core_nflplayer.id=ff_core_picks.rb_id \
                                     OR ff_core_nflplayer.id=ff_core_picks.wr_id \
                                     OR ff_core_nflplayer.id=ff_core_picks.te_id) \
-                                    where ff_core_picks.week!=%s \
-                                    AND ff_core_picks.fflplayer_id=%s\
-                                    GROUP BY ff_core_nflplayer.id", [week,fflplayer.id])
+                                    where  not (ff_core_picks.week=%s AND ff_core_picks.season_type=%s) \
+                                    AND ff_core_picks.season_type!=%s \
+                                    AND ff_core_picks.fflplayer_id=%s \
+                                    GROUP BY ff_core_nflplayer.id", [week,season_type,"Preseason",fflplayer.id])
+    
+    
     validplayers = []
     pickedPlayerDict = {}
     count = 0 
@@ -110,10 +115,10 @@ def ValidPlayers(week,position,user):
             validplayers.append(player)             
     return validplayers
 
-def validatePick(week,pick):
+def validatePick(week,season_type,pick):
     
-    valid = (validatePlayer(week,pick.qb) and 
-             validatePlayer(week,pick.rb) and 
-             validatePlayer(week,pick.wr) and 
-             validatePlayer(week,pick.te))
+    valid = (validatePlayer(week,season_type,pick.qb) and 
+             validatePlayer(week,season_type,pick.rb) and 
+             validatePlayer(week,season_type,pick.wr) and 
+             validatePlayer(week,season_type,pick.te))
     return valid

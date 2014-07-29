@@ -22,14 +22,27 @@ class NFLPlayer(models.Model):
     name = models.CharField(max_length=200)
     team = models.ForeignKey(NFLTeam)
     position = models.CharField(max_length=2, choices=POSITIONS)
-    
+    nfldb_id = models.CharField(max_length=10)
     def __unicode__(self):
         return self.name
-    
+
+class ScoringSystem(models.Model):
+    function=models.CharField(max_length=100)
+
+class NFLSchedule(models.Model):
+    home = models.ForeignKey(NFLTeam, related_name='homeGames')
+    away = models.ForeignKey(NFLTeam, related_name='awayGames')
+    week = models.IntegerField()
+    season_type =  models.CharField(max_length=10)
+    kickoff = models.DateTimeField(datetime.datetime.now)
+    nfldb_id = models.CharField(max_length=10)
+    scoring_system = models.ForeignKey(ScoringSystem)
+    def __unicode__(self):
+        return self.away.short_name + " @ " + self.home.short_name
 
 class NFLWeeklyStat(models.Model):
-    week              = models.IntegerField()
     score             = models.FloatField()
+    defaultScore      = models.FloatField()
     recTd             = models.IntegerField() 
     fumbles           = models.IntegerField()
     interceptions     = models.IntegerField() 
@@ -40,17 +53,20 @@ class NFLWeeklyStat(models.Model):
     recYds            = models.IntegerField()
     rushTd            = models.IntegerField()
     player            = models.ForeignKey(NFLPlayer)
+    game              = models.ForeignKey(NFLSchedule)    
     
     def __unicode__(self):
-        return self.player.team.short_name + " week:" +str(self.week)    
+        return self.player.name + " " +self.player.team.short_name + " week:" + str(self.game.week)
 
 
 class FFLPlayer(models.Model):
     user = models.ForeignKey(User)
     #name = models.CharField(max_length=200)
     teamname = models.CharField(max_length=100)
+    displayName = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
     league = models.IntegerField(default=0)
+    autoPickPreference = models.BooleanField(default=True)
     
     def calculateyearlyscore(self):
         #TODO: Calcuate the total score of all picks up to this point
@@ -65,6 +81,7 @@ class FFLPlayer(models.Model):
 
 class Picks(models.Model):
     week = models.IntegerField()
+    season_type =  models.CharField(max_length=10)
     qb = models.ForeignKey(NFLPlayer, related_name='qbpicks')
     rb = models.ForeignKey(NFLPlayer, related_name='rbpicks')
     te = models.ForeignKey(NFLPlayer, related_name='tepicks')
@@ -75,7 +92,7 @@ class Picks(models.Model):
     def calculatescore(self):
         #query the NFLWeeklyStats for the players for this week
         #query for each of my players and the right week
-        query = (Q(player=self.qb) | Q(player=self.rb) | Q(player=self.wr) | Q(player=self.te)) & Q(week=self.week)
+        query = (Q(player=self.qb) | Q(player=self.rb) | Q(player=self.wr) | Q(player=self.te)) & Q(game__week=self.week) & Q(game__season_type=self.season_type)
         stats = NFLWeeklyStat.objects.filter(query)
         if not len(stats) in (0,4):
           print "ERROR - we don't have enough stats!"
@@ -83,16 +100,6 @@ class Picks(models.Model):
           #raise RuntimeError("wrong number of stats retrieved")
         return sum([x.score for x in stats])
     score = property(calculatescore)
-
-class NFLSchedule(models.Model):
-    home = models.ForeignKey(NFLTeam, related_name='homeGames')
-    away = models.ForeignKey(NFLTeam, related_name='awayGames')
-    week = models.IntegerField()
-    kickoff = models.DateTimeField(datetime.datetime.now)
-
-    def __unicode__(self):
-        return self.home.short_name + " vs " + self.away.short_name
-
 
 class Standing(models.Model):
     fflPlayer = models.ForeignKey(FFLPlayer, related_name='standingPlayer')
