@@ -52,7 +52,7 @@
     {% for score in scores %}
     <tr>
     <td>{{forloop.counter}}</td>
-    <td><a href="{% url 'threeandout:selected' score.fflPlayer.id %}">{{score.fflPlayer.teamname}}</a></td> 
+    <td><a href="{% url 'threeandout:selected' score.fflplayer.id %}">{{score.fflplayer.teamname}}</a></td> 
     <td>{{score.scoretodate}}</td>
     <td>{%if score.week1 != 0.0%} {{score.week1}} {%endif%}</td>
     <td>{%if score.week2 != 0.0%} {{score.week2}}{%endif%}</td>

@@ -31,6 +31,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "threeandout.settings.prod")
 activate_env=os.path.expanduser("~/.virtualenvs/production/bin/activate_this.py")
 execfile(activate_env, dict(__file__=activate_env))
 
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
@@ -38,5 +41,5 @@ from django.contrib.auth.handlers.modwsgi import check_password
 from django.core.handlers.wsgi import WSGIHandler
 application = WSGIHandler()
 
-import apache.monitor
-apache.monitor.start(interval=1.0)
+import apache2.monitor
+apache2.monitor.start(interval=1.0)

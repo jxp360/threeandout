@@ -95,7 +95,7 @@ function setTE(row) {
 {% if QBs %}
 <p>Pick a QB:</p>
 <div class="row">
-<div class="col-sm-6">
+<div class="col-sm-8">
 <table id="QB-table" class="table table-striped table-bordered pick-table-scroll table-condensed sorter-bootstrap"> 
 <thead>
   <tr role="row">
@@ -129,7 +129,7 @@ function setTE(row) {
 {% if RBs %}
 <p>Pick a RB:</p>
 <div class="row">
-<div class="col-sm-6">
+<div class="col-sm-8">
 <table id="RB-table" class="table table-striped table-bordered pick-table-scroll sorter-bootstrap"> 
 <thead>
   <tr>
@@ -143,7 +143,7 @@ function setTE(row) {
  <tbody>
   {% for RB in RBs %}
   <tr id="{{RB.id}}">
-  	<td WIDTH="190" onclick="return setRB('{{RB.id}}')">{{RB.name}} </td>
+  	<td onclick="return setRB('{{RB.id}}')">{{RB.name}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.team}} </td>
   	<td onclick="return setRB('{{RB.id}}')">{%if RB.teamName == RB.away%} {{RB.home}} {%else%} {{RB.away}} {%endif%}</td>
   	<td onclick="return setRB('{{RB.id}}')">{{RB.scoretodate}} </td>
@@ -165,7 +165,7 @@ function setTE(row) {
 {% if WRs %}
 <p>Pick a WR:</p> 
 <div class="row">
-<div class="col-sm-6">
+<div class="col-sm-8">
 <table id="WR-table" class="table table-striped table-bordered pick-table-scroll table-condensed sorter-bootstrap"> 
 <thead>
   <tr>
@@ -179,7 +179,7 @@ function setTE(row) {
  <tbody>
   {% for WR in WRs %}
   <tr id="{{WR.id}}">
-  	<td WIDTH="190" onclick="return setWR('{{WR.id}}')">{{WR.name}} </td>
+  	<td onclick="return setWR('{{WR.id}}')">{{WR.name}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.team}} </td>
   	<td onclick="return setWR('{{WR.id}}')">{%if WR.teamName == WR.away%} {{WR.home}} {%else%} {{WR.away}} {%endif%}</td>
   	<td onclick="return setWR('{{WR.id}}')">{{WR.scoretodate}} </td>
@@ -200,7 +200,7 @@ function setTE(row) {
 {% if TEs %}
 <p>Pick a TE: </p>
 <div class="row">
-<div class="col-sm-6">
+<div class="col-sm-8">
 <table id="TE-table" class="table table-striped table-bordered pick-table-scroll table-condensed sorter-bootstrap"> 
 <thead>
   <tr>
@@ -214,7 +214,7 @@ function setTE(row) {
  <tbody>
   {% for TE in TEs %}
   <tr id="{{TE.id}}">
-  	<td WIDTH="190" onclick="return setTE('{{TE.id}}')">{{TE.name}} </td>
+  	<td onclick="return setTE('{{TE.id}}')">{{TE.name}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.team}} </td>
   	<td onclick="return setTE('{{TE.id}}')">{%if TE.teamName == TE.away%} {{TE.home}} {%else%} {{TE.away}} {%endif%}</td>
   	<td onclick="return setTE('{{TE.id}}')">{{TE.scoretodate}} </td>

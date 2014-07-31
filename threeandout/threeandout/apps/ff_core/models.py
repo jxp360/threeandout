@@ -71,7 +71,7 @@ class FFLPlayer(models.Model):
     def calculateyearlyscore(self):
         #TODO: Calcuate the total score of all picks up to this point
         #totalPicks = Picks.objects.filter(fflPlayer=self).filter(week__lte=17)
-        totalPicks = Picks.objects.filter(fflPlayer=self)
+        totalPicks = Picks.objects.filter(fflplayer=self)
         return sum([x.score for x in totalPicks])
 
     scoretodate = property(calculateyearlyscore)
@@ -87,7 +87,7 @@ class Picks(models.Model):
     te = models.ForeignKey(NFLPlayer, related_name='tepicks')
     wr = models.ForeignKey(NFLPlayer, related_name='wrpicks')
     #score = models.FloatField()
-    fflPlayer = models.ForeignKey(FFLPlayer, related_name='fflPlayer')
+    fflplayer = models.ForeignKey(FFLPlayer, related_name='fflPlayer')
     mod_time = models.DateTimeField(datetime.datetime.now)
     def calculatescore(self):
         #query the NFLWeeklyStats for the players for this week
@@ -102,7 +102,7 @@ class Picks(models.Model):
     score = property(calculatescore)
 
 class Standing(models.Model):
-    fflPlayer = models.ForeignKey(FFLPlayer, related_name='standingPlayer')
+    fflplayer = models.ForeignKey(FFLPlayer, related_name='standingPlayer')
     scoretodate = models.FloatField()
     week1 = models.FloatField()
     week2 = models.FloatField()
@@ -123,22 +123,22 @@ class Standing(models.Model):
     week17 = models.FloatField()
     
     def __unicode__(self):
-        return self.fflPlayer.teamname
+        return self.fflplayer.teamname
 
 
 class madePlayoffs(models.Model):
-    fflPlayer = models.ForeignKey(FFLPlayer)   
+    fflplayer = models.ForeignKey(FFLPlayer)   
     
     def __unicode__(self):
-        return self.fflPlayer.teamname 
+        return self.fflplayer.teamname 
 
 class PlayoffStanding(models.Model):
-    fflPlayer = models.ForeignKey(FFLPlayer, related_name='playoffStandingPlayer')
+    fflplayer = models.ForeignKey(FFLPlayer, related_name='playoffStandingPlayer')
     scoretodate = models.FloatField()
     week1 = models.FloatField()
     week2 = models.FloatField()
     week3 = models.FloatField()
 
     def __unicode__(self):
-        return self.fflPlayer.teamname
+        return self.fflplayer.teamname
 

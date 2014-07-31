@@ -1,7 +1,8 @@
 # Django settings for threeandout project.
 from threeandout.settings.common import *
 from threeandout.settings.prod_info import *
-DEBUG = False
+
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 EMAIL_HOST = 'localhost'

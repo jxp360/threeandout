@@ -37,7 +37,7 @@ def submit(request,week,season_type="Regular"):
     pickexists = False
     try:
         # A Pick that that user and week already exists
-        pick = Picks.objects.get(week=week,season_type=season_type, fflPlayer=player)
+        pick = Picks.objects.get(week=week,season_type=season_type, fflplayer=player)
         pickexists = True
     except ObjectDoesNotExist:
         pickexists = False
@@ -66,7 +66,7 @@ def submit(request,week,season_type="Regular"):
            
     else:
         #Make Totally New Pick
-        pick = Picks(week=week,season_type=season_type, fflPlayer=player)
+        pick = Picks(week=week,season_type=season_type, fflplayer=player)
         pick.qb = NFLPlayer.objects.get(pk=request.POST["QB"])
         pick.rb = NFLPlayer.objects.get(pk=request.POST["RB"])
         pick.wr = NFLPlayer.objects.get(pk=request.POST["WR"])
@@ -82,7 +82,7 @@ def submit(request,week,season_type="Regular"):
 @login_required
 def picksummary(request,week,season_type="Regular"):
     player = FFLPlayer.objects.get(user=request.user)
-    pick =  Picks.objects.get(week=week,season_type=season_type,fflPlayer=player)
+    pick =  Picks.objects.get(week=week,season_type=season_type,fflplayer=player)
     qb = pick.qb.name
     rb = pick.rb.name
     wr = pick.wr.name
@@ -106,7 +106,7 @@ def pickcurrentweek(request):
 def pickweek(request, week,season_type="Regular"):
     player = FFLPlayer.objects.get(user=request.user)
     try:
-        pick = Picks.objects.get(week=week, fflPlayer=player,season_type=season_type)
+        pick = Picks.objects.get(week=week, fflplayer=player,season_type=season_type)
     except ObjectDoesNotExist:
         qb = None
         rb = None
@@ -176,8 +176,8 @@ def weeklyresults(request,week,season_type="Regular"):
 @login_required
 def personalresults(request):
     player = FFLPlayer.objects.get(user=request.user)
-    picks = Picks.objects.filter(fflPlayer=player).filter(season_type="Regular").order_by('week')
-    picksPostseason = Picks.objects.filter(fflPlayer=player).filter(season_type="Postseason").order_by('week')
+    picks = Picks.objects.filter(fflplayer=player).filter(season_type="Regular").order_by('week')
+    picksPostseason = Picks.objects.filter(fflplayer=player).filter(season_type="Postseason").order_by('week')
     pickData= [getPickData(pick,season_type="Regular") for pick in picks]
     for pick in picksPostseason:
         print "Post season picks" , pick.week
@@ -187,7 +187,7 @@ def personalresults(request):
 @login_required
 def selected(request, user):
     player = FFLPlayer.objects.get(id=user)
-    picks = Picks.objects.filter(fflPlayer=player)
+    picks = Picks.objects.filter(fflplayer=player)
     qbs={}
     rbs={}
     wrs={}
@@ -247,7 +247,7 @@ def getPickData(pick,season_type="Regular"):
         teScore = NFLWeeklyStat.objects.get(player=pick.te, game__week=pick.week,game__season_type=season_type).score
       except ObjectDoesNotExist:
         teScore = '-'
-      d={'user':pick.fflPlayer.teamname,
+      d={'user':pick.fflplayer.teamname,
          'week':pick.week,
          'season_type':season_type,
          'score':pick.score,

@@ -3,9 +3,9 @@ import os
 PROJECT_PATH = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 ADMINS = (
-    ('Jeff Pfeiffenberger', 'jxp360@gmail.com'),
-    ('Bryan Gregory', 'bryan.scott.gregory@googlemail.com'),
-    ('Grant Faiks', 'grant.faiks@gmail.com'),
+#    ('Jeff Pfeiffenberger', 'jxp360@gmail.com'),
+#    ('Bryan Gregory', 'bryan.scott.gregory@googlemail.com'),
+#    ('Grant Faiks', 'grant.faiks@gmail.com'),
 )
 
 SITE_NAME='www.threeandoutfantasyfootball.com'
