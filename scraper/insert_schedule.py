@@ -2,7 +2,7 @@ import sys
 sys.path.append('../threeandout')
 
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threeandout.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threeandout.settings.prod')
 from django.conf import settings
 
 import nflschedule

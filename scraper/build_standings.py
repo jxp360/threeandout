@@ -17,13 +17,13 @@ def buildStandings():
     for fflplayer in fflplayers:
         points=[0] *21
         for week in range(1,21):
-                stat = models.Picks.objects.filter(week=week,fflPlayer=fflplayer)
+                stat = models.Picks.objects.filter(week=week,fflplayer=fflplayer)
                 if len(stat) == 1:
                     points[week] = stat[0].score
                 elif len(stat) >1:
                     print "This shouldn't happen"
                 
-        standing = models.Standing(fflPlayer=fflplayer,
+        standing = models.Standing(fflplayer=fflplayer,
                             scoretodate=fflplayer.scoretodate,
                             week1 = points[1],
                             week2 = points[2],
@@ -51,16 +51,16 @@ def buildPlayoffStandings():
     fflplayers = models.madePlayoffs.objects.all()
 
     for playoffplayer in fflplayers:
-        fflplayer = playoffplayer.fflPlayer
+        fflplayer = playoffplayer.fflplayer
         points=[0] *3
         for i,week in enumerate(range(18,21)):
-                stat = models.Picks.objects.filter(week=week,fflPlayer=fflplayer)
+                stat = models.Picks.objects.filter(week=week,fflplayer=fflplayer)
                 if len(stat) == 1:
                     points[i] = stat[0].score
                 elif len(stat) >1:
                     print "This shouldn't happen"
         print fflplayer.teamname,points[0],points[1],points[2]
-        standing = models.PlayoffStanding(fflPlayer=fflplayer,
+        standing = models.PlayoffStanding(fflplayer=fflplayer,
                             scoretodate=points[0]+points[1]+points[2],
                             week1 = points[0],
                             week2 = points[1],

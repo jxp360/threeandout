@@ -2,7 +2,7 @@ import sys
 sys.path.append('../threeandout')
 
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threeandout.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threeandout.settings.prod')
 from django.conf import settings
 
 import nflschedule
@@ -40,7 +40,7 @@ TEAM_MAP = {"Vikings"   : ('MIN', 'Minnesota'),
               "Texans"    : ('HOU', 'Houston'),
               "Packers"   : ('GB', 'Green Bay'),
               "Redskins"  : ('WAS', 'Washington'),
-              "Jaguars"   : ('JAX', 'Jacksonville'),
+              "Jaguars"   : ('JAC', 'Jacksonville'),
               "Chiefs"    : ('KC', 'Kansas City'),
               "Eagles"    : ('PHI', 'Philadelphia'),
               "Buccaneers": ('TB', 'Tampa Bay'),

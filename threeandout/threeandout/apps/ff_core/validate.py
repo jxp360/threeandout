@@ -16,16 +16,16 @@ def validateTwoOrLessPicks(fflplayer, player,position,week):
     # Exclude the picking week because re-picking a player does not increase the number of uses
 
     if position == "QB":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,qb=player).exclude(week=week).count()
+        allUserMatches = Picks.objects.filter(fflplayer=fflplayer,qb=player).exclude(week=week).count()
         return (allUserMatches)<=2
     if position == "RB":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,rb=player).exclude(week=week).count()
+        allUserMatches = Picks.objects.filter(fflplayer=fflplayer,rb=player).exclude(week=week).count()
         return (allUserMatches)<=2
     if position == "WR":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,wr=player).exclude(week=week).count()
+        allUserMatches = Picks.objects.filter(fflplayer=fflplayer,wr=player).exclude(week=week).count()
         return (allUserMatches)<=2
     if position == "TE":
-        allUserMatches = Picks.objects.filter(fflPlayer=fflplayer,te=player).exclude(week=week).count()
+        allUserMatches = Picks.objects.filter(fflplayer=fflplayer,te=player).exclude(week=week).count()
         return (allUserMatches)<=2
 
 def validateTwoOrLessPicksAll(fflplayer,pick,week):
@@ -55,13 +55,13 @@ def ValidPlayers(week,season_type,position,user):
     # Find all NFL Players at the given position who's game has not yet started
     # Grab their score to date, home and away team for display purposes 
     # numPicked is not actually computed correctly in this query, it is just a placeholder so the object has this field later
-    players= NFLPlayer.objects.raw("select ff_core_nflplayer.id, \
-                                    ff_core_nflteam.name as 'teamName', \
+    players= NFLPlayer.objects.raw('select ff_core_nflplayer.id, \
+                                    ff_core_nflteam.name as "teamName", \
                                     ff_core_nflplayer.name, \
-                                    awayteam.name as 'away',\
-                                    hometeam.name as 'home',\
-                                    COUNT(ff_core_nflplayer.id) as 'numPicked', \
-                                    SUM(ff_core_nflweeklystat.score) as 'scoretodate' \
+                                    awayteam.name as "away",\
+                                    hometeam.name as "home",\
+                                    COUNT(ff_core_nflplayer.id) AS "numPicked", \
+                                    SUM(ff_core_nflweeklystat.score) AS "scoretodate" \
                                     from ff_core_nflplayer \
                                     join ff_core_nflteam \
                                     on ff_core_nflplayer.team_id=ff_core_nflteam.id \
@@ -78,13 +78,13 @@ def ValidPlayers(week,season_type,position,user):
                                     AND (ff_core_nflschedule.season_type=%s) \
                                     AND (ff_core_nflplayer.position=%s) \
                                     AND (ff_core_nflschedule.kickoff>%s) \
-                                    GROUP BY  ff_core_nflplayer.id", [week,season_type,position,locktime_str])
+                                    GROUP BY  ff_core_nflplayer.id, ff_core_nflteam.name, ff_core_nflplayer.name, awayteam.name,hometeam.name', [week,season_type,position,locktime_str])
 
  
     # Query the Picks for this particular FFL Player
     # Exclude the current week because they are editing that week for this query 
-    pickedPlayers= NFLPlayer.objects.raw("select ff_core_nflplayer.id, \
-                                    COUNT(ff_core_nflplayer.id) as 'numPicked' \
+    pickedPlayers= NFLPlayer.objects.raw('select ff_core_nflplayer.id, \
+                                    COUNT(ff_core_nflplayer.id) as "numPicked" \
                                     from ff_core_nflplayer \
                                     join ff_core_picks \
                                     on (ff_core_nflplayer.id=ff_core_picks.qb_id \
@@ -94,7 +94,7 @@ def ValidPlayers(week,season_type,position,user):
                                     where  not (ff_core_picks.week=%s AND ff_core_picks.season_type=%s) \
                                     AND ff_core_picks.season_type!=%s \
                                     AND ff_core_picks.fflplayer_id=%s \
-                                    GROUP BY ff_core_nflplayer.id", [week,season_type,"Preseason",fflplayer.id])
+                                    GROUP BY ff_core_nflplayer.id', [week,season_type,"Preseason",fflplayer.id])
     
     
     validplayers = []

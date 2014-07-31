@@ -14,11 +14,11 @@ if now.month<3:
   CURRENT_SEASON=CURRENT_SEASON-1
 
 print "FOR DEBUG ONLY - lets use last year because it has data!"
-CURRENT_SEASON=CURRENT_SEASON-1
+#CURRENT_SEASON=CURRENT_SEASON-1
 
 TEAMS={} #keys are short abbreviation, id is django object
 for team in models.NFLTeam.objects.all():
-  TEAMS[team.short_name]=team
+  TEAMS[str(team.short_name)]=team
 
 class Hasher(object):
   def __init__(self, dataList, attr = 'nfldb_id'):
@@ -69,7 +69,7 @@ def sync_players():
   nfldbPlayers =[]
   for position in ('QB', 'TE', 'WR', 'RB'):
     q, db = getNflDbQuery()
-    nfldbPlayers.extend(q.player(season_year=CURRENT_SEASON,position=position).as_players())
+    nfldbPlayers.extend(q.player(position=position).as_players())
     db.close()
   hasher  = Hasher(models.NFLPlayer.objects.all())
   #djangoPlayers = models.NFLPlayer.objects.all()
@@ -125,8 +125,8 @@ def sync_schedule():
         djangoGame.kickoff = kickoff
     else:
       save = True
-      homeTeam = TEAMS[game.home_team]
-      awayTeam = TEAMS[game.away_team]
+      homeTeam = TEAMS[str(game.home_team)]
+      awayTeam = TEAMS[str(game.away_team)]
       djangoGame = models.NFLSchedule(home =homeTeam, away =awayTeam, week = game.week, season_type=game.season_type, kickoff = kickoff, nfldb_id = gameID, scoring_system=defaultScore)
     if save:
       djangoGame.save()

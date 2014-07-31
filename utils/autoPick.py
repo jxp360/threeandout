@@ -54,14 +54,14 @@ def autoPickWeek(FFLPlayer,week,season_type):
     
     # If the user already has a pick for this week and seaon_type then don't pick
     try:
-        Picks.objects.get(fflPlayer=FFLPlayer, week=week,season_type=season_type)
+        Picks.objects.get(fflplayer=FFLPlayer, week=week,season_type=season_type)
     except ObjectDoesNotExist:
         pass
     else:
         print "Pick already exists for ", FFLPlayer.teamname
         return
 
-    pick = Picks(week=week,season_type=season_type, fflPlayer=FFLPlayer)
+    pick = Picks(week=week,season_type=season_type, fflplayer=FFLPlayer)
     
     # For the first week of the season just the best players from last year
     if week==1 and season_type=="Regular":

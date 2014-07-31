@@ -15,7 +15,7 @@ if __name__=="__main__":
 
     #for team in playoffteams:
     #    print dir(team)
-    #    test_stats.models.madePlayoffs.objects.create(fflPlayer=team.fflPlayer)
+    #    test_stats.models.madePlayoffs.objects.create(fflplayer=team.fflPlayer)
     
     buildPlayoffStandings()
     

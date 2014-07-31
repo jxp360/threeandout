@@ -8,5 +8,6 @@ BeautifulSoup==3.2.1
 mechanize==0.2.5
 pytz==2014.4
 psycopg2==2.5.3
-nfldb==0.1.4
+nfldb==0.2.0
+lxml==3.3.5
 
