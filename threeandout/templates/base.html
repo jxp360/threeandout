@@ -53,19 +53,19 @@
     <ul class="nav navbar-nav">
       {% block link_makepicks_class %}<li class="">{% endblock %}
         <a href="{% url 'threeandout:pickcurrentweek' %}">
-          <i class="fa fa-cog"></i>
+          <i class="fa fa-bolt"></i>
           <span>Picks</span>
         </a>
       </li>
       {% block link_standings_class %}<li class="">{% endblock %}
         <a href="{% url 'threeandout:currentstandings' %}" >
-          <i class="fa icon-user"></i>
+          <i class="fa fa-trophy"></i>
           <span>Standings</span>
         </a>
       </li>
       {% block link_results_class %}<li class="dropdown">{% endblock %}
         <a href="{url 'threeandout:weeklyresultssummary' %}" class="dropdown-toggle" data-toggle="dropdown">
-          <i class="icon-flag"></i>
+          <i class="fa fa-user"></i>
           <span>Results</span>
           <b class="caret"></b>
         </a>
@@ -76,13 +76,13 @@
       </li>
       {% block link_rules_class %}<li class="">{% endblock %}
         <a href="{% url 'threeandout:rules' %}" title="">
-          <i class="icon-home"></i>
+          <i class="fa fa-book"></i>
           <span>Rules</span>
         </a>
       </li>
       {% block link_preferences_class %}<li class="">{% endblock %}
         <a href="{% url 'threeandout:editPreferences' %}" title="">
-          <i class="icon-home"></i>
+          <i class="fa fa-cog"></i>
           <span>Settings</span>
         </a>
       </li>

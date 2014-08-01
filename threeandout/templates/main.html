@@ -1,14 +1,27 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
 {% block content %}
+
+<div class="well well-sm">It's not your grandfather's fantasy football game</div>
 
 <div class="container">
   <div class="jumbotron">
-    <h1>Three and Out Fantasy Football</h1>
-    <p>A new take on yor grandfather's Fantasy Football game! </p>
+    <div class="well well-sm">It's not your grandfather's fantasy football game</div>
+    <img src="{% static "images/3&Out_Logo.png" %}" class="img-rounded" alt="Rounded Image">  
+
+    <p> 1. Pick one QB, one RB, one WR, one TE each week. </p>
+    <p> 2. Pick any NFL player up to 3 times throughout the season.  After you select the same player 3 times, you can no longer select that player. </p>
+    <p> 3. Have the highest combined score at the end of playoffs and win.
+
+    <p>Sound like fun? </p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="{% url 'threeandout:registerUser' %}">Sign Up</a>
+    </p>
+    <p>Want the full set of rules? </p>
     <p>
       <a class="btn btn-primary btn-lg" href="{% url 'threeandout:rules' %}">Rules</a>
-      <a class="btn btn-primary btn-lg" href="{% url 'threeandout:registerUser' %}">Sign Up</a>
     </p>
   </div>
 </div>
