@@ -23,7 +23,7 @@ def findGameTime(player,week,season_type):
 
 def findCurrentWeek():
     now = datetime.datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
-    game = NFLSchedule.objects.filter(kickoff__gt=now).order_by("kickoff").first()
+    game = NFLSchedule.objects.filter(~Q(season_type="Preseason"),kickoff__gt=now).order_by("kickoff").first()
     week = game.week
     season_type = game.season_type
     return week,season_type
@@ -87,9 +87,9 @@ def autoPickWeek(FFLPlayer,week,season_type):
 if __name__=="__main__":
     
     week,season_type = findCurrentWeek()
-    week =1
-    season_type = "Regular"
     players = FFLPlayer.objects.all()
     for player in players:
-        autoPickWeek(player,week,season_type)
+        if player.autoPickPreference:
+            print "Making Auto Pick for" , player.teamname
+            autoPickWeek(player,week,season_type)
     
