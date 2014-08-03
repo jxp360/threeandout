@@ -29,7 +29,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "threeandout.settings.dev")
 
 # Activate your virtual env
 activate_env=os.path.expanduser("~/.virtualenvs/develop/bin/activate_this.py")
-execfile(activate_env, dict(__file__=activate_env))
+if os.path.isfile(activate_env):
+    print "Found virtual env script at '"+activate_env+"', running "
+    execfile(activate_env, dict(__file__=activate_env))
 
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
