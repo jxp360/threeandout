@@ -156,7 +156,7 @@ def weeklyresultssummary(request):
     tmp = [(x.scoretodate, x.teamname, x.user.id) for x in players]
     tmp.sort(reverse=True)
     leaders = [{'user':x[1],'score':x[0], 'id':x[2], 'rank': idx} for idx,x in enumerate(tmp)]
-    return render(request, 'ff_core/weeklyresultssummary.html', {'weeks':weeks, 'scores':leaders})
+    return render(request, 'ff_core/weeklyresultsmain.html', {'weeks':weeks, 'scores':leaders})
 
 @login_required
 def weeklyresults(request,week,season_type="Regular"):
@@ -171,7 +171,7 @@ def weeklyresults(request,week,season_type="Regular"):
     else:
         pickData = []
     
-    return render(request, 'ff_core/weeklyresults.html', {'week':week, 'season_type':season_type,'picks':pickData, 'ok':okToDisplay})
+    return render(request, 'ff_core/weeklyresults_new.html', {'week':week, 'season_type':season_type,'picks':pickData, 'ok':okToDisplay})
 
 @login_required
 def personalresults(request):
