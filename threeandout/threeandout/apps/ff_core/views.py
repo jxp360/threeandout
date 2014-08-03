@@ -96,7 +96,7 @@ def pickcurrentweek(request):
     bufferTime = timedelta(minutes=-240)
     # The closest game that hasn't started is the "current" week
     # It is delayed by 4 hours so that if you go to check who you picked in the final game of the week it won't move to the next week yet
-    game = NFLSchedule.objects.filter(kickoff__gt=now+bufferTime).order_by("kickoff").first()
+    game = NFLSchedule.objects.filter(~Q(season_type="Preseason"),kickoff__gt=now+bufferTime).order_by("kickoff").first()
     week = game.week
     season_type = game.season_type
     print week,season_type

@@ -1,5 +1,6 @@
 # Django settings for threeandout project.
 from threeandout.settings.common import *
+from threeandout.settings.prod_info import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -15,9 +16,9 @@ DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2', 
                 'NAME': 'threeandout',
-                'USER': 'threeandout',
-                'PASSWORD': 'Thr33&0ut!',
-                'HOST': 'threeandout-ops.cjftsjpuovni.us-east-1.rds.amazonaws.com',
+                'USER': POSTGRESQL_DB_USER,
+                'PASSWORD': POSTGRESQL_DB_PASS,
+                'HOST': POSTGRESQLD_DB_URL,
                 'PORT': 5432 },
 
 }

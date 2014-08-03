@@ -12,7 +12,7 @@ if DEBUG:
     EMAIL_USE_TLS = False
     DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
 
-dburl = '/data/threeandout/dbs/threeandout.db'
+dburl = '/data/test/threeandout/dbs/threeandout.db'
 import os
 if os.environ.has_key('THREEANDOUT_DB'):
     dburl = os.environ['THREEANDOUT_DB']
@@ -22,6 +22,8 @@ DATABASES = {
                 'NAME': dburl}
 }
 
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'threeandout.wsgi.dev.application'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
