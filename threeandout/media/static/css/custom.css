@@ -7,3 +7,23 @@ Last change:	03/25/2013
 Assigned to:	You
 
 -------------------------------------------------------------------*/
+
+.main-panel {
+  background-color: black;
+  margin: 0 10px 10px 10px;
+
+}
+
+.main-panel .content {
+  margin: 0 35px 35px 35px;
+}
+
+.main-highlight {
+  color: #FF7B00;
+  font-weight: bolder;
+}
+
+.vertical-align {
+  position: relative;
+  top: 20px;
+}
