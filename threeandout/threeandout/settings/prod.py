@@ -1,6 +1,7 @@
 # Django settings for threeandout project.
 from threeandout.settings.common import *
 from threeandout.settings.prod_info import *
+import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,6 +13,12 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
 
+db_var_names = ['POSTGRESQL_DB_USER', 'POSTGRESQL_DB_PASS', 'POSTGRESQLD_DB_URL']
+if not all( i in globals() for i in db_var_names ):
+    print "ERROR: DB Variables are not defined: "+str(db_var_names)
+    print "       Check that there is a prod_info.py in the settings and"
+    print "       "+str(db_var_names)+" are properly defined."
+    sys.exit(1)
 
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2', 
@@ -22,6 +29,9 @@ DATABASES = {
                 'PORT': 5432 },
 
 }
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'threeandout.wsgi.prod.application'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
