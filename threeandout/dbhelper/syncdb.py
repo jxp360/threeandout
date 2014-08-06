@@ -219,7 +219,7 @@ class StatSyncher(object):
     if filterargs:
       games = models.NFLSchedule.objects.filter(**filterargs)
     else:
-      games = models.NFLSchedule.objects.filter(**filterargs)
+      games = models.NFLSchedule.objects.all()
     for game in games:
       self.sync_game(game,forceRescore)
 
@@ -234,6 +234,7 @@ if __name__=="__main__":
   sync_players()
   game = models.NFLSchedule.objects.all()[0]
   ss = StatSyncher()
+  ss.sync_games()
   #ss.sync_game(game,null)
   #ss.sync_games(True)
 
