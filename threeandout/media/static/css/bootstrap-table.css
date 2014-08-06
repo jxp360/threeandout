@@ -1,4 +1,4 @@
-.pick-table-scroll {  
+.pick-table-scroll {
     width: 100%;
     overflow: auto;
 }
@@ -27,13 +27,24 @@
 
 .pick-table-scroll > tbody > tr > td,
 .pick-table-scroll > thead > tr > th {
-    width: 20%;
+    width: calc(100% / 5);
     float: left;
 }
 
-.pick-table-scroll > thead,
 .pick-table-scroll > thead > tr {
-    width: calc(100% - 6px);
+  width: calc(100% - 17px);
+  border-bottom: 1px solid white;
+}
+
+.pick-table-scroll > tbody {
+  border-bottom: 1px solid darkgrey;
+}
+
+.pick-table-scroll > thead > tr > th {
+  cursor: pointer;
+}
+.pick-table-scroll > tbody > tr > td {
+  cursor: default;
 }
 
 .table-highlight {
