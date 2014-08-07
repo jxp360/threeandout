@@ -94,6 +94,13 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+BOOTSTRAP3 = {
+    # Label class to use in horizontal forms
+    'horizontal_label_class': 'col-md-4',
+    # Field class to use in horiozntal forms
+    'horizontal_field_class': 'col-md-8',
+}
+
 ROOT_URLCONF = 'threeandout.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.

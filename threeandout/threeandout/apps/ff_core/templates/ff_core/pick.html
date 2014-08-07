@@ -6,7 +6,8 @@
 
 
 <div class="row">
-  <div class="col-lg-6">
+  <div class="col-sm-12">
+    <h2>
     <div class="btn-group">
       <button id="picks_button" class="btn btn-default dropdown-toggle btn-select" type="button" data-toggle="dropdown">{% block btn_text %}Current Week{% endblock %}<span class="caret"></span></button>
       <ul class="dropdown-menu">
@@ -35,6 +36,8 @@
         <li class="disabled"><a href="{% url 'threeandout:pickweek' 20 %}">Week 20</a></li>
       </ul>
     </div>
+     Make Your Picks For Week {{week}} of the {{season_type}} Season
+    </h2>
   </div>
 </div>
 

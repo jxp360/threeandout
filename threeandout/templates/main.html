@@ -5,22 +5,40 @@
 {% block content %}
 
 <div class="container">
-  <div class="jumbotron">
-    <div class="well well-sm">It's not your grandfather's fantasy football game</div>
-    <img src="{% static "images/3&Out_Logo.png" %}" class="img-rounded" alt="Rounded Image">  
+  <div class="well main-panel">
+    <div class="well well-sm"><h4 class="text-center"><em>It's not your grandfather's fantasy football game</em></h4></div>
 
-    <p> 1. Pick one QB, one RB, one WR, one TE each week. </p>
-    <p> 2. Pick any NFL player up to 3 times throughout the season.  After you select the same player 3 times, you can no longer select that player. </p>
-    <p> 3. Have the highest combined score at the end of playoffs and win.
+    <div class="content">
+      <img src="{% static "images/3&Out_Logo.png" %}" class="img-rounded" alt="Rounded Image">
+      <div class="row">
+        <div class="col-xs-6">
+          <h2>HOW TO PLAY</h2>
+        </div>
+        <div class="col-xs-6">
+          <!--<p class="text-center">Want the full set of rules? </p>-->
+          <p>
+            <a class="btn btn-primary vertical-align pull-right" href="{% url 'threeandout:rules' %}">Official Rules</a>
+          </p>
+        </div>
+      </div>
 
-    <p>Sound like fun? </p>
-    <p>
-      <a class="btn btn-primary btn-lg" href="{% url 'threeandout:registerUser' %}">Sign Up</a>
-    </p>
-    <p>Want the full set of rules? </p>
-    <p>
-      <a class="btn btn-primary btn-lg" href="{% url 'threeandout:rules' %}">Rules</a>
-    </p>
+
+
+      <h3><span class="main-highlight">1 <i class="fa fa-arrow-right"></i></span> Pick one QB, one RB, one WR, one TE each week. </h3>
+      <h3><span class="main-highlight">2 <i class="fa fa-arrow-right"></i></span> Pick any NFL player up to 3 times throughout
+        the season.  After you select the same player 3 times, you can no longer select that player. </h3>
+      <h3><span class="main-highlight">3 <i class="fa fa-arrow-right"></i></span> Have the highest combined score at the end of playoffs and win.</h3>
+
+      <div class="text-center">
+        <h3 class="main-highlight">Sound like fun? </h3>
+        <p>
+          <a class="btn btn-primary btn-lg" href="{% url 'threeandout:registerUser' %}">Sign Up</a>
+        </p>
+      </div>
+
+
+    </div>
+
   </div>
 </div>
 {% endblock %}
