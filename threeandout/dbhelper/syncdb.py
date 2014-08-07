@@ -234,6 +234,7 @@ if __name__=="__main__":
   sync_players()
   game = models.NFLSchedule.objects.all()[0]
   ss = StatSyncher()
+  #we could put something in here to only sync one week if this is too slow
   ss.sync_games()
   #ss.sync_game(game,null)
   #ss.sync_games(True)
