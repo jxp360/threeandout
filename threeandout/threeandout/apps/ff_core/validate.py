@@ -81,6 +81,22 @@ def ValidPlayers(week,season_type,position,user):
                                     GROUP BY  ff_core_nflplayer.id, ff_core_nflteam.name, ff_core_nflplayer.name, awayteam.name,hometeam.name', [week,season_type,position,locktime_str])
 
  
+    # Get score to date of only regular season.  
+    playerScores= NFLPlayer.objects.raw('select ff_core_nflplayer.id, \
+                                         SUM(ff_core_nflweeklystat.score) AS "scoretodate" \
+                                         from ff_core_nflplayer \
+                                         left join ff_core_nflweeklystat \
+                                         on (ff_core_nflplayer.id = ff_core_nflweeklystat.player_id) \
+                                         join ff_core_nflschedule \
+                                         on (ff_core_nflweeklystat.game_id=ff_core_nflschedule.id) \
+                                         where (ff_core_nflschedule.season_type=%s) \
+                                         GROUP BY  ff_core_nflplayer.id', ["Regular"])
+    playerScoresDict = {}
+    for player in playerScores:
+        playerScoresDict[player.id] =player.scoretodate    
+        
+ 
+ 
     # Query the Picks for this particular FFL Player
     # Exclude the current week because they are editing that week for this query 
     pickedPlayers= NFLPlayer.objects.raw('select ff_core_nflplayer.id, \
@@ -105,6 +121,11 @@ def ValidPlayers(week,season_type,position,user):
     # Remove the players picked more than three times from the list of all players and load numPicked 
     for player in players:
         count+=1
+        # Load the correct scoretodate 
+        if player.id in playerScoresDict:
+            player.scoretodate = playerScoresDict[player.id]
+        else:
+            player.scoretodate = 0
         if player.id in pickedPlayerDict:
                 player.numPicked = pickedPlayerDict[player.id].numPicked
                 if player.numPicked <3:
