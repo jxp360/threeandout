@@ -11,18 +11,18 @@
         $("#RB-table").tablesorter({sortList: [[3,1]]});
         $("#WR-table").tablesorter({sortList: [[3,1]]});
         $("#TE-table").tablesorter({sortList: [[3,1]]});
-		    {% if qb %}
-		    	setQB({{qb.id}});
-		    {% endif %}
-		    {% if rb %}
-				setRB({{rb.id}});
-		    {% endif %}
-		    {% if wr %}
-				setWR({{wr.id}});
-			{% endif %}
-		    {% if te %}
-				setTE({{te.id}});
-			{% endif %}
+        {% if qb %}
+          setQB({{qb.id}});
+        {% endif %}
+        {% if rb %}
+          setRB({{rb.id}});
+        {% endif %}
+        {% if wr %}
+          setWR({{wr.id}});
+        {% endif %}
+        {% if te %}
+          setTE({{te.id}});
+        {% endif %}
 	    }
 	);
 
@@ -143,7 +143,7 @@
               {% for RB in RBs %}
               <tr id="{{RB.id}}" onclick="return setRB('{{RB.id}}')">
                 <td>{{RB.name}} </td>
-                <td>{{RB.team}} </td>
+                <td>{{RB.teamName}} </td>
                 <td>{%if RB.teamName == RB.away%} {{RB.home}} {%else%} {{RB.away}} {%endif%}</td>
                 <td>{{RB.scoretodate}} </td>
                 <td>{{RB.numPicked}} </td>
@@ -178,7 +178,7 @@
               {% for WR in WRs %}
               <tr id="{{WR.id}}" onclick="return setWR('{{WR.id}}')">
                 <td>{{WR.name}} </td>
-                <td>{{WR.team}} </td>
+                <td>{{WR.teamName}} </td>
                 <td>{%if WR.teamName == WR.away%} {{WR.home}} {%else%} {{WR.away}} {%endif%}</td>
                 <td>{{WR.scoretodate}} </td>
                 <td>{{WR.numPicked}} </td>
@@ -213,7 +213,7 @@
               {% for TE in TEs %}
               <tr id="{{TE.id}}" onclick="return setTE('{{TE.id}}')">
                 <td>{{TE.name}} </td>
-                <td>{{TE.team}} </td>
+                <td>{{TE.teamName}} </td>
                 <td>{%if TE.teamName == TE.away%} {{TE.home}} {%else%} {{TE.away}} {%endif%}</td>
                 <td>{{TE.scoretodate}} </td>
                 <td>{{TE.numPicked}} </td>
