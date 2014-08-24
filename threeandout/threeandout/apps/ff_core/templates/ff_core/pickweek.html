@@ -29,11 +29,17 @@
 </script>
 
 <script type="text/javascript">
+
+  function clearInfoClass(id) {
+    var infoList = document.getElementById(id).getElementsByClassName("info");
+    for(var i=0; i<infoList.length; i++) {
+      infoList[i].classList.remove('info');
+    }
+  }
+
   function setQB(row) {
-    // set desired row 
-    {% for QB in QBs %}
-        document.getElementById({{QB.id}}).classList.remove("info");
-    {%endfor%}
+    // set desired row
+    clearInfoClass('QB-table');
     document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
     formInfo.QB.value = row;
@@ -42,9 +48,7 @@
 
   function setRB(row) {
     // Clear all rows each time 
-    {% for RB in RBs %}
-        document.getElementById({{RB.id}}).classList.remove("info");
-    {%endfor%}
+    clearInfoClass('RB-table');
     // set desired row 
     document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
@@ -54,9 +58,7 @@
 
   function setWR(row) {
     // Clear all rows each time 
-    {% for WR in WRs %}
-        document.getElementById({{WR.id}}).classList.remove("info");
-    {%endfor%}
+    clearInfoClass('WR-table');
     // set desired row 
     document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
@@ -66,9 +68,7 @@
     
   function setTE(row) {
     // Clear all rows each time 
-    {% for TE in TEs %}
-        document.getElementById({{TE.id}}).classList.remove("info");
-    {%endfor%}
+    clearInfoClass('TE-table');
     // set desired row 
     document.getElementById(row).classList.add("info");
     var formInfo = document.forms['players'];
