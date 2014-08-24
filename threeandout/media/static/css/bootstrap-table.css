@@ -70,3 +70,12 @@
   font-style: italic;
   /*font-weight: normal;*/
 }
+
+.picks-summary-title {
+  padding-top: 20px;
+}
+
+.picks-summary-position {
+  color: darkgrey;
+  font-style: italic;
+}
