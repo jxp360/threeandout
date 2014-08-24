@@ -1,26 +1,26 @@
-.pick-table-scroll {
+.table-scroll {
     width: 100%;
     overflow: auto;
 }
 
-.pick-table-scroll > thead,
-.pick-table-scroll > tbody,
-.pick-table-scroll > thead > tr,
-.pick-table-scroll > tbody > tr,
-.pick-table-scroll > thead > tr > th,
-.pick-table-scroll > tbody > tr > td {
+.table-scroll > thead,
+.table-scroll > tbody,
+.table-scroll > thead > tr,
+.table-scroll > tbody > tr,
+.table-scroll > thead > tr > th,
+.table-scroll > tbody > tr > td {
     display: block;
 }
 
-.pick-table-scroll > tbody > tr:after,
-.pick-table-scroll > thead > tr:after {
+.table-scroll > tbody > tr:after,
+.table-scroll > thead > tr:after {
     content: ' ';
     display: block;
     visibility: hidden;
     clear: both;
 }
 
-.pick-table-scroll > tbody {
+.table-scroll > tbody {
     overflow-y: auto;
     height: 150px;
 }
@@ -31,19 +31,14 @@
     float: left;
 }
 
-.pick-table-scroll > thead > tr {
+.table-scroll > thead > tr {
   width: calc(100% - 17px);
-  border-bottom: 1px solid white;
 }
 
-.pick-table-scroll > tbody {
-  border-bottom: 1px solid darkgrey;
-}
-
-.pick-table-scroll > thead > tr > th {
+.table-scroll > thead > tr > th {
   cursor: pointer;
 }
-.pick-table-scroll > tbody > tr > td {
+.table-scroll > tbody > tr > td {
   cursor: default;
 }
 
@@ -56,4 +51,31 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
- 
+
+.table > tbody {
+  color: darkgrey;
+  border-bottom: 1px solid darkgrey;
+}
+.table > thead {
+  border-bottom: 1px solid white;
+}
+.table > tbody > tr > td > strong {
+  color: #ffffff;
+}
+.table > tbody > tr > td > em {
+  color: #ffffff;
+}
+.deemphasis {
+  color: darkgrey;
+  font-style: italic;
+  /*font-weight: normal;*/
+}
+
+.picks-summary-title {
+  padding-top: 20px;
+}
+
+.picks-summary-position {
+  color: darkgrey;
+  font-style: italic;
+}

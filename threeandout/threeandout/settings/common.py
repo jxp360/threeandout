@@ -114,8 +114,8 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'threeandout', 'apps', 'ff_core', 'templates', 'ff_core'),
 )
 
-LOGIN_URL = 'threeandout/login'
-LOGIN_REDIRECT_URL = 'threeandout/picks'
+LOGIN_URL = '/threeandout/login'
+LOGIN_REDIRECT_URL = '/threeandout/picks'
 
 INSTALLED_APPS = (
     'django.contrib.auth',

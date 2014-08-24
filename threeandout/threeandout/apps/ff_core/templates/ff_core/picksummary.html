@@ -1,19 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1> Thanks for making Picks for week {{week}} {{season_type}}</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1> Thanks for making Picks for week {{week}} {{season_type}}</h1>
 
-<p> Summary of your Picks </p>
+      <h4 class="text-center picks-summary-title"> Summary of your Picks </h4>
+    </div>
+  </div>
+  <div class="row well">
+    <div class="col-sm-3 text-center">
+      <h4 class="picks-summary-position">Quarterback</h4>
+      <h3>{{ qb }}</h3>
+    </div>
+    <div class="col-sm-3 text-center">
+      <h4 class="picks-summary-position">Running Back</h4>
+      <h3>{{ rb }}</h3>
+    </div>
+    <div class="col-sm-3 text-center">
+      <h4 class="picks-summary-position">Wide Receiver</h4>
+      <h3>{{ wr }}</h3>
+    </div>
+    <div class="col-sm-3 text-center">
+      <h4 class="picks-summary-position">Tight End</h4>
+      <h3>{{ te }}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <p>
+        <a href="{% url 'threeandout:pickweek' week %}">Change Picks?</a>
+      </p>
+      <p>
+        <a href="{% url 'threeandout:picks' %}">Pick Another Week?</a>
+      </p>
+    </div>
+  </div>
+</div>
 
-<p> 
-QB: {{qb}} <br>
-RB: {{rb}} <br>
-WR: {{wr}} <br>
-TE: {{te}} <br>
-</p>
 
-<a href="{% url 'threeandout:pickweek' week %}">Change Picks?</a>
-<p>
-<a href="{% url 'threeandout:picks' %}">Pick Another Week?</a>
-</p>
 {% endblock %}

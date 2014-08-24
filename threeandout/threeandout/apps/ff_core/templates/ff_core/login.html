@@ -25,7 +25,7 @@
 
             <div class="form-group">
               <div class="col-xs-offset-1 col-xs-3">
-                <a class="btn btn-link" href="{% url 'django.contrib.auth.views.password_reset' %}">
+                <a class="btn btn-link" href="{% url 'django.contrib.auth.views.password_reset' %}?">
                   Forgot Password?
                 </a>
               </div>
@@ -33,6 +33,7 @@
                 <button type="submit" class="btn btn-primary">Login</button>
               </div>
             </div>
+            <input type="hidden" name="next" value="{{ next }}" />
           </form>
 
         </div>
