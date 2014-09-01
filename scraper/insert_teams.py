@@ -20,8 +20,8 @@ TEAM_MAP = {"Vikings"   : ('MIN', 'Minnesota'),
               "Dolphins"  : ('MIA', 'Miami'),
               "Panthers"  : ('CAR', 'Carolina'),
               "Falcons"   : ('ATL', 'Atlanta'),
-              "Lions"     : ('DET', 'Detriot'), 
-              "Bengals"   : ('CIN', 'Cinncinati'),
+              "Lions"     : ('DET', 'Detroit'), 
+              "Bengals"   : ('CIN', 'Cincinnati'),
               "Jets"      : ('NYJ', 'New York Jets'),
               "Broncos"   : ('DEN', 'Denver'),
               "Ravens"    : ('BAL', 'Baltimore'),
@@ -47,7 +47,7 @@ TEAM_MAP = {"Vikings"   : ('MIN', 'Minnesota'),
               "Colts"     : ('IND', 'Indianapolis'),
               "Cardinals" : ('ARI', 'Arizona'),
               "49ers"     : ('SF', 'San Francisco'),
-              "Chargers"  : ('SD', 'Sand Diego') }
+              "Chargers"  : ('SD', 'San Diego') }
 
 for key, val in TEAM_MAP.items():
 
