@@ -1,11 +1,8 @@
 import sys
+sys.path.append('../threeandout/dbhelper')
 sys.path.append('../threeandout')
-import os
-if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
-  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings.dev' 
-import nflstats
-import threeandout.apps.ff_core.models as models
-
+import django_env
+models = django_env.models
 
 def buildStandings():
     models.Standing.objects.all().delete()
@@ -15,9 +12,9 @@ def buildStandings():
     print fflplayers
 
     for fflplayer in fflplayers:
-        points=[0] *21
-        for week in range(1,21):
-                stat = models.Picks.objects.filter(week=week,fflplayer=fflplayer)
+        points=[0] *18
+        for week in range(1,18):
+                stat = models.Picks.objects.filter(week=week,fflplayer=fflplayer,season_type="Regular")
                 if len(stat) == 1:
                     points[week] = stat[0].score
                 elif len(stat) >1:
