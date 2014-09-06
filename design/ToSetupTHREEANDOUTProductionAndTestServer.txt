@@ -5,7 +5,7 @@
 5) Create ops user on EC2 instance
 6) Change hostname, threeandout
 7) Make /data directory, checkout https://github.com/jxp360/threeandout, git checkout develop
-8) Edit /data/threeandout/threeandout/settings/prod.py and change POSTGRESQL host ip
+8) Obtain prod_info.py file, change the POSTGRESQL host/ip and cp it to /data/threeandout/threeandout/settings/
 9) Enable EPEL sudo yum localinstall "http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
 10) sudo yum install python-pip
 11) sudo pip install virtualenv
@@ -15,11 +15,12 @@
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 15) source ~/.bashrc
-16) mkvirtualenv procution --no-site-packages
+16) mkvirtualenv production --no-site-packages
 17) sudo yum install postgresql-devel
 18) sudo yum groupinstall "Development Tools"
 19) workon production
 20) pip install -r requirements.txt (/data/threeandout)
 21) sudo yum install mod_wsgi
-
+22) Copy apache files over
+23) Setup dev partition 
 

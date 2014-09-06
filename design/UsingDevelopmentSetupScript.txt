@@ -1,0 +1,22 @@
+Steps To Setup Django Development Environment
+1) Run the setup script as the user you want to develop with (make sure you
+have sudo privileges with that user):
+    ./setup_development_environment.sh
+2) It will ask for several pieces of information
+  a) Directory to install threeandout (typically /data)
+  b) Gituser to checkout repo
+  c) Password for current user to use with sudo commands
+
+3) Go to threeandout/settings/dev.py and change the dburl to your location of choice (typically /data/threeandout/dbs/threeandout.db)
+4) Go to root of threeand out and syncdb ->
+python manage.py syncdb --settings=threeandout.settings.dev 
+5) DO EITHE: 
+  Go to /data/threeandout/scraper and run:
+  a) python insert_teams.py
+  b) python insert_schedule.py
+  c) python insert_players.py
+  OR
+  Grab .db file from ops backup
+6) Run the server ->
+  python manager.py runserver localhost:8000 --settings=threeandout.settings.dev
+

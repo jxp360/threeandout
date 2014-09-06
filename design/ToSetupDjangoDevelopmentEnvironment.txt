@@ -23,13 +23,24 @@ Steps To Setup Django Development Environment
   E) To go into an environment, type 'workon ENVIRONMENT_NAME'
 4) Clone the threeandout repo -> git clone
 http://github.com/jxp360/threeandout.git
-5) Checkout the develop branch, git checkout develop in the
-/data/threeandout/threeandout directory
-5) Install yum install python-devel
-6) While in the virtual environment, install all dev dependecies -> pip
+5) Checkout the develop branch, git checkout develop in the /data/threeandout/threeandout directory
+6) Install yum install python-devel
+7) yum groupinstall "Development tools"
+8) yum install postgresql-devel
+9) yum install libxslt-devel
+10) While in the virtual environment, install all dev dependecies -> pip
 install -r /path/to/requirements/dev.txt
-7) Go to root of threeand out and syncdb ->
-python manage.py syncdb --settings=threeandout.settings.dev (this assumues you have aa data directory already made for the database: /data/threeandout/dbs/)
-8) Run the server ->
+11) Get the dev_info.py file from the developers for the remote nfldb, or make
+it yourself
+12) Change the dburl in threeandout/settings/dev.py to your location
+13) Go to root of threeand out and syncdb ->
+python manage.py syncdb --settings=threeandout.settings.dev (this assumues you have a data directory already made for the database: /data/threeandout/dbs/)
+14) Go to /data/threeandout/scraper and run:
+  a) python insert_teams.py
+  b) python insert_schedule.py
+  c) python insert_players.py
+OR
+14) grab .db file from ops backup
+15) Run the server ->
 python manager.py runserver localhost:8000 --settings=threeandout.settings.dev
 
