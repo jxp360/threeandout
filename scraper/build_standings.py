@@ -1,6 +1,11 @@
-import sys
-sys.path.append('../threeandout/dbhelper')
-sys.path.append('../threeandout')
+import sys, os
+basedir2 = os.path.dirname(__file__)
+sys.path.append(basedir2)
+sys.path.append(os.path.join(basedir2, '../threeandout/dbhelper'))
+sys.path.append(os.path.join(basedir2, '../threeandout'))
+
+
+
 import django_env
 models = django_env.models
 

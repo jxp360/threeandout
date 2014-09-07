@@ -1,6 +1,9 @@
 #!/bin/bash
-export PYTHONPATH=/data/threeandout/threeandout:${PYTHONPATH}
-if [ -f /var/log/update_week.log ]; then
-    rm /var/log/update_week.log
-fi
-python /data/threeandout/scraper/update_week.py >& /var/log/update_week.log
+now=$(date +"%D::%T")
+
+echo "$now Running update week" >> /var/log/threeandout/update_week.log
+
+export PYTHONPATH="/data/threeandout/threeandout:${PYTHONPATH}"
+source /home/ops/.virtualenvs/production/bin/activate
+
+python /data/threeandout/scraper/update_week.py >> /var/log/threeandout/update_week.log 2>&1

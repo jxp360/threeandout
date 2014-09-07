@@ -1,11 +1,13 @@
-import sys
-sys.path.append('../threeandout')
 import os
+import sys
+basedir = os.path.dirname(__file__)
+sys.path.append(basedir)
+sys.path.append(os.path.join(basedir, '../threeandout'))
 if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
-  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings' 
+  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings.prod' 
 import nflstats
 import playoffstats
-import test_stats.models
+import threeandout.apps.ff_core.models 
 from django.core.exceptions import ObjectDoesNotExist
 from build_standings import buildStandings
 
@@ -66,12 +68,12 @@ def getStats(week, year,forcePlayoffScraper=False):
 
 if __name__=="__main__":
   import datetime
-  startGame = datetime.datetime(2013, 9, 5, 0, 0)
+  startGame = datetime.datetime(2014, 9, 5, 0, 0)
   current = datetime.datetime.utcnow()
   delta = current - startGame
   week = (delta.days/7)+1
   year = 2014
   print week
   print delta 
-  getStats(week,year)
+  #getStats(week,year)
   buildStandings()  

@@ -1,3 +1,8 @@
+import os,sys
+tmpdir = os.path.dirname(__file__)
+sys.path.append(tmpdir)
+sys.path.append(os.path.join(tmpdir, ".."))
+
 import django_env
 models = django_env.models
 
@@ -12,9 +17,6 @@ CURRENT_SEASON = now.year
 #IF ITS JANUARY OR FEBRUARY, ITS PART OF LAST SEASON
 if now.month<3:
   CURRENT_SEASON=CURRENT_SEASON-1
-
-print "FOR DEBUG ONLY - lets use last year because it has data!"
-#CURRENT_SEASON=CURRENT_SEASON-1
 
 TEAMS={} #keys are short abbreviation, id is django object
 for team in models.NFLTeam.objects.all():

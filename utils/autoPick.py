@@ -1,6 +1,9 @@
-import sys
-sys.path.append('../threeandout/dbhelper')
-sys.path.append('../threeandout')
+import sys, os
+
+basedir = os.path.dirname(__file__)
+sys.path.append(basedir)
+sys.path.append(os.path.join(basedir, '../threeandout/dbhelper'))
+sys.path.append(os.path.join(basedir, '../threeandout'))
 import django_env
 
 from threeandout.apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
