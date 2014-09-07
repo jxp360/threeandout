@@ -1,9 +1,9 @@
 import sys
+sys.path.append('../threeandout/dbhelper')
 sys.path.append('../threeandout')
-import os
-if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
-  os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings.dev'
-from threeandout.apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat,Standing,PlayoffStanding
+import django_env
+
+from threeandout.apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
 import datetime
 import pytz
 from django.utils import timezone
@@ -45,7 +45,7 @@ def manualPick():
 
     bestPlayers = {}
     for position in bestPlayersNames.keys():
-        print bestPlayersNames[position]
+        #print bestPlayersNames[position]
         bestPlayers[position] = NFLPlayer.objects.get(name=bestPlayersNames[position])
     
     return bestPlayers
@@ -58,7 +58,7 @@ def autoPickWeek(FFLPlayer,week,season_type):
     except ObjectDoesNotExist:
         pass
     else:
-        print "Pick already exists for ", FFLPlayer.teamname
+        print "...Pick already exists for ", FFLPlayer.teamname
         return
 
     pick = Picks(week=week,season_type=season_type, fflplayer=FFLPlayer)
@@ -81,6 +81,7 @@ def autoPickWeek(FFLPlayer,week,season_type):
     if validatePick(week,season_type,pick) and validateTwoOrLessPicksAll(player,pick,week):
         pick.mod_time=timezone.now()
         pick.save()    
+        print "... Made pick for ", FFLPlayer.teamname
     else:
         print "Error Invalid Auto-Pick, no Auto Pick made" , FFLPlayer.teamname
 
@@ -90,6 +91,9 @@ if __name__=="__main__":
     players = FFLPlayer.objects.all()
     for player in players:
         if player.autoPickPreference:
-            print "Making Auto Pick for" , player.teamname
+            print "Making Auto Pick for" , player.teamname,
             autoPickWeek(player,week,season_type)
+        else:
+	    print "Team does not want AutoPick" , player.teamname
+
     
