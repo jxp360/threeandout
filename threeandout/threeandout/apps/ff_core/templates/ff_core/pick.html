@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block link_makepicks_class %}<li class="active">{% endblock %}
+{% block link_makepicks_class %}active{% endblock %}
 
 {% block content %}
 
@@ -9,7 +9,13 @@
   <div class="col-sm-12">
     <h2>
     <div class="btn-group">
-      <button id="picks_button" class="btn btn-default dropdown-toggle btn-select" type="button" data-toggle="dropdown">{% block btn_text %}Current Week{% endblock %}<span class="caret"></span></button>
+      <button id="picks_button"
+              class="btn btn-default dropdown-toggle btn-select"
+              type="button"
+              data-toggle="dropdown">
+        {% block btn_text %}Current Week{% endblock %}
+        <span class="caret"></span>
+      </button>
       <ul class="dropdown-menu">
         <li><a href="{% url 'threeandout:pickcurrentweek' %}">Current</a></li>
         <li class="divider"></li>

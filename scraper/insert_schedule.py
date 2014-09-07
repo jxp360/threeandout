@@ -23,7 +23,6 @@ for i in xrange(1,18):
     for key in s.KEYS:  
         args['week'] = game['week']
         args['kickoff'] = game['kickoff']
-        print dir(args['kickoff'])
         try:
             args['home'] = models.NFLTeam.objects.get(short_name = game['home'])
         except ObjectDoesNotExist:
@@ -34,7 +33,8 @@ for i in xrange(1,18):
         except ObjectDoesNotExist:
             print game['away']
         
-
+    args['scoring_system_id'] = 0
+    args['season_type'] = "Regular"
     print args    
     dbSchedule = models.NFLSchedule(**args)
     dbSchedule.save()

@@ -1,0 +1,49 @@
+Assumptions
+A) You have already checked out the git repo to a data directory like
+/data/threeandout
+B) You are on the develop branch
+
+
+Steps To Setup Django Development Environment
+1) Run the setup script as the user you want to develop with (make sure you
+have sudo privileges with that user):
+    ./setup_development_environment.sh
+2) It will ask for several pieces of information
+  a) Directory to install threeandout (typically /data)
+  c) Password for current user to use with sudo commands
+
+3) Go to threeandout/settings/dev.py and change the dburl to your location of choice (typically /data/threeandout/dbs/threeandout.db)
+4) Change to your development virtualenv
+   workon development
+5) export DJANGO_SETTINGS_MODULE=threeandout.settings.dev (otherwise you have
+to end every django manage.py command with
+--settings=threeandout.settings.dev)
+
+6) DO EITHER
+  *) Go to root of threeand out and syncdb ->
+     python manage.py syncdb 
+     Go to /data/threeandout/scraper and run:
+     a) python insert_teams.py
+     b) python insert_schedule.py
+     c) python insert_players.py
+  OR
+  *) Grab .db file from ops backup and copy to your dburl (typically
+/data/threeandout/dbs/threeandout.db
+7) Run the server ->
+  python manager.py runserver localhost:8000 
+8) You are good to go!
+
+
+Steps to Development after Initial Install
+1) workon development
+2) export DJANGO_SETTINGS_MODULE=threeandout.settings.dev 
+3) python manager.py runserver localhost:8000 
+
+
+Steps to Use the Production NFLDB to Populate the Development Partition
+1) Copy over the config.ini from developers and put it in your
+$HOME/.config/nfldb/config.ini file
+2) workon development
+3) export DJANGO_SETTINGS_MODULE=threeandout.settings.dev 
+4) cd /data/threeandout/threeandout/dbhelper
+5) python syncdb.py 

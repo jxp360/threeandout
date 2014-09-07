@@ -1,72 +1,89 @@
 {% extends "base.html" %}
+{% block link_standings_class %}active{% endblock %}
 {% block content %}
 
-{% block link_standings_class %}active{% endblock %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1> Showing selections made by position for {{fflplayer}}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <h2>Quarterback</h2>
+      <table class="table table-striped table-condensed sorter-bootstrap">
+        <thead>
+          <tr>
+            <td>Player</td>
+            <td>Locked</td>
+            <td>Pending</td>
+          </tr>
+        </thead>
+        {% for player in qb %}
+          <tr>
+            <td>{{player.name}}</td>
+            <td>{{player.locked}}</td>
+            <td>{{player.pending}}</td>
+          </tr>
+        {% endfor %}
+      </table>
 
-<h1> Showing selections made by position for {{fflplayer}}</h1>
-<h2>QB</h2>
-<table border>
-<tr>
-<td>name</td>
-<td>locked</td>
-<td>pending</td>
-</tr>
-{% for player in qb %}
-<tr>
-<td>{{player.name}}</td>
-<td>{{player.locked}}</td>
-<td>{{player.pending}}</td>
-</tr>
-{% endfor %}
-</table>
+      <h2>Running Back</h2>
+      <table class="table table-striped table-condensed sorter-bootstrap">
+        <thead>
+            <tr>
+            <td>Player</td>
+            <td>Locked</td>
+            <td>Pending</td>
+            </tr>
+        </thead>
+        {% for player in rb %}
+          <tr>
+            <td>{{player.name}}</td>
+            <td>{{player.locked}}</td>
+            <td>{{player.pending}}</td>
+          </tr>
+        {% endfor %}
+      </table>
 
-<h2>RB</h2>
-<table border>
-    <tr>
-    <td>name</td>
-    <td>locked</td>
-    <td>pending</td>
-    </tr>
-    {% for player in rb %}
-    <tr>
-    <td>{{player.name}}</td>
-    <td>{{player.locked}}</td>
-    <td>{{player.pending}}</td>
-    </tr>
-    {% endfor %}
-</table>
+      <h2>Tight End</h2>
+      <table class="table table-striped table-condensed sorter-bootstrap">
+        <thead>
+          <tr>
+            <td>Player</td>
+            <td>Locked</td>
+            <td>Pending</td>
+          </tr>
+        </thead>
+          {% for player in te %}
+            <tr>
+              <td>{{player.name}}</td>
+              <td>{{player.locked}}</td>
+              <td>{{player.pending}}</td>
+            </tr>
+          {% endfor %}
+      </table>
 
-<h2>TE</h2>
-<table border>
-    <tr>
-    <td>name</td>
-    <td>locked</td>
-    <td>pending</td>
-    </tr>
-    {% for player in te %}
-    <tr>
-    <td>{{player.name}}</td>
-    <td>{{player.locked}}</td>
-    <td>{{player.pending}}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<h2>WR</h2>
-<table border>
-    <tr>
-    <td>name</td>
-    <td>locked</td>
-    <td>pending</td>
-    </tr>
-    {% for player in wr %}
-    <tr>
-    <td>{{player.name}}</td>
-    <td>{{player.locked}}</td>
-    <td>{{player.pending}}</td>
-    </tr>
-    {% endfor %}
-</table>
+      <h2>Wide Receiver</h2>
+      <table class="table table-striped table-condensed sorter-bootstrap">
+        <thead>
+          <tr>
+          <td>Player</td>
+          <td>Locked</td>
+          <td>Pending</td>
+          </tr>
+        </thead>
+        {% for player in wr %}
+          <tr>
+            <td>{{player.name}}</td>
+            <td>{{player.locked}}</td>
+            <td>{{player.pending}}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
 
 
 {% endblock %}

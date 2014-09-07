@@ -18,6 +18,9 @@ CURRENT_SEASON = now.year
 if now.month<3:
   CURRENT_SEASON=CURRENT_SEASON-1
 
+#print "FOR DEBUG ONLY - lets use last year because it has data!"
+#CURRENT_SEASON=CURRENT_SEASON-1
+
 TEAMS={} #keys are short abbreviation, id is django object
 for team in models.NFLTeam.objects.all():
   TEAMS[str(team.short_name)]=team

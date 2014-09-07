@@ -10,4 +10,5 @@ Setup Development Environment
   - pip install -r threeandout/requirements/dev.txt
   - cd ./threeandout
   - Set the ENV Variable DJANGO_SETTINGS_MODULE='threeandout.settings.dev'
+  - If you need nfldb, please set it up or use the production version and get the dev_info.py from the developers
   - python manage.py runserver
