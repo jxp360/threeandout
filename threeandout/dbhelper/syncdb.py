@@ -8,6 +8,7 @@ models = django_env.models
 
 import nfldb
 
+from django.utils import timezone
 import datetime
 import sys
 import score
@@ -232,16 +233,26 @@ class StatSyncher(object):
     for i in xrange(1,maxWeek+1):
       self.sync_week(i)
 
+  def getMatchingWeek(self, gamedate):
+    early_date = gamedate - datetime.timedelta(days=2)
+    late_date = gamedate + datetime.timedelta(4)
+    games = models.NFLSchedule.objects.filter(kickoff__gte=early_date, kickoff__lte=late_date)
+    print len(games)
+    week = 44
+    for game in games:
+      if game.week < week:
+        week = game.week
+    print "Found week = %d" % week
+    return week
+  
 
 if __name__=="__main__":
   import_teams()
   sync_schedule()
   sync_players()
-  game = models.NFLSchedule.objects.all()[0]
   ss = StatSyncher()
-  #we could put something in here to only sync one week if this is too slow
-  ss.sync_games()
-  #ss.sync_game(game,null)
-  #ss.sync_games(True)
+  curr = timezone.now()
+  week = ss.getMatchingWeek(curr)
+  ss.sync_games(forceRescore=True, week=week, season_type="Regular")
 
 
