@@ -235,7 +235,7 @@ class StatSyncher(object):
 
   def getMatchingWeek(self, gamedate):
     early_date = gamedate - datetime.timedelta(days=2)
-    late_date = gamedate + datetime.timedelta(4)
+    late_date = gamedate + datetime.timedelta(days=4)
     games = models.NFLSchedule.objects.filter(kickoff__gte=early_date, kickoff__lte=late_date)
     print len(games)
     week = 44
