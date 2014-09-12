@@ -3,6 +3,7 @@
 source /home/ops/.virtualenvs/production/bin/activate
 
 export XDG_CONFIG_HOME="/home/ops/.config"
+export DJANGO_SETTINGS_MODULE="threeandout.settings.prod"
 
 #get new data into nfldb
 now=$(date +"%D::%T")

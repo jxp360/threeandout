@@ -13,20 +13,24 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'threeandoutfantasyfootball@gmail.com'
 
-db_var_names = ['POSTGRESQL_DB_USER', 'POSTGRESQL_DB_PASS', 'POSTGRESQLD_DB_URL']
+db_var_names = ['POSTGRESQL_DB_USER', 'POSTGRESQL_DB_PASSWORD', 'POSTGRESQL_DB_URL']
 if not all( i in globals() for i in db_var_names ):
     print "ERROR: DB Variables are not defined: "+str(db_var_names)
     print "       Check that there is a prod_info.py in the settings and"
     print "       "+str(db_var_names)+" are properly defined."
     sys.exit(1)
 
+dburl = '/data/threeandout/dbs/threeandout.db'
+
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2', 
                 'NAME': 'threeandout',
                 'USER': POSTGRESQL_DB_USER,
-                'PASSWORD': POSTGRESQL_DB_PASS,
-                'HOST': POSTGRESQLD_DB_URL,
+                'PASSWORD': POSTGRESQL_DB_PASSWORD,
+                'HOST': POSTGRESQL_DB_URL,
                 'PORT': 5432 },
+    'slave': {'ENGINE': 'django.db.backends.sqlite3', 
+                'NAME': dburl}
 
 }
 

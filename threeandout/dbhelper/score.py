@@ -46,7 +46,8 @@ def default(playPlayer, nflDbGame):
     2-Point Conversions: 2 points
     Fumbles Lost: -2 points
   """
-  twoPtConv = playPlayer.receiving_twoptm + playPlayer.rushing_twoptm
+  print playPlayer
+  twoPtConv = playPlayer.receiving_twoptm + playPlayer.rushing_twoptm + playPlayer.passing_twoptm
   value = 1/25.0*playPlayer.passing_yds\
         + 4*playPlayer.passing_tds\
         - 2*playPlayer.passing_int\
@@ -57,6 +58,7 @@ def default(playPlayer, nflDbGame):
         + 6*playPlayer.fumbles_rec_tds\
         + 2*twoPtConv\
         - 2*playPlayer.fumbles_lost
+  print value
   return value
 
 def times2(playPlayer, nflDbGame):

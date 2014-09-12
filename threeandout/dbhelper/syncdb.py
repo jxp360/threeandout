@@ -200,6 +200,11 @@ class StatSyncher(object):
           #update stats if required
           save = False
           djangoStat = res.get()
+          print '###########################################'
+          print djangoStat, djangoStat.player.id, djangoStat.id, djangoStat.score
+          print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+
+
           for key, value in self.MAP.items():
             newVal = getattr(playPlayer,value)
             oldVal = getattr(djangoStat, key)
@@ -218,7 +223,9 @@ class StatSyncher(object):
             if defaultScore != djangoStat.defaultScore:
               djangoStat.defaultScore=defaultScore
               save=True
+          print pts, djangoStat.score, defaultScore, djangoStat.defaultScore
           if save:
+            print "saving the data"
             djangoStat.save()
     db.close()
   def sync_games(self, forceRescore=False, **filterargs):
