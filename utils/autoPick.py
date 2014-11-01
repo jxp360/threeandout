@@ -16,7 +16,6 @@ from threeandout.apps.ff_core.validate import ValidPlayers, validatePick,validat
 
 
 def findGameTime(player,week,season_type):
-    
     try:
         game = NFLSchedule.objects.get(Q(home=player.team) | Q(away=player.team),week=week,season_type=season_type)
     except:
@@ -26,13 +25,15 @@ def findGameTime(player,week,season_type):
 
 def findCurrentWeek():
     now = datetime.datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
-    game = NFLSchedule.objects.filter(~Q(season_type="Preseason"),kickoff__gt=now).order_by("kickoff").first()
+    #game = NFLSchedule.objects.filter(~Q(season_type="Regular"),kickoff__gt=now).order_by("kickoff").first()
+    game = NFLSchedule.objects.filter(kickoff__gt=now).order_by("kickoff").first()
     week = game.week
     season_type = game.season_type
     return week,season_type
 
 def bestPlayerAvailable(FFLPlayer,week,season_type,position):
     validplayers = ValidPlayers(week,season_type,position,FFLPlayer.user)
+    validplayers.sort(key=lambda x: x.scoretodate, reverse=True)
     for player in validplayers:
         kickoff = findGameTime(player,week,season_type)
         if datetime.date.weekday(kickoff) != 3: # Thursday Game
@@ -52,6 +53,7 @@ def manualPick():
         bestPlayers[position] = NFLPlayer.objects.get(name=bestPlayersNames[position])
     
     return bestPlayers
+
 
 def autoPickWeek(FFLPlayer,week,season_type):
     
@@ -85,8 +87,10 @@ def autoPickWeek(FFLPlayer,week,season_type):
         pick.mod_time=timezone.now()
         pick.save()    
         print "... Made pick for ", FFLPlayer.teamname
+        print "QB: %s  RB: %s  WR: %s  TE: %s" % (pick.qb, pick.rb, pick.wr, pick.te)
     else:
         print "Error Invalid Auto-Pick, no Auto Pick made" , FFLPlayer.teamname
+
 
 if __name__=="__main__":
     
