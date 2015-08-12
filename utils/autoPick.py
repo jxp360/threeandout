@@ -41,10 +41,10 @@ def bestPlayerAvailable(FFLPlayer,week,season_type,position):
 def manualPick():
     bestPlayersNames ={}
     # 2013 Points Leaders at their positions
-    bestPlayersNames['QB'] = "Peyton Manning"
-    bestPlayersNames['RB'] = "Jamaal Charles"
-    bestPlayersNames['WR'] = "Demaryius Thomas"
-    bestPlayersNames['TE'] = "Jimmy Graham"
+    bestPlayersNames['QB'] = "Aaron Rogers"
+    bestPlayersNames['RB'] = "DeMarco Murray"
+    bestPlayersNames['WR'] = "Antonio Brown"
+    bestPlayersNames['TE'] = "Rob Gronkowski"
 
     bestPlayers = {}
     for position in bestPlayersNames.keys():
@@ -64,7 +64,13 @@ def autoPickWeek(FFLPlayer,week,season_type):
         print "...Pick already exists for ", FFLPlayer.teamname
         return
 
-    pick = Picks(week=week,season_type=season_type, fflplayer=FFLPlayer)
+    # Don't auto pick if plyer already has 3 autopicks 
+    numautopick = Picks.objects.filter(fflplayer=FFLPlayer,season_type=season_type,autopick=True)
+    if numautopick >= 3 :
+        print "... Player already has three auto picks"
+        return
+
+    pick = Picks(week=week,season_type=season_type, fflplayer=FFLPlayer,autopick=True)
     
     # For the first week of the season just the best players from last year
     if week==1 and season_type=="Regular":
