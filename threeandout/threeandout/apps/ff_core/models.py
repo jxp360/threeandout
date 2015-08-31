@@ -89,6 +89,7 @@ class Picks(models.Model):
     #score = models.FloatField()
     fflplayer = models.ForeignKey(FFLPlayer, related_name='fflPlayer')
     mod_time = models.DateTimeField(datetime.datetime.now)
+    autopick = models.BooleanField(default=False)
     def calculatescore(self):
         #query the NFLWeeklyStats for the players for this week
         #query for each of my players and the right week
