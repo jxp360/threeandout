@@ -109,7 +109,7 @@ def sync_schedule():
   """
   q, db = getNflDbQuery()
   #games=q.game(season_year=CURRENT_SEASON, season_type='Regular').as_games()
-  print "for now only doing the regular season.  TBD fix that"
+  #print "for now only doing the regular season.  TBD fix that"
   games=q.game(season_year=CURRENT_SEASON).as_games()
   db.close()
   hasher = Hasher(models.NFLSchedule.objects.all())
@@ -124,7 +124,7 @@ def sync_schedule():
     kickoff = game.start_time
     djangoGame = hasher.get(gameID)
     if djangoGame:
-      print djangoGame.season_type, djangoGame.week, djangoGame.home,  djangoGame.away, djangoGame.kickoff
+      #print "Game in django already" 
       #make sure game hasn't changed times
       save = djangoGame.kickoff != kickoff
       if save:
@@ -135,6 +135,7 @@ def sync_schedule():
       homeTeam = TEAMS[str(game.home_team)]
       awayTeam = TEAMS[str(game.away_team)]
       djangoGame = models.NFLSchedule(home =homeTeam, away =awayTeam, week = game.week, season_type=game.season_type, kickoff = kickoff, nfldb_id = gameID, scoring_system=defaultScore)
+      print "adding new game " , homeTeam, awayTeam
     if save:
       djangoGame.save()
   print "total games in schedule = %s"%models.NFLSchedule.objects.count()
@@ -247,31 +248,20 @@ class StatSyncher(object):
     games = models.NFLSchedule.objects.filter(kickoff__gte=early_date, kickoff__lte=late_date)
     print len(games)
     week = 44
-    season_type=None
-    print "^^^^^^^^^^" , len(games)
     for game in games:
-      print "**************"
-      print game.week
       if game.week < week:
         week = game.week
-        print "&&&&&&&&&&" , week
-        season_type = game.season_type
-        #break
-        # This was commented out to get this to work in week 1. We don't think break should be in there but maybe it was needed for playoff week.
-    print "Found week = %d, %s" % (week, season_type)
-    print dir(game)
-    return week, season_type
+    print "Found week = %d" % week
+    return week
   
 
 if __name__=="__main__":
-  import_teams()
+  #import_teams()
   sync_schedule()
-  sync_players()
-  ss = StatSyncher()
-  curr = timezone.now()
-  week, season_type = ss.getMatchingWeek(curr)
-  print "doing ", week, season_type
-  ss.sync_games(forceRescore=True,week=week, season_type=season_type)
-  #ss.sync_games(forceRescore=True, week=1, season_type="Regular")
-  #ss.sync_games(forceRescore=True, week=1, season_type="Postseason")
-  
+  #sync_players()
+  #ss = StatSyncher()
+  #curr = timezone.now()
+  #week = ss.getMatchingWeek(curr)
+  #ss.sync_games(forceRescore=True, week=week, season_type="Regular")
+
+

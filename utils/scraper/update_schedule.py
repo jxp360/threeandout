@@ -19,12 +19,12 @@ else:
 s = nflschedule.ScheduleScraper()
 
 eastern = pytz.timezone('US/Eastern')
-daylighSavings = datetime.datetime(2013, 11, 3, tzinfo=eastern)
+daylighSavings = datetime.datetime(2015, 11, 3, tzinfo=eastern)
 offset = datetime.timedelta(hours=1)
 
-for i in xrange(5,18):
+for i in xrange(1,18):
   print "doing week %s" %i
-  games = s.scrapeWeek(i,2013)
+  games = s.scrapeWeek(i,2015)
   for game in games:
     args = {}
     for key in s.KEYS:  

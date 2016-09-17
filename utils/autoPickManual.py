@@ -7,7 +7,7 @@ sys.path.append(os.path.join(basedir, '../threeandout'))
 import django_env
 
 from threeandout.apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
-import datetime,time
+import datetime
 import pytz
 from django.utils import timezone
 from django.db.models import Q
@@ -33,7 +33,23 @@ def findCurrentWeek():
 
 def bestPlayerAvailable(FFLPlayer,week,season_type,position):
     validplayers = ValidPlayers(week,season_type,position,FFLPlayer.user)
+    for player in validplayers:
+        try:
+            week8score = NFLWeeklyStat.objects.get(game__week=week,player__id=player.id)
+            
+            if player.id == 127:
+                print player.scoretodate
+                print week8score.score
+            player.scoretodate=player.scoretodate-week8score.score
+            if player.id==127:
+               print player.scoretodate
+        except Exception,e:
+           pass
+           # print player.name
+           # print player.id
+           # print e
     validplayers.sort(key=lambda x: x.scoretodate, reverse=True)
+    
     for player in validplayers:
         kickoff = findGameTime(player,week,season_type)
         if datetime.date.weekday(kickoff) != 3: # Thursday Game
@@ -42,10 +58,10 @@ def bestPlayerAvailable(FFLPlayer,week,season_type,position):
 def manualPick():
     bestPlayersNames ={}
     # 2013 Points Leaders at their positions
-    bestPlayersNames['QB'] = "Russell Wilson"
-    bestPlayersNames['RB'] = "Devonta Freeman"
-    bestPlayersNames['WR'] = "Antonio Brown"
-    bestPlayersNames['TE'] = "Rob Gronkowski"
+    bestPlayersNames['QB'] = "Peyton Manning"
+    bestPlayersNames['RB'] = "Jamaal Charles"
+    bestPlayersNames['WR'] = "Demaryius Thomas"
+    bestPlayersNames['TE'] = "Jimmy Graham"
 
     bestPlayers = {}
     for position in bestPlayersNames.keys():
@@ -54,6 +70,9 @@ def manualPick():
     
     return bestPlayers
 
+def manaulautoPick(FFLPlayer, week,season_type="regular"):
+
+    qbs = NFLPLayers.objects.aggregate(score=NFLWeeklyStats__score)
 
 def autoPickWeek(FFLPlayer,week,season_type):
     
@@ -66,13 +85,7 @@ def autoPickWeek(FFLPlayer,week,season_type):
         print "...Pick already exists for ", FFLPlayer.teamname
         return
 
-    # Don't auto pick if plyer already has 3 autopicks 
-    numautopick = Picks.objects.filter(fflplayer=FFLPlayer,season_type=season_type,autopick=True).count()
-    if numautopick >= 3 :
-        print "... Player already has three auto picks"
-        return
-
-    pick = Picks(week=week,season_type=season_type, fflplayer=FFLPlayer,autopick=True)
+    pick = Picks(week=week,season_type=season_type, fflplayer=FFLPlayer)
     
     # For the first week of the season just the best players from last year
     if week==1 and season_type=="Regular":
@@ -101,12 +114,13 @@ def autoPickWeek(FFLPlayer,week,season_type):
 if __name__=="__main__":
     
     week,season_type = findCurrentWeek()
+    week = 8
     players = FFLPlayer.objects.all()
     for player in players:
         if player.autoPickPreference:
-            print "%s Making Auto Pick for" % time.asctime() , player.teamname,
+            print "Making Auto Pick for" , player.teamname,
             autoPickWeek(player,week,season_type)
         else:
-	    print "%s Team does not want AutoPick" % time.asctime() , player.teamname
+	    print "Team does not want AutoPick" , player.teamname
 
     

@@ -13,7 +13,7 @@ if models.NFLPlayer.objects.count() !=0:
 else:
   print "no players in database", models.NFLPlayer.objects.count()
 s = nflstats.NflScraper()
-stats = s.scrapeWeek(1,2014)
+stats = s.scrapeWeek(1,2015)
 fields = ('name', 'team', 'position')
 for player in stats:
   args = {}

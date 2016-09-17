@@ -28,7 +28,7 @@ sys.path.append('/data/threeandout/threeandout/threeandout')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "threeandout.settings.prod")
 
 # Activate your virtual env
-activate_env=os.path.expanduser("~/.virtualenvs/develop/bin/activate_this.py")
+activate_env=os.path.expanduser("~/.virtualenvs/production/bin/activate_this.py")
 if os.path.isfile(activate_env):
     print "Found virtual env script at '"+activate_env+"', running "
     execfile(activate_env, dict(__file__=activate_env))

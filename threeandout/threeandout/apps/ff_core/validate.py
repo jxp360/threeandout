@@ -5,7 +5,7 @@ import pytz
 from django.db.models import Q
 from django.db.models import Count,Sum
 
-PICK_LOCKOUT_MINUTES = 10
+PICK_LOCKOUT_MINUTES = 2
 
 def hasNotStarted(game, buffer=timedelta(0)):
     now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
@@ -47,7 +47,7 @@ def validatePlayer(week,season_type,player):
 
 # Returns a list of players than could be picked by a given user on a given week.
 # Used the load the table on the pick page                         
-def ValidPlayers(week,season_type,position,user):
+def ValidPlayers(week,season_type,position,user, overrideTime=False):
     fflplayer = FFLPlayer.objects.get(user=user)
     locktime = datetime.utcnow().replace(tzinfo=pytz.timezone('utc')) +timedelta(minutes=PICK_LOCKOUT_MINUTES)
     locktime_str = time.strftime('%Y-%m-%d %H:%M:%S',locktime.timetuple())
@@ -55,7 +55,32 @@ def ValidPlayers(week,season_type,position,user):
     # Find all NFL Players at the given position who's game has not yet started
     # Grab their score to date, home and away team for display purposes 
     # numPicked is not actually computed correctly in this query, it is just a placeholder so the object has this field later
-    players= NFLPlayer.objects.raw('select ff_core_nflplayer.id, \
+    if overrideTime:
+        players= NFLPlayer.objects.raw('select ff_core_nflplayer.id, \
+                                    ff_core_nflteam.name as "teamName", \
+                                    ff_core_nflplayer.name, \
+                                    awayteam.name as "away",\
+                                    hometeam.name as "home",\
+                                    COUNT(ff_core_nflplayer.id) AS "numPicked", \
+                                    SUM(ff_core_nflweeklystat.score) AS "scoretodate" \
+                                    from ff_core_nflplayer \
+                                    join ff_core_nflteam \
+                                    on ff_core_nflplayer.team_id=ff_core_nflteam.id \
+                                    join ff_core_nflschedule \
+                                    on (ff_core_nflteam.id=ff_core_nflschedule.home_id \
+                                    OR ff_core_nflteam.id=ff_core_nflschedule.away_id) \
+                                    join ff_core_nflteam awayteam \
+                                    on ff_core_nflschedule.away_id=awayteam.id \
+                                    join ff_core_nflteam hometeam \
+                                    on ff_core_nflschedule.home_id=hometeam.id \
+                                    left join ff_core_nflweeklystat \
+                                    on (ff_core_nflplayer.id = ff_core_nflweeklystat.player_id) \
+                                    where (ff_core_nflschedule.week=%s) \
+                                    AND (ff_core_nflschedule.season_type=%s) \
+                                    AND (ff_core_nflplayer.position=%s) \
+                                    GROUP BY  ff_core_nflplayer.id, ff_core_nflteam.name, ff_core_nflplayer.name, awayteam.name,hometeam.name', [week,season_type,position])
+    else:
+        players= NFLPlayer.objects.raw('select ff_core_nflplayer.id, \
                                     ff_core_nflteam.name as "teamName", \
                                     ff_core_nflplayer.name, \
                                     awayteam.name as "away",\

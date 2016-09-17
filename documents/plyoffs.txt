@@ -1,0 +1,15 @@
+#get into box & SETUP environment
+
+> sudo su - ops
+> source /home/ops/.virtualenvs/production/bin/activate
+> export DJANGO_SETTINGS_MODULE=threeandout.settings.prod
+
+#Run scripts to do get schedule data into our database via nflgame & nfldb
+
+> cd /home/ops/.virtualenvs/production/lib64/python2.6/site-packages/nflgame
+> python update_sched.py --phase POST --week 1
+> nfldb-update
+> cd /data/threeandout/threeandout/dbhelper
+> python syncdb.py
+
+

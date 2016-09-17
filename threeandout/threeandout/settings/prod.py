@@ -20,7 +20,7 @@ if not all( i in globals() for i in db_var_names ):
     print "       "+str(db_var_names)+" are properly defined."
     sys.exit(1)
 
-dburl = '/data/threeandout/dbs/threeandout.db'
+dburl = '/data/threeandout/dbs/threeandout-2015.db'
 
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2', 

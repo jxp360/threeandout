@@ -182,7 +182,7 @@ class StatSyncher(object):
         res = models.NFLWeeklyStat.objects.filter(player = djangoPlayer, game=djangoGame)
         count = res.count()
         if count==0:       
-          #new player
+          print('#player has no score for that game already')
           pts = score.score(playPlayer, nflDbGame, djangoGame.scoring_system.function)
           if djangoGame.scoring_system.function !="default":
              defaultScore = score.default(playPlayer, nflDbGame)
@@ -196,9 +196,10 @@ class StatSyncher(object):
             d[key] =getattr(playPlayer,value)
           
           djangoStat = models.NFLWeeklyStat(**d)
+          print ('Saving Stat ',djangoStat,djangoStat.score,djangoStat.game)
           djangoStat.save()
         elif count==1:
-          #update stats if required
+          print ('#update stats if required')
           save = False
           djangoStat = res.get()
           print '###########################################'
@@ -247,31 +248,21 @@ class StatSyncher(object):
     games = models.NFLSchedule.objects.filter(kickoff__gte=early_date, kickoff__lte=late_date)
     print len(games)
     week = 44
-    season_type=None
-    print "^^^^^^^^^^" , len(games)
     for game in games:
-      print "**************"
-      print game.week
       if game.week < week:
         week = game.week
-        print "&&&&&&&&&&" , week
-        season_type = game.season_type
-        #break
-        # This was commented out to get this to work in week 1. We don't think break should be in there but maybe it was needed for playoff week.
-    print "Found week = %d, %s" % (week, season_type)
-    print dir(game)
-    return week, season_type
+    print "Found week = %d" % week
+    return week
   
 
 if __name__=="__main__":
-  import_teams()
-  sync_schedule()
-  sync_players()
-  ss = StatSyncher()
-  curr = timezone.now()
-  week, season_type = ss.getMatchingWeek(curr)
-  print "doing ", week, season_type
-  ss.sync_games(forceRescore=True,week=week, season_type=season_type)
-  #ss.sync_games(forceRescore=True, week=1, season_type="Regular")
-  #ss.sync_games(forceRescore=True, week=1, season_type="Postseason")
+  #import_teams()
+  #sync_schedule()
   
+  #sync_players()
+  ss = StatSyncher()
+  #curr = timezone.now()
+  #week = ss.getMatchingWeek(curr)
+  #ss.sync_games(forceRescore=True, week=week, season_type="Regular")
+  ss.sync_games(forceRescore=True, week=1, season_type="Postseason")
+

@@ -9,7 +9,7 @@ import nflstats
 import playoffstats
 import threeandout.apps.ff_core.models 
 from django.core.exceptions import ObjectDoesNotExist
-from build_standings import buildStandings
+from build_standings import buildStandings,buildPlayoffStandings
 
 def getStats(week, year,forcePlayoffScraper=False):
   if week >=18 or forcePlayoffScraper:
@@ -68,12 +68,13 @@ def getStats(week, year,forcePlayoffScraper=False):
 
 if __name__=="__main__":
   import datetime
-  startGame = datetime.datetime(2014, 9, 5, 0, 0)
+  startGame = datetime.datetime(2015, 9, 1, 0, 0)
   current = datetime.datetime.utcnow()
   delta = current - startGame
   week = (delta.days/7)+1
-  year = 2014
+  year = 2015
   print week
   print delta 
   #getStats(week,year)
-  buildStandings()  
+  buildStandings() 
+  buildPlayoffStandings() 

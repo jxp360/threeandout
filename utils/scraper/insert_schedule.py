@@ -17,7 +17,7 @@ else:
 s = nflschedule.ScheduleScraper()
 for i in xrange(1,18):
   print "doing week %s" %i
-  games = s.scrapeWeek(i,2014)
+  games = s.scrapeWeek(i,2015)
   for game in games:
     args = {}
     for key in s.KEYS:  

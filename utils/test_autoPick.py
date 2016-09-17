@@ -1,5 +1,5 @@
 import sys, os
-
+import time
 basedir = os.path.dirname(__file__)
 sys.path.append(basedir)
 sys.path.append(os.path.join(basedir, '../threeandout/dbhelper'))
@@ -7,7 +7,7 @@ sys.path.append(os.path.join(basedir, '../threeandout'))
 import django_env
 
 from threeandout.apps.ff_core.models import NFLPlayer, Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
-import datetime,time
+import datetime
 import pytz
 from django.utils import timezone
 from django.db.models import Q
@@ -42,8 +42,8 @@ def bestPlayerAvailable(FFLPlayer,week,season_type,position):
 def manualPick():
     bestPlayersNames ={}
     # 2013 Points Leaders at their positions
-    bestPlayersNames['QB'] = "Russell Wilson"
-    bestPlayersNames['RB'] = "Devonta Freeman"
+    bestPlayersNames['QB'] = "Aaron Rodgers"
+    bestPlayersNames['RB'] = "DeMarco Murray"
     bestPlayersNames['WR'] = "Antonio Brown"
     bestPlayersNames['TE'] = "Rob Gronkowski"
 
@@ -68,6 +68,9 @@ def autoPickWeek(FFLPlayer,week,season_type):
 
     # Don't auto pick if plyer already has 3 autopicks 
     numautopick = Picks.objects.filter(fflplayer=FFLPlayer,season_type=season_type,autopick=True).count()
+    print "%", FFLPlayer.teamname
+    print "%%", season_type
+    print "%%%", numautopick
     if numautopick >= 3 :
         print "... Player already has three auto picks"
         return
@@ -91,7 +94,7 @@ def autoPickWeek(FFLPlayer,week,season_type):
     # Validate the Pick
     if validatePick(week,season_type,pick) and validateTwoOrLessPicksAll(player,pick,week):
         pick.mod_time=timezone.now()
-        pick.save()    
+        #pick.save()    
         print "... Made pick for ", FFLPlayer.teamname
         print "QB: %s  RB: %s  WR: %s  TE: %s" % (pick.qb, pick.rb, pick.wr, pick.te)
     else:

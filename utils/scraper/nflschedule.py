@@ -162,6 +162,6 @@ if __name__=="__main__":
     import sys
     s = ScheduleScraper()
     #predictions = s._scrapeUrl(s.SEASON%0)
-    predictions = s.scrapeWeek(13,2013)
+    predictions = s.scrapeWeek(2,2015)
     #predictions =  s.scrapeSeason()
     print predictions

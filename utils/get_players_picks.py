@@ -11,9 +11,9 @@ def getPlayer(name):
     print player
     return player[0]
 
-def getWeeklyPicks(week):
+def getWeeklyPicks(week,season_type="Regular"):
 
-    picks = models.Picks.objects.filter(week=week)
+    picks = models.Picks.objects.filter(week=week,season_type=season_type)
     #for pick in picks:
     #    print "Team: %s | QB: %s | WR: %s | RB: %s | TE: %s" % (pick.fflplayer, pick.qb, pick.wr, pick.rb, pick.te) 
     return picks
@@ -24,7 +24,7 @@ def setWeeklyPicks(pick, qbid, rbid, wrid, teid):
     
 if __name__=="__main__":
     
-    picks = getWeeklyPicks(2)
+    picks = getWeeklyPicks(3,'Postseason')
     for pick in picks:
         print "Team: %s | QB: %s | WR: %s | RB: %s | TE: %s" % (pick.fflplayer, pick.qb, pick.wr, pick.rb, pick.te) 
 

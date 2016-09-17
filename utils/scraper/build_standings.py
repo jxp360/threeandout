@@ -55,8 +55,8 @@ def buildPlayoffStandings():
     for playoffplayer in fflplayers:
         fflplayer = playoffplayer.fflplayer
         points=[0] *3
-        for i,week in enumerate(range(18,21)):
-                stat = models.Picks.objects.filter(week=week,fflplayer=fflplayer)
+        for i,week in enumerate(range(1,4)):
+                stat = models.Picks.objects.filter(week=week,fflplayer=fflplayer,season_type='Postseason')
                 if len(stat) == 1:
                     points[i] = stat[0].score
                 elif len(stat) >1:
@@ -72,4 +72,6 @@ def buildPlayoffStandings():
 
 if __name__ == "__main__":
 
-    buildStandings()
+    #buildStandings()
+    buildPlayoffStandings()
+

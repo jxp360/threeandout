@@ -1,0 +1,83 @@
+) Log in as 'ops' user
+) Type "workon production" to setup virtualenv 
+
+** Backup Old Database **
+
+) Change /data/threeandout/threeandout/threeandout/settings/prod.py to have a dburl of the previous year
+   * dburl = '/data/threeandout/dbs/threeandout-2015.db'
+) Navigate to /data/threeandout/threeandout
+) python manage.py syncdb --database=slave --settings=threeandout.settings.prod
+    * Type yes
+    * Use "ops" as user
+    * Use default password for ops user
+) python manage.py shell --settings=threeandout.settings.prod
+    * from to_slave import run
+    * run()
+) Check to see if the database was backed up
+    * sqlite3 command
+    * .tables to see all the tables
+    * select * from ff_core_playoffstandings to see playoff results
+
+
+** Remove old database for TAO FFL Use/Production **
+
+)psql -h dbid.cjftsjpuovni.us-east-1.rds.amazonaws.com  -U threeandout threeandout
+    *  Enter default password
+    * \d to see all tables
+    * \l to see databases
+    * Exit
+)dropdb -h dbid.cjftsjpuovni.us-east-1.rds.amazonaws.com  -U threeandout
+threeandout
+) Check to see if database is deleted
+* psql -h dbid.cjftsjpuovni.us-east-1.rds.amazonaws.com  -U threeandout postgres
+    * \l to see all databases
+
+
+** Update nfldb to new version to get bug fixes --- this could break our
+scoring scripts
+) pip install --upgrade nfldb
+) Follow patch instructions to fix datetime incompatiblity
+     * https://github.com/BurntSushi/nflgame/compare/master...Kirkman:patch-1?expand=1
+) Also need to patch "/home/ops/.virtualenvs/production/lib/python2.6/site-packages/nfldb/types.py" line 2124
+
+** Update the NFLDB Database with 2016 Schedule/Teams/Players **
+) If this is before NFLDB release it's official 2016 Games (happened after
+8/23/2016 last year), follow these steps:
+*  In nflgame/live.py, uncomment line 68 _CUR_SCHEDULE = "http://www.nfl.com/liveupdate/scorestrip/ss.xml" 
+*  comment out line 75 _CUR_SCHEDULE = http://www.nfl.com/liveupdate/scorestrip/postseason/ss.xml"
+) update_sched.py --year 2016 
+) IF a team has moved, do the following:
+* Add lines nfldb/team.py and nflgame/__init__.py that look like this: ['LA', 'Los Angeles', 'Rams', 'Los Angeles Rams'],
+* Go into nfldb: psql -h dbid.cjftsjpuovni.us-east-1.rds.amazonaws.com  -U nfldb nfldb
+* insert into team values ('LA', 'Los Angeles', 'Rams');
+) update_nfldb
+* If an issue, possibly blow away the game table in nfldb
+* psql -h dbid.cjftsjpuovni.us-east-1.rds.amazonaws.com  -U nfldb nfldb
+* delete from game where season_year=2016;
+
+** Fetch Data from NFLDB Into TAO FFL DB **
+
+)createdb -h dbid.cjftsjpuovni.us-east-1.rds.amazonaws.com  -U threeandout
+threeandout
+)python manage.py syncdb --settings=threeandout.settings.prod
+    * Type yes
+    * Use "ops" as user
+    * Use default password for ops user
+) Run python /data/threeandout/threeandout/dbhelper/syncdb.py --settings=prod
+) Check using python manage.py shell --settings=threeandout.settings.prod
+* from threeandout.apps.ff_core.models import NFLPlayer,Picks,FFLPlayer,NFLSchedule, NFLWeeklyStat
+* NFLPlayer.objects.filter(name="Carson Wentz") # Search for Rookie
+
+
+** Set players for Week 1 AutoPicks **
+)vi /data/threeandout/utils/autoPick.py
+) Change the QB, RB, WR, TE to the scoring leaders for the previous season
+from NFL.com/fantasy
+
+
+
+
+
+other userful stuff
+crontab -l
+
