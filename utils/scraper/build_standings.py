@@ -1,8 +1,8 @@
 import sys, os
 basedir2 = os.path.dirname(__file__)
 sys.path.append(basedir2)
-sys.path.append(os.path.join(basedir2, '../threeandout/dbhelper'))
-sys.path.append(os.path.join(basedir2, '../threeandout'))
+sys.path.append(os.path.join(basedir2, '../dbhelper'))
+sys.path.append(os.path.join(basedir2, '../../threeandout'))
 
 
 

@@ -1,4 +1,8 @@
-import sys
+#!/usr/bin/env python
+
+'''  This is a manual entry of all teams into the official database.  I believe this is only run once. '''
+
+import sysh
 sys.path.append('../threeandout')
 import os
 if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):

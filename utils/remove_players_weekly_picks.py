@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+''' This file can delete a specific team's weekly picks and deletes it.  '''
+
 import sys
 sys.path.append('../threeandout')
 import os
@@ -17,9 +21,6 @@ def getWeeklyPicks(week):
     #for pick in picks:
     #    print "Team: %s | QB: %s | WR: %s | RB: %s | TE: %s" % (pick.fflplayer, pick.qb, pick.wr, pick.rb, pick.te) 
     return picks
-
-def setWeeklyPicks(pick, qbid, rbid, wrid, teid):
-    pass    
 
     
 if __name__=="__main__":

@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+''' This file can be used to populate a local database with nfl players info, however it uses Mongo, which is not supported by threeandout at this point '''
+
 import datetime
 
 import pymongo

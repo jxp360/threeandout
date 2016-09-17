@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+''' This file allows the operator to manually put in teams names and picks and correct them on a weekly basis '''
+
 import sys
 sys.path.append('../threeandout')
 import os
