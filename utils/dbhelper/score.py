@@ -17,10 +17,12 @@ def _getTeam(playPlayer,nflDbGame):
     """
     db = nfldb.connect()
     q = nfldb.Query(db).game(gsis_id=nflDbGame.gsis_id)
-    drives = q.player(player_id=playPlayer.player_id).as_drives()
-    if drives:
-      drive = drives[0]
-      return drive.pos_team
+    players = q.player(player_id=playPlayer.player_id).as_play_players()
+    if players:
+      return players[0].team
+    else:
+      print "This player didn't haev any plays in this game. This shouldn't happen"
+      return None
 
 def addIfMissing(meths):
     """Add methods to the Scoring System database
