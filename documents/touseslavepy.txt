@@ -1,8 +1,12 @@
-Add MySQL as slave to settings.py
-python manage.py syncdb --slave
-python manage.py shell
-from to_slave import run
-run()
+1) workon production
+2) Add MySQL as slave to settings.py -> remember where the file goes
+3) Remove old file if exists 
+4) cd /data/threeandout/threeandout
+5) python manage.py syncdb --database=slave --settings=threeandout.settings.prod
+6) python manage.py shell --settings=threeandout.settings.prod
+7) In python type:
+   *) import sys
+   *) sys.path.append("..\utils")
+   *) import copy_ops_db_to_sqlite_db
+   *) copy_ops_db_to_sqlite_db.run()
 
-If broken add if str(i) == 'user':
-  do(i)
