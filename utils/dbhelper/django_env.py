@@ -5,7 +5,7 @@ from optparse import OptionParser
 import os
 
 import sys
-sys.path.append('..')
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../threeandout'))
 if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
   parser = OptionParser()
   parser.add_option("", "--settings", dest="settings",
@@ -17,5 +17,8 @@ if not os.environ.has_key('DJANGO_SETTINGS_MODULE'):
     print "WARNING:  No --settings flag given on the command line.  defaulting to %s" %options.settings
   os.environ['DJANGO_SETTINGS_MODULE'] = 'threeandout.settings.%s' %options.settings
 
+
+from pprint import pprint as pp 
+pp(sys.path)
 from threeandout.apps.ff_core import models
 

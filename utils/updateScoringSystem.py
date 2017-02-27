@@ -17,6 +17,7 @@ def updateScoringSystem(week,soringSystem='winnerTimes2',seasonType='Regular'):
   scoringSystem = getScoringSystem(soringSystem)
   games = getGames(week,seasonType)
   for game in games:
+    #print game.scoring_system.function
     game.scoring_system=scoringSystem
     game.save()
 

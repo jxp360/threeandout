@@ -87,7 +87,7 @@ def sync_players():
 
   for player in nfldbPlayers:
     ID = player.player_id
-    print player.full_name 
+    print player.full_name, player.team 
     teamID = TEAMS[player.team]
     djangoPlayer= hasher.get(ID)
     if djangoPlayer:
@@ -248,13 +248,9 @@ class StatSyncher(object):
     print len(games)
     week = 44
     season_type=None
-    print "^^^^^^^^^^" , len(games)
     for game in games:
-      print "**************"
-      print game.week
       if game.week < week:
         week = game.week
-        print "&&&&&&&&&&" , week
         season_type = game.season_type
         #break
         # This was commented out to get this to work in week 1. We don't think break should be in there but maybe it was needed for playoff week.

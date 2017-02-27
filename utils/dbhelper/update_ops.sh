@@ -12,7 +12,7 @@ echo "$now ********************************* Running NFLDB Update at nfldb-updat
 nfldb-update >> /var/log/threeandout/nflupdate.log 2>&1
 
 #refresh our internal databases
-python /data/threeandout/threeandout/dbhelper/syncdb.py "$@" >> /var/log/threeandout/nflupdate.log 2>&1
+python /data/threeandout/utils/dbhelper/syncdb.py "$@" >> /var/log/threeandout/nflupdate.log 2>&1
 now=$(date +"%D::%T")
 echo "$now  ******************************** Finished running NFLDB Update at nfldb-update" >> /var/log/threeandout/nflupdate.log 2>&1
 
